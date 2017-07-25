@@ -1,1 +1,83 @@
-job
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Job</title>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<script type="text/javascript" src="/static/angular.min.js"></script>
+		<script type="text/javascript" src="/static/bootstrap/js/jquery-2.1.4.js"></script>
+		<script type="text/javascript" src="/static/bootstrap/js/bootstrap.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="/static/bootstrap/css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="/static/bootstrap/css/bootstrap-theme.min.css">
+		<link rel="stylesheet" type="text/css" href="/static/css/style.css">
+		</script>
+		<style>
+		body {
+		padding-top: 60px;
+		padding-bottom: 60px;
+		}
+		</style>
+	</head>
+	<body id="docbody" ng-app="Job" ng-controller="jobCtrl">
+		{% block nav %}
+			{% include 'nav.html' %}
+		{% endblock %}
+		<div class="container">
+			<div class="col-md-12">
+				<div class="row">
+					<div class="table-responsive">
+						<table class="table table-bordered table-hover table-striped">
+							<thead>
+								<tr>
+									<th>STT</th>
+									<th>JobID</th>
+									<th>JobName</th>
+									<th>Status</th>
+									<th>State</th>
+									<th>Workflow</th>
+									<th>Source</th>
+									<th>Process</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="log in log_list">
+									<td>{{'{{$index + 1}'}}}</td>
+									<td>{{'{{log.jid}'}}}</td>
+									<td>{{'{{log.nid}'}}}</td>
+									<td>{{'{{log.res}'}}}</td>
+									<td>{{'{{log.desc}'}}}</td>
+									<td>{{'{{log.jid}'}}}</td>
+									<td>{{'{{log.jname}'}}}</td>
+								</tr>
+							</tbody>
+							<tr>
+								<td colspan="8" class="text-center">Total: {{'{{job_list.length}'}}}</td>
+							</tr>
+							</tfoot>
+						</table>
+						</div><!--end of .table-responsive-->
+					</form>
+				</div>
+			</div>
+		</div><!-- /.container -->
+		<script>
+			var app = angular.module('Job',[]);
+			app.controller("jobCtrl", function ($scope,$http,$timeout){
+				$scope.reload = function () {
+					$http.get('/job/api/job').
+					then(function (response) {
+						$scope.job_list = response.data;
+						console.log($scope.job_list);
+					});
+					$timeout(function(){
+						$scope.reload();
+					},10000)
+				};
+				$scope.reload();
+			});
+		</script>
+	</body>
+</html>
+
+
