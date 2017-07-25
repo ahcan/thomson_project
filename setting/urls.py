@@ -5,4 +5,6 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^log/', include('log.urls')),
     url(r'^system/', include('system.urls')),
+    url(r'^workflow/', include('workflow.urls')),
+    url(r'^job/', include('job.urls')),
 ]
