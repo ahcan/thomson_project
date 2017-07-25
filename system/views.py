@@ -26,6 +26,6 @@ def mountpoint_list_json(request):
     mountpoint_list = Thomson().get_mountpoint()
     return HttpResponse(mountpoint_list, content_type='application/json', status=200)
 
- def get_mountpoint(request):
+def get_mountpoint(request):
  	return render_to_response('system/mountpoint.html')
 
