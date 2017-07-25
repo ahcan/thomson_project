@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Thomson</title>
+		<title>MountPoint</title>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -19,7 +19,7 @@
 		}
 		</style>
 	</head>
-	<body id="docbody" ng-app="log_list" ng-controller="logCtrl">
+	<body id="docbody" ng-app="MountPoint" ng-controller="mountPointCtrl">
 		{% block nav %}
 			{% include 'nav.html' %}
 		{% endblock %}
@@ -32,29 +32,18 @@
 								<tr>
 									<th><input type="checkbox" ng-model="allAgent" name="SellectAllAgent" id="SellectAllAgent"></th>
 									<th>STT</th>
-									<th>Serverily</th>
-									<th>Node ID</th>
-									<th>Resource</th>
-									<th>Description</th>
-									<th>Job ID</th>
-									<th>Job name</th>
+									<th>name</th>
 								</tr>
 							</thead>
 							<tbody>
-								<tr ng-repeat="log in myData">
-									<td></td>
+								<tr ng-repeat="mount in mount_list">
 									<td><input type="checkbox" ng-checked="allAgent" name="SellectAgent" id="SellectAgent" value="{{'{{item.id}'}}}"></td>
 									<td>{{'{{$index + 1}'}}}</td>
-									<td>{{'{{log.sev}'}}}</td>
-									<td>{{'{{log.nid}'}}}</td>
-									<td>{{'{{log.res}'}}}</td>
-									<td>{{'{{log.desc}'}}}</td>
-									<td>{{'{{log.jid}'}}}</td>
-									<td>{{'{{log.jname}'}}}</td>
+									<td>{{'{{mount.name}'}}}</td>
 								</tr>
 							</tbody>
 							<tr>
-								<td colspan="8" class="text-center">---</td>
+								<td colspan="8" class="text-center">Total: {{'{{mount_list.length}'}}}</td>
 							</tr>
 							</tfoot>
 						</table>
@@ -64,18 +53,22 @@
 			</div>
 		</div><!-- /.container -->
 		<script>
-		var app = angular.module('myApp',[]);
-		app.controller("logCtrl", function ($scope,$http,$timeout){
-			$scope.reload = function () {
-				$http.get('/log/json/').
-				then(function (response) {
-					$scope.log_list = response.data;
-				});
-		    $timeout(function(){
-		    	$scope.reload();
-		    },20000)
-		};
+			var app = angular.module('MountPoint',[]);
+			app.controller("mountPointCtrl", function ($scope,$http,$timeout){
+				$scope.reload = function () {
+					$http.get('/system/api/mountpoint').
+					then(function (response) {
+						$scope.mount_list = response.data;
+						console.log($scope.mount_list);
+					});
+					$timeout(function(){
+						$scope.reload();
+					},600000)
+				};
+				$scope.reload();
+			});
 		</script>
 	</body>
 </html>
+
 
