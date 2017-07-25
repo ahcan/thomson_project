@@ -37,7 +37,7 @@
 			var app = angular.module('DateTime',[]);
 			app.controller("datetimeCtrl", function ($scope,$http,$timeout){
 				$scope.reload = function () {
-					$http.get('/system/api/datetime').
+					$http.get('/system/api/datetime/').
 					then(function (response) {
 						$scope.date_time = response.data;
 						console.log($scope.date_time);

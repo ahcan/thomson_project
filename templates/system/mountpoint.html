@@ -56,7 +56,7 @@
 			var app = angular.module('MountPoint',[]);
 			app.controller("mountPointCtrl", function ($scope,$http,$timeout){
 				$scope.reload = function () {
-					$http.get('/system/api/mountpoint').
+					$http.get('/system/api/mountpoint/').
 					then(function (response) {
 						$scope.mount_list = response.data;
 						console.log($scope.mount_list);
