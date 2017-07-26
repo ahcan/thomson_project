@@ -19,7 +19,7 @@
 		}
 		</style>
 	</head>
-	<body id="docbody" ng-app="log_list" ng-controller="logCtrl">
+	<body id="docbody" ng-app="Log" ng-controller="logCtrl">
 		{% block nav %}
 			{% include 'nav.html' %}
 		{% endblock %}
@@ -51,7 +51,7 @@
 								</tr>
 							</tbody>
 							<tr>
-								<td colspan="8" class="text-center">Total: {{'{{log_list.length}'}}}</td>
+								<td colspan="8" class="text-center">Total: {{'{{total}'}}}</td>
 							</tr>
 							</tfoot>
 						</table>
@@ -61,12 +61,14 @@
 			</div>
 		</div><!-- /.container -->
 		<script>
-			var app = angular.module('log_list',[]);
+			var app = angular.module('Log',[]);
 			app.controller("logCtrl", function ($scope,$http,$timeout){
 				$scope.reload = function () {
+					$scope.total = 0;
 					$http.get('/log/api/log').
 					then(function (response) {
 						$scope.log_list = response.data;
+						$scope.total = $scope.log_list.length;
 						console.log($scope.log_list);
 					});
 					$timeout(function(){
