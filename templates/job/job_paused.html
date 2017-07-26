@@ -1,1 +1,84 @@
-paused
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Job Paused</title>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<script type="text/javascript" src="/static/angular.min.js"></script>
+		<script type="text/javascript" src="/static/bootstrap/js/jquery-2.1.4.js"></script>
+		<script type="text/javascript" src="/static/bootstrap/js/bootstrap.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="/static/bootstrap/css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="/static/bootstrap/css/bootstrap-theme.min.css">
+		<link rel="stylesheet" type="text/css" href="/static/css/style.css">
+		</script>
+		<style>
+		body {
+		padding-top: 60px;
+		padding-bottom: 60px;
+		}
+		</style>
+	</head>
+	<body id="docbody" ng-app="JobPaused" ng-controller="jobpausedCtrl">
+		{% block nav %}
+			{% include 'nav.html' %}
+		{% endblock %}
+		<div class="container">
+			<div class="col-md-12">
+				<div class="row">
+					<div class="table-responsive">
+						<table class="table table-bordered table-hover table-striped">
+							<thead>
+								<tr>
+									<th>STT</th>
+									<th>JobID</th>
+									<th>JobName</th>
+									<th>Status</th>
+									<th>State</th>
+									<th>Workflow</th>
+									<th>Source</th>
+									<th>Process</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="paused_job in paused_job_list">
+									<td>{{'{{$index + 1}'}}}</td>
+									<td>{{'{{paused_job.jid}'}}}</td>
+									<td>{{'{{paused_job.nid}'}}}</td>
+									<td>{{'{{paused_job.res}'}}}</td>
+									<td>{{'{{paused_job.desc}'}}}</td>
+									<td>{{'{{paused_job.jid}'}}}</td>
+									<td>{{'{{paused_job.jname}'}}}</td>
+								</tr>
+							</tbody>
+							<tr>
+								<td colspan="8" class="text-center">Total: {{'{{total}'}}}</td>
+							</tr>
+							</tfoot>
+						</table>
+						</div><!--end of .table-responsive-->
+					</form>
+				</div>
+			</div>
+		</div><!-- /.container -->
+		<script>
+			var app = angular.module('JobAPaused',[]);
+			app.controller("jobpausedCtrl", function ($scope,$http,$timeout){
+				$scope.reload = function () {
+					$scope.total = 0;
+					$http.get('/job/api/paused').
+					then(function (response) {
+						$scope.paused_job_list = response.data;
+						$scope.total = $scope.paused_job_list.length
+						console.log($scope.paused_job_list);
+					});
+					$timeout(function(){
+						$scope.reload();
+					},10000)
+				};
+				$scope.reload();
+			});
+		</script>
+	</body>
+</html>
+
