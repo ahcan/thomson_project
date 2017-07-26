@@ -8,5 +8,5 @@ urlpatterns = [
 
     url(r'^$', views.get_log, name='log'),
     url(r'^open/$', views.get_open_log, name='open'),
-    url(r'^(?d<job_id>\d+)/$', views.get_log_by_jobID, name='byjobid'),
+    url(r'^(?P<job_id>\d+)/$', views.get_log_by_jobID, name='byjobid'),
 ]
