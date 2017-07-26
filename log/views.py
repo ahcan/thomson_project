@@ -49,7 +49,7 @@ def get_open_log(request):
 ##############################################################################
 
 def log_by_jobID_list_json(request, job_id):
-	print "qqq"
+	print "qqqsdfhyteruyuyegrtyu"
     #log_list = Log().get_by_jobID(int(job_id))
     #return HttpResponse(log_list, content_type='application/json', status=200)
 
