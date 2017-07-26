@@ -10,11 +10,12 @@ from setting.get_thomson_api import *
 
 # Create your views here.
 
-#######################################################################
-#                                                                     #
-#---------------------------------log---------------------------------#
-#                                                                     #
-#######################################################################
+##############################################################################
+#                                                                            #
+#--------------------------------------ALL LOG-------------------------------#
+#                                                                            #
+##############################################################################
+
 def log_list_json(request):
     """
     List all Logs.
@@ -24,3 +25,35 @@ def log_list_json(request):
 
 def get_log(request):
     return render_to_response('log/log.html')
+
+##############################################################################
+#                                                                            #
+#---------------------------------CRITICAL LOG-------------------------------#
+#                                                                            #
+##############################################################################
+
+def open_log_list_json(request):
+    """
+    List all Logs.
+    """
+    log_list = Log().get_open()
+    return HttpResponse(log_list, content_type='application/json', status=200)
+
+def get_open_log(request):
+    return render_to_response('log/log_open.html')
+
+##############################################################################
+#                                                                            #
+#---------------------------------CRITICAL LOG-------------------------------#
+#                                                                            #
+##############################################################################
+
+def log_by_jobID_list_json(request, jobID):
+    """
+    List all Logs.
+    """
+    log_list = Log().get_by_jobID(jobID)
+    return HttpResponse(log_list, content_type='application/json', status=200)
+
+def get_log_by_jobID(request, jobID):
+    return render_to_response('log/log_by_jobID.html')
