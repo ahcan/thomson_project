@@ -7,6 +7,6 @@ urlpatterns = [
     url(r'^api/(?P<jobID>\d+)/$', views.log_list_json, name='jobID_log_json'),
 
     url(r'^$', views.get_log, name='log'),
-    url(r'^open$', views.get_open_log, name='open'),
-    url(r'^byjobid$', views.get_log_by_jobID, name='byjobid'),
+    url(r'^open/$', views.get_open_log, name='open'),
+    url(r'^(?P<job_id>\d+)/$', views.get_log_by_jobID, name='byjobid'),
 ]
