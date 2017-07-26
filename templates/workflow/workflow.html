@@ -50,7 +50,7 @@
 								</tr>
 							</tbody>
 							<tr>
-								<td colspan="7" class="text-center">Total: {{'{{workflow_list.length}'}}}</td>
+								<td colspan="7" class="text-center">Total: {{'{{total}'}}}</td>
 							</tr>
 							</tfoot>
 						</table>
@@ -63,9 +63,11 @@
 			var app = angular.module('Workflow',[]);
 			app.controller("workflowCtrl", function ($scope,$http,$timeout){
 				$scope.reload = function () {
-					$http.get('/workflow/api/job').
+					$scope.total = 0;
+					$http.get('/workflow/api/workflow/').
 					then(function (response) {
 						$scope.workflow_list = response.data;
+						$scope.total = $scope.workflow_list.length;
 						console.log($scope.workflow_list);
 					});
 					$timeout(function(){

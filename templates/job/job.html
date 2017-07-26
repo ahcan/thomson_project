@@ -52,7 +52,7 @@
 								</tr>
 							</tbody>
 							<tr>
-								<td colspan="8" class="text-center">Total: {{'{{job_list.length}'}}}</td>
+								<td colspan="8" class="text-center">Total: {{'{{total}'}}}</td>
 							</tr>
 							</tfoot>
 						</table>
@@ -65,9 +65,11 @@
 			var app = angular.module('Job',[]);
 			app.controller("jobCtrl", function ($scope,$http,$timeout){
 				$scope.reload = function () {
+					$scope.total = 0;
 					$http.get('/job/api/job').
 					then(function (response) {
 						$scope.job_list = response.data;
+						$scope.total = $scope.job_list.length
 						console.log($scope.job_list);
 					});
 					$timeout(function(){

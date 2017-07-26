@@ -41,7 +41,7 @@
 								</tr>
 							</tbody>
 							<tr>
-								<td colspan="8" class="text-center">Total: {{'{{mount_list.length}'}}}</td>
+								<td colspan="8" class="text-center">Total: {{'{{total}'}}}</td>
 							</tr>
 							</tfoot>
 						</table>
@@ -54,9 +54,11 @@
 			var app = angular.module('MountPoint',[]);
 			app.controller("mountPointCtrl", function ($scope,$http,$timeout){
 				$scope.reload = function () {
+					$scope.total = 0;
 					$http.get('/system/api/mountpoint/').
 					then(function (response) {
 						$scope.mount_list = response.data;
+						$scope.total = $scope.mount_list.length;
 						console.log($scope.mount_list);
 					});
 					$timeout(function(){
