@@ -66,7 +66,7 @@
 			app.controller("jobpausedCtrl", function ($scope,$http,$timeout){
 				$scope.reload = function () {
 					$scope.total = 0;
-					$http.get('/job/api/paused').
+					$http.get('/job/api/paused/').
 					then(function (response) {
 						$scope.paused_job_list = response.data;
 						$scope.total = $scope.paused_job_list.length

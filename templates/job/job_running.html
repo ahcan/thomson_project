@@ -19,7 +19,7 @@
 		}
 		</style>
 	</head>
-	<body id="docbody" ng-app="Jobrunning" ng-controller="jobrunningCtrl">
+	<body id="docbody" ng-app="JobRunning" ng-controller="jobrunningCtrl">
 		{% block nav %}
 			{% include 'nav.html' %}
 		{% endblock %}
@@ -66,7 +66,7 @@
 			app.controller("jobrunningCtrl", function ($scope,$http,$timeout){
 				$scope.reload = function () {
 					$scope.total = 0;
-					$http.get('/job/api/running').
+					$http.get('/job/api/running/').
 					then(function (response) {
 						$scope.running_job_list = response.data;
 						$scope.total = $scope.running_job_list.length
