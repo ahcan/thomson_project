@@ -66,7 +66,7 @@
 			app.controller("jobabortedCtrl", function ($scope,$http,$timeout){
 				$scope.reload = function () {
 					$scope.total = 0;
-					$http.get('/job/api/aborted').
+					$http.get('/job/api/aborted/').
 					then(function (response) {
 						$scope.aborted_job_list = response.data;
 						$scope.total = $scope.aborted_job_list.length
