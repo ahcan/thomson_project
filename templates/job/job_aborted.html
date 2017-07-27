@@ -32,32 +32,30 @@
 								<tr>
 									<th>STT</th>
 									<th>JobID</th>
-									<th>JobName</th>
 									<th>Status</th>
 									<th>State</th>
-									<th>Workflow</th>
-									<th>Source</th>
 									<th>Process</th>
+									<th>Start Date</th>
+									<th>End Date</th>
 								</tr>
 							</thead>
 							<tbody>
-								<tr ng-repeat="aborted_job in aborted_job_list">
+								<tr ng-repeat="job in aborted_job_list">
 									<td>{{'{{$index + 1}'}}}</td>
-									<td>{{'{{aborted_job.jid}'}}}</td>
-									<td>{{'{{aborted_job.nid}'}}}</td>
-									<td>{{'{{aborted_job.res}'}}}</td>
-									<td>{{'{{aborted_job.desc}'}}}</td>
-									<td>{{'{{aborted_job.jid}'}}}</td>
-									<td>{{'{{aborted_job.jname}'}}}</td>
+									<td>{{'{{job.jid}'}}}</td>
+									<td>{{'{{job.status}'}}}</td>
+									<td>{{'{{job.state}'}}}</td>
+									<td>{{'{{job.prog}'}}}</td>
+									<td>{{'{{job.startdate}'}}}</td>
+									<td>{{'{{job.enddate}'}}}</td>
 								</tr>
 							</tbody>
 							<tr>
-								<td colspan="8" class="text-center">Total: {{'{{total}'}}}</td>
+								<td colspan="7" class="text-center">Total: {{'{{total}'}}}</td>
 							</tr>
 							</tfoot>
 						</table>
-						</div><!--end of .table-responsive-->
-					</form>
+					</div><!--end of .table-responsive-->
 				</div>
 			</div>
 		</div><!-- /.container -->
