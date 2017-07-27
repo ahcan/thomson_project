@@ -28,3 +28,12 @@ def workflow_by_jobID_json(request, jobID):
 
 def get_workflow_by_jobID(request, jobID):
  	return render_to_response('workflow/job/workflow_by_job.html')
+
+#######################################################################
+#                                                                     #
+#-----------------------------TEST CLOCK------------------------------#
+#                                                                     #
+#######################################################################
+
+def test_clock(request):
+	return render_to_response('workflow/test_clock.html')
