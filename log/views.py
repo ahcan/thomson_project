@@ -49,7 +49,7 @@ def get_open_log(request):
 ##############################################################################
 
 def log_by_jobID_list_json(request, job_id):
-    return render_to_response('log/log_by_jobID.html')
+    print "aaaa"
 
 def get_log_by_jobID(request, job_id):
     return render_to_response('log/log_by_jobID.html')
