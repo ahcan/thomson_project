@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Workflow</title>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<script type="text/javascript" src="/static/angular.min.js"></script>
+		<script type="text/javascript" src="/static/bootstrap/js/jquery-2.1.4.js"></script>
+		<script type="text/javascript" src="/static/bootstrap/js/bootstrap.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="/static/bootstrap/css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="/static/bootstrap/css/bootstrap-theme.min.css">
+		<link rel="stylesheet" type="text/css" href="/static/css/style.css">
+		</script>
+		<style>
+		body {
+		padding-top: 60px;
+		padding-bottom: 60px;
+		}
+		</style>
+	</head>
+	<body id="docbody" ng-app="myApp">
+		{% block nav %}
+			{% include 'nav.html' %}
+		{% endblock %}
+		<div class="container">
+			<div class="col-md-12">
+				<div class="row">
+				  <div ng-controller='TimeCtrl'>
+				    <p>{{ clock | date:'HH:mm:ss'}}</p>
+				  </div>
+				</div>
+			</div>
+		</div><!-- /.container -->
+		<script>
+			var module = angular.module('myApp', []);
+			module.controller('TimeCtrl', function($scope, $interval) {
+				var tick = function() {
+					$scope.clock = Date.now();
+				}
+				tick();
+				$interval(tick, 1000);
+			});
+		</script>
+	</body>
+</html>
+
+
