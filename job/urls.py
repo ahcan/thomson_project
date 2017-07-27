@@ -14,5 +14,5 @@ urlpatterns = [
     url(r'^running/$', views.get_running_job, name='running'),
     url(r'^paused/$', views.get_paused_job, name='paused'),
     url(r'^completed/$', views.get_completed_job, name='completed'),
-    url(r'^aborted/$', views.aborted_job_json, name='aborted'),
+    url(r'^aborted/$', views.get_aborted_job, name='aborted'),
 ]
