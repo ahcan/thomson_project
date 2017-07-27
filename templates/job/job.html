@@ -32,27 +32,26 @@
 								<tr>
 									<th>STT</th>
 									<th>JobID</th>
-									<th>JobName</th>
 									<th>Status</th>
 									<th>State</th>
-									<th>Workflow</th>
-									<th>Source</th>
 									<th>Process</th>
+									<th>Start Date</th>
+									<th>End Date</th>
 								</tr>
 							</thead>
 							<tbody>
-								<tr ng-repeat="log in log_list">
+								<tr ng-repeat="job in job_list">
 									<td>{{'{{$index + 1}'}}}</td>
-									<td>{{'{{log.jid}'}}}</td>
-									<td>{{'{{log.nid}'}}}</td>
-									<td>{{'{{log.res}'}}}</td>
-									<td>{{'{{log.desc}'}}}</td>
-									<td>{{'{{log.jid}'}}}</td>
-									<td>{{'{{log.jname}'}}}</td>
+									<td>{{'{{job.jid}'}}}</td>
+									<td>{{'{{job.status}'}}}</td>
+									<td>{{'{{job.state}'}}}</td>
+									<td>{{'{{job.prog}'}}}</td>
+									<td>{{'{{job.startdate}'}}}</td>
+									<td>{{'{{job.enddate}'}}}</td>
 								</tr>
 							</tbody>
 							<tr>
-								<td colspan="8" class="text-center">Total: {{'{{total}'}}}</td>
+								<td colspan="7" class="text-center">Total: {{'{{total}'}}}</td>
 							</tr>
 							</tfoot>
 						</table>
