@@ -13,7 +13,7 @@ import tzlocal # $ pip install tzlocal
 #                                                                            #
 ##############################################################################
 
-#data input string YYYY-MM-DDTHH:mm:ss.000Z, return datetime fortmat
+#data input string YYYY-MM-DDTHH:mm:ss.000Z, return a string
 def convert_UTC_2_local(utc_time):
     #return UTC fortmat
     ts = time.strptime(utc_time[:19], "%Y-%m-%dT%H:%M:%S")
@@ -22,7 +22,7 @@ def convert_UTC_2_local(utc_time):
     local_timezone = tzlocal.get_localzone()
     utc_time = datetime.strptime(dateTime, "%Y-%m-%d %H:%M:%S")
     local_time = utc_time.replace(tzinfo=pytz.utc).astimezone(local_timezone)
-    return local_time  
+    return str(local_time)[0:len(str(local_time))-6]
 
 ##############################################################################
 #                                                                            #
@@ -66,7 +66,7 @@ class Thomson:
         'OlsonTZ' in str(itemlist[0].attributes.items()) else ""
         #Convert response data to Json
         args = []
-        args.append({'dateAndTime'  : str(convert_UTC_2_local(DateAndTime)) \
+        args.append({'dateAndTime'  : convert_UTC_2_local(DateAndTime) \
             if DateAndTime else "",
                     'timeZone'      : OlsonTZ if OlsonTZ else "Asia/Ho_Chi_Minh"
             })
@@ -256,10 +256,10 @@ class Job:
                         'status'    : Status if Status else "",
                         'jid'       : JId if JId else "",
                         'prog'      : Prog if Prog else "",
-                        'startdate' : str(convert_UTC_2_local(StartDate)) \
+                        'startdate' : convert_UTC_2_local(StartDate) \
                         if StartDate else "",
                         'ver'       : Ver if Ver else "",
-                        'enddate'   : str(convert_UTC_2_local(EndDate)) \
+                        'enddate'   : convert_UTC_2_local(EndDate) \
                         if EndDate else ""
                 })
         return json.dumps(args) 
