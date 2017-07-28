@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main ng-app="DateTime" ng-controller="datetimeCtrl"">
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 	<h2 class="sub-header">Date Time</h2>
-	<div class="table-responsive">
+	<div class="table-responsive" ng-app="DateTime" ng-controller="datetimeCtrl">
 		<table class="table table-bordered table-hover table-striped">
 			<thead>
 				<tr>
@@ -22,7 +22,7 @@
 		</table>
 	</div>
 	<h2 class="sub-header">MountPoint</h2>
-	<div class="table-responsive">
+	<div class="table-responsive" ng-app="MountPoint" ng-controller="mountPointCtrl">
 		<table class="table table-bordered table-hover table-striped">
 			<thead>
 				<tr>
@@ -55,6 +55,16 @@ app.controller("datetimeCtrl", function ($scope,$http,$timeout){
 			$scope.date_time = response.data;
 			console.log($scope.date_time);
 		});
+		$timeout(function(){
+			$scope.reload();
+		},600000)
+	};
+	$scope.reload();
+});
+
+var app = angular.module('MountPoint',[]);
+app.controller("mountPointCtrl", function ($scope,$http,$timeout){
+	$scope.reload = function () {
 		$scope.total = 0;
 		$http.get('/system/api/mountpoint/').
 		then(function (response) {
