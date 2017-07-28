@@ -1,0 +1,24 @@
+{% block nav-sidebar %}
+  <div class="col-sm-3 col-md-2 sidebar">
+    <ul class="nav nav-sidebar">
+      <li class="active"><a href="/log/">All Log <span class="sr-only">(current)</span></a></li>
+      <li><a href="/log/open/">Open log</a></li>
+      <li><a href="/log/18010/">By Job ID<</a></li>
+    </ul>
+    <ul class="nav nav-sidebar">
+      <li><a href="/job/">All Job</a></li>
+      <li><a href="/job/waiting/">Waiting</a></li>
+      <li><a href="/job/running/">Running</a></li>
+      <li><a href="/job/paused/">Paused</a></li>
+      <li><a href="/job/completed/">Completed</a></li>
+      <li><a href="/job/aborted/">Aborted</a></li>
+    </ul>
+    <ul class="nav nav-sidebar">
+      <li><a href="/workflow/">Workflow</a></li>
+    </ul>
+    <ul class="nav nav-sidebar">
+      <li><a href="/system/datetime/">Datetime</a></li>
+      <li><a href="/system/mountpoint/">Mount Point</a></li>
+    </ul>
+  </div>
+{% endblock %}
