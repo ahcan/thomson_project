@@ -103,3 +103,40 @@ body {
   display: inline-block;
   border-radius: 50%;
 }
+
+/***************************
+2. Navigation
+***************************/
+a.list-group-item {
+  height:auto;
+  min-height:250px;
+
+}
+a.list-group-item.active small {
+  color:#fff;
+  
+}
+
+.stars {
+  margin:20px auto 1px;    
+}
+
+/***************************
+3. Generic
+***************************/
+
+.spacer-10 {
+padding-top: 10px;
+}
+.spacer-20 {
+  padding-top: 20px;
+}
+.spacer-30 {
+  padding-top: 30px;
+}
+/***************************
+4. Product 
+***************************/
+.btn-product{
+  width: 100%;
+}
