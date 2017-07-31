@@ -8,13 +8,21 @@
 		  <div class="input-group">
 		    <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
 		    <select select ng-model="sev" class="form-control selectpicker" name="sev">
-		      <option value="">All Log</option>
+		      <option value="">Serverily</option>
 		      <option value="Critical">Critical</option>
 		      <option value="Info">Info</option>
 		      <option value="Major">Major</option>
 		    </select>
 		  </div>
 		</div>
+
+		<div class="form-group">
+		  <div class="input-group">
+		    <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
+		    <input type="text" class="form-control" placeholder="Search..." ng-model="search">
+		  </div>
+		</div>
+
 	</div>
 	<div class="table-responsive">
 		<table class="table table-bordered table-hover table-striped">
@@ -30,7 +38,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr ng-repeat="log in log_list | filter:{sev: sev}">
+				<tr ng-repeat="log in log_list | filter:search | filter:{sev: sev}">
 					<td>{{'{{$index + 1}'}}}</td>
 					<td>{{'{{log.sev}'}}}</td>
 					<td>{{'{{log.nid}'}}}</td>
