@@ -5,19 +5,21 @@
 	<div class="panel-body">
 		<div>
 			<label class="checkbox-inline">
-				<input type="checkbox" id="sev" value="sev" ng-model="sev"> Info
+				<input type="checkbox" id="sev" value="sev" ng-model="info"> Info
 			</label>
 			<label class="checkbox-inline">
-				<input type="checkbox" id="sev" value="sev" ng-model="sev"> Critical
+				<input type="checkbox" id="sev" value="sev" ng-model="critical"> Critical
 			</label>
 			<label class="checkbox-inline">
-				<input type="checkbox" id="sev" value="sev" ng-model="sev"> Major
+				<input type="checkbox" id="sev" value="sev" ng-model="major"> Major
 			</label>
 		</div>
 	</div>
 	<div class="table-responsive">
 		<table class="table table-bordered table-hover table-striped">
-			<input type="text" ng-model="sev">
+			<input type="text" ng-model="info">
+                        <input type="text" ng-model="critical">
+                        <input type="text" ng-model="major">
 			<thead>
 				<tr>
 					<th>#</th>
