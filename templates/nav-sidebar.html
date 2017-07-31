@@ -1,81 +1,24 @@
 {% block nav-sidebar %}
 <div class="col-sm-3 col-md-2 sidebar">
-  <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-    <!-- first Panel start Here -->
-    <div class="panel panel-default">
-      <div class="panel-heading" role="tab" id="headingOne">
-        <h4 class="panel-title">
-        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne" class="collapsed">
-          System <span class="glyphicon glyphicon-plus pull-right" aria-hidden="true"></span>
-        </a>
-        </h4>
-      </div>
-      <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne" aria-expanded="false" style="height: 0px;">
-        <div class="panel-body">
-          <div class="list-group">
-            <div class="checkbox">
-              <label><input type="checkbox" value="">Hyundai</label>
-            </div>
-            <div class="checkbox">
-              <label><input type="checkbox" value="">Maruti</label>
-            </div>
-          </div>
-          <!-- List Group End Here -->
-        </div>
-      </div>
-    </div>
-    <!-- first Panel End Here -->
-
-    <!-- second Panel start Here -->
-    <div class="panel panel-default">
-      <div class="panel-heading" role="tab" id="headingTwo">
-        <h4 class="panel-title">
-        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-          Log <span class="glyphicon glyphicon-plus pull-right" aria-hidden="true"></span>
-        </a>
-        </h4>
-      </div>
-      <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo" aria-expanded="false" style="height: 0px;">
-        <div class="panel-body">
-          <div class="list-group">
-            <div class="checkbox">
-              <label><input type="checkbox" value="">Hyundai</label>
-            </div>
-            <div class="checkbox">
-              <label><input type="checkbox" value="">Maruti</label>
-            </div>
-          </div>
-        </div>
-        <!-- List Group End Here -->
-      </div>
-    </div>
-    <!-- second Panel End Here -->
-
-    <!-- Thirth Panel start Here -->
-    <div class="panel panel-default">
-      <div class="panel-heading" role="tab" id="headingTwo">
-        <h4 class="panel-title">
-        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-          Log <span class="glyphicon glyphicon-plus pull-right" aria-hidden="true"></span>
-        </a>
-        </h4>
-      </div>
-      <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo" aria-expanded="false" style="height: 0px;">
-        <div class="panel-body">
-          <div class="list-group">
-            <div class="checkbox">
-              <label><input type="checkbox" value="">Hyundai</label>
-            </div>
-            <div class="checkbox">
-              <label><input type="checkbox" value="">Maruti</label>
-            </div>
-          </div>
-        </div>
-        <!-- List Group End Here -->
-      </div>
-    </div>
-    <!-- Thirth Panel End Here -->
-
-  </div>
-</div><!-- /.sidebar column end here -->
+  -    <ul class="nav nav-sidebar">
+    -      <li class="active"><a href="/log/">All Log <span class="sr-only">(current)</span></a></li>
+    -      <li><a href="/log/open/">Open log</a></li>
+    -      <li><a href="/log/18010/">By Job ID</a></li>
+  -    </ul>
+  -    <ul class="nav nav-sidebar">
+    -      <li><a href="/job/">All Job</a></li>
+    -      <li><a href="/job/waiting/">Waiting</a></li>
+    -      <li><a href="/job/running/">Running</a></li>
+    -      <li><a href="/job/paused/">Paused</a></li>
+    -      <li><a href="/job/completed/">Completed</a></li>
+    -      <li><a href="/job/aborted/">Aborted</a></li>
+  -    </ul>
+  -    <ul class="nav nav-sidebar">
+    -      <li><a href="/workflow/">Workflow</a></li>
+  -    </ul>
+  -    <ul class="nav nav-sidebar">
+    -      <li><a href="/system/datetime/">Datetime</a></li>
+    -      <li><a href="/system/mountpoint/">Mount Point</a></li>
+  -    </ul>
+</div>
 {% endblock %}
