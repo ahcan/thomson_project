@@ -1,21 +1,21 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-app="Log" ng-controller="logCtrl">
 	<h2 class="sub-header">Logs</h2>
 	<div class="panel-body">
 		<div>
 			<label class="checkbox-inline">
-				<input type="checkbox" id="inlineCheckbox1" value="option1"> Info
+				<input type="checkbox" id="sev" value="sev" ng-model="sev"> Info
 			</label>
 			<label class="checkbox-inline">
-				<input type="checkbox" id="inlineCheckbox2" value="option2"> Critical
+				<input type="checkbox" id="sev" value="sev" ng-model="sev"> Critical
 			</label>
 			<label class="checkbox-inline">
-				<input type="checkbox" id="inlineCheckbox3" value="option3"> Major
+				<input type="checkbox" id="sev" value="sev" ng-model="sev"> Major
 			</label>
 		</div>
 	</div>
-	<div class="table-responsive" ng-app="Log" ng-controller="logCtrl">
+	<div class="table-responsive">
 		<table class="table table-bordered table-hover table-striped">
 			<thead>
 				<tr>
