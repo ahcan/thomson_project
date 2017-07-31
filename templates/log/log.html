@@ -2,12 +2,12 @@
 {% block content %}
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-app="Log" ng-controller="logCtrl">
 	<div>
-		<div width="40%">
+		<div max-width="40%">
 			<h2 class="sub-header">Logs</h2>
 		</div>
 
-		<div width="60%">
-			<div  width="30%" class="form-group">
+		<div max-width="60%">
+			<div  max-width="30%" class="form-group">
 			  <div class="input-group">
 			    <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
 			    <select select ng-model="sev" class="form-control selectpicker" name="sev">
@@ -19,7 +19,7 @@
 			  </div>
 			</div>
 
-			<div  width="40%" class="form-group">
+			<div max-width="30%" class="form-group">
 			  <div class="input-group">
 			    <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
 			    <input type="text" class="form-control" placeholder="Search..." ng-model="search">
