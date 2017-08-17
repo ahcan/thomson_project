@@ -1,0 +1,1 @@
+﻿<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">  <soapenv:Body>    <jStart:JobStartRsp OpV="01.00.00" xmlns:mg="MalteseGlobal" xmlns:jStart="JobStart">      <mg:RspDone>        <mg:RspOK/>      </mg:RspDone>    </jStart:JobStartRsp>  </soapenv:Body></soapenv:Envelope>

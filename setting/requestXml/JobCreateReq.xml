@@ -1,0 +1,10 @@
+﻿<soapenv:Envelope
+xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+xmlns:job="JobCreate" xmlns:wor="WorkflowDesc">
+  <soapenv:Body>
+    <job:JobCreateReq Cmd="Start" OpV="01.00.00" ConsistencyBL="noerror_nowarning" StartJob="TRUE_FALSE">
+      <wor:Job name="JOB_NAME" workflowIdRef="WORKFLOW_ID">     
+      </wor:Job>
+    </job:JobCreateReq>
+  </soapenv:Body>
+</soapenv:Envelope>
