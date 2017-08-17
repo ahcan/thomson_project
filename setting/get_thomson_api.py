@@ -32,7 +32,7 @@ def convert_UTC_2_local(utc_time):
 
 class File:
     def __init__(self):
-        self.file_path = '/root/thomson_project/setting/responseXml/'
+        self.file_path = '/home/huy/django_env/thomson_huynt/setting/responseXml/'
 
     def read(self, filename):
         print self.file_path + filename
