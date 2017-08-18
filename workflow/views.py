@@ -16,24 +16,18 @@ from setting.get_thomson_api import *
 #                                                                     #
 #######################################################################
 def workflow_json(request):
-    date_time = Workflow().get_workflow()
-    return HttpResponse(date_time, content_type='application/json', status=200)
+    workflow_list = Workflow().get_workflow()
+    return HttpResponse(workflow_list, content_type='application/json', status=200)
 
 def get_workflow(request):
 	return render_to_response('workflow/workflow.html')
 
-def workflow_by_jobID_json(request, jobID):
-    mountpoint_list = Thomson().get_mountpoint()
-    return HttpResponse(mountpoint_list, content_type='application/json', status=200)
-
-def get_workflow_by_jobID(request, jobID):
- 	return render_to_response('workflow/job/workflow_by_job.html')
-
 #######################################################################
 #                                                                     #
-#-----------------------------TEST CLOCK------------------------------#
+#--------------------------WORKFLOW DETAIL----------------------------#
 #                                                                     #
 #######################################################################
 
-def test_clock(request):
-	return render_to_response('workflow/test_clock.html')
+def get_workflow_params(request, wfid):
+	param_list = WorkflowDetail('wfid').get_param()
+	return HttpResponse(param_list, content_type='application/json', status=200)
