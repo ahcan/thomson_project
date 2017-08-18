@@ -1,0 +1,13 @@
+.nav .menu .head-menu {
+  background-color: #337ab7;
+  color: #fff; }
+.nav .menu .sub-menu {
+  margin-left: 10px; }
+.nav li a:hover {
+  background-color: #419BE8;
+  color: #fff; }
+.nav li a:focus {
+  background-color: #419BE8;
+  color: #fff; }
+
+/*# sourceMappingURL=main.css.map */

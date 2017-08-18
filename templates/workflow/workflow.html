@@ -18,7 +18,7 @@
 				<tr ng-repeat="workflow in workflow_list">
 					<td>{{'{{$index + 1}'}}}</td>
 					<td>{{'{{workflow.name}'}}}</td>
-					<td>{{'{{workflow.wid}'}}}</td>
+					<td class="showinfo" ng-click="showinfo(workflow.wid)" ><p uib-tooltip-html="text" >{{'{{workflow.wid}'}}}</p></td>
 					<td>{{'{{workflow.pubver}'}}}</td>
 					<td>{{'{{workflow.priver}'}}}</td>
 					<td>Add job</td>
@@ -31,9 +31,26 @@
 		</table>
 	</div>
 </div>
+<style type="text/css">
+        /* Specify styling for tooltip contents */
+        .tooltip.customClass .tooltip-inner {
+          color: #880000;
+          background-color: #ffff66;
+          box-shadow: 0 6px 12px rgba(0,0,0,.175);
+        }
+        /* Hide arrow */
+        .tooltip.customClass .tooltip-arrow {
+          display: none;
+        }
+</style>
 <script>
-	var app = angular.module('Workflow',[]);
-	app.controller("workflowCtrl", function ($scope,$http,$timeout){
+	var app = angular.module('Workflow',['ui.bootstrap']).config(['$tooltipProvider', function ($tooltipProvider) {
+        $tooltipProvider.options({
+            placement: 'auto bottom-right',
+            trigger:'click',
+        });
+    }])
+	app.controller("workflowCtrl", function ($scope,$http,$timeout,$element,$sce){
 		$scope.reload = function () {
 			$scope.total = 0;
 			$http.get('/workflow/api/workflow/').
@@ -43,11 +60,18 @@
 				console.log($scope.workflow_list);
 			});
 			$timeout(function(){
-				$scope.reload();
+				// $scope.reload();
 			},10000)
 		};
 		$scope.reload();
+		$scope.showinfo = function(id){
+			console.log(id);
+			var strID = "<div>"+id+"</div";
+			$scope.text = $sce.trustAsHtml(strID);	
+		}
 	});
+	
+
 </script>
 {% endblock %}
 
