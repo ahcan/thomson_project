@@ -86,4 +86,15 @@ def aborted_job_json(request):
 
 def get_aborted_job(request):
 	return render_to_response('job/job_aborted.html')
+
+#######################################################################
+#                                                                     #
+#------------------------------JOB DETAIL-----------------------------#
+#                                                                     #
+#######################################################################
+
+def get_job_params(request, jid):
+    param_list = JobDetail('jid').get_param()
+    return HttpResponse(param_list, content_type='application/json', status=200)
+
 	

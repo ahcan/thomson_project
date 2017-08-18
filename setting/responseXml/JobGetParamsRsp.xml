@@ -1,24 +1,20 @@
-﻿<soapenv:Envelope
-xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
   <soapenv:Body>
-    <jGetParams:JobGetParamsRsp OpV="01.00.00"
-    xmlns:mt="MalteseTypes" xmlns:mg="MalteseGlobal"
-    xmlns:jGetParams="JobGetParams">
+    <jGetParams:JobGetParamsRsp xmlns:mt="MalteseTypes" xmlns:mg="MalteseGlobal" xmlns:jGetParams="JobGetParams" OpV="01.00.00">
       <mg:RspDone>
         <mg:RspOK>
-          <mg:RspOKRef UIdRef="ID000000"/>
+          <mg:RspOKRef UIdRef="ID000000" />
         </mg:RspOK>
       </mg:RspDone>
       <jGetParams:RspOkJGetParams UId="ID000000">
-        <wd:Job name="" priority="1"
-        workflowIdRef="WorkflowUser_Encoder TNT SD"
-        hasRunScale="false" xmlns:wd="WorkflowDesc">
-          <wd:ParamDesc name="" value="M6, W9 et France4"/>
-          <wd:ParamDesc name="Output channel"
-          value="Odyssey 2"/>
-          <wd:ParamDesc name="Input channel" value="W9"/>
-          <wd:ParamDesc name="Video bitrate SD"
-          value="2000000"/>
+        <wd:Job xmlns:wd="WorkflowDesc" name="Da Nang 1" priority="1" workflowIdRef="WorkflowUser_DaNang1DuplicatedMyTV" hasRunScale="false">
+          <wd:ParamDesc name="IP address" value="225.1.7.15#88" />
+          <wd:ParamDesc name="UDP port" value="30120" />
+          <wd:ParamDesc name="Define backup input" value="true" />
+          <wd:ParamDesc name="Backup input IP address" value="225.1.9.1#320" />
+          <wd:ParamDesc name="Backup input UDP port" value="30120" />
+          <wd:ParamDesc name="Logo file network storage (mounting point)" value="Logo_Main" />
+          <wd:ParamDesc name="Bitrate Out" value="3500000" />
         </wd:Job>
       </jGetParams:RspOkJGetParams>
     </jGetParams:JobGetParamsRsp>

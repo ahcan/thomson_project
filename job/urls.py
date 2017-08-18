@@ -8,6 +8,7 @@ urlpatterns = [
     url(r'^api/paused/$', views.paused_job_json, name='paused_job_json'),
     url(r'^api/completed/$', views.completed_job_json, name='completed_job_json'),
     url(r'^api/aborted/$', views.aborted_job_json, name='aborted_job_json'),
+    url(r'^api/job/(?P<jid>.+)/$', views.get_job_params, name='jparams'),
 
     url(r'^$', views.get_job, name='job'),
     url(r'^waiting/$', views.get_waiting_job, name='waiting'),
