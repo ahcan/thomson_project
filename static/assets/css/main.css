@@ -10,4 +10,18 @@
   background-color: #419BE8;
   color: #fff; }
 
+.tooltip-inner {
+  max-width: none;
+  max-height: none;
+  background-color: #337ab7;
+  color: #fff; }
+
+.tooltip.bottom .tooltip-arrow {
+  border-bottom-color: #337ab7;
+  left: 15%; }
+
+.tooltip .showinfo {
+  text-align: left;
+  font-size: 15px; }
+
 /*# sourceMappingURL=main.css.map */
