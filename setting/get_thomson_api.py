@@ -126,7 +126,6 @@ class Thomson:
         return json.dumps(args)
 
     def get_system_status(self):
-
         headers = {
             'content-type': 'text/xml; charset=utf-8',
             'SOAPAction': 'SystemGetStatus'
@@ -154,6 +153,19 @@ class Thomson:
                      'Mem'   : Mem
                     })
         return json.dumps(agrs)
+
+    def get_job_status(self):
+        agrs = []
+        agrs.append({
+            'total'     :Job().count_job(),
+            'running'   :Job().count_Running(),
+            'completed' :Job().count_Completed(),
+            'waiting'   :Job().count_Waiting(),
+            'paused'    :Job().count_Paused(),
+            'aborted'   :Job().count_Aborted()
+            })
+        return json.dumps(agrs)
+
         
 ##############################################################################
 #                                                                            #
@@ -389,7 +401,13 @@ class Job:
                         'enddate'   : convert_UTC_2_local(EndDate) \
                         if EndDate else ""
                 })
-        return json.dumps(args) 
+        return json.dumps(args)
+
+    def count_object(self, xml):
+        xmldoc = minidom.parseString(xml)
+        itemlist = xmldoc.getElementsByTagName('jGetList:JItem')
+        return len(itemlist)
+
 
     def get_job(self):
         body = """<soapenv:Envelope
@@ -410,6 +428,25 @@ class Job:
         reponse_xml = File().get_response('JobGetListRsp.xml')
         return self.parse_xml(reponse_xml)
 
+    def count_job(self):
+        body = """<soapenv:Envelope
+            xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+            xmlns:job="JobGetList" xmlns:job1="JobGlobal">
+                <soapenv:Header/>
+                <soapenv:Body>
+                    <job:JobGetListReq Cmd="Start" OpV="01.00.00" >
+                        <job1:JState>Waiting</job1:JState>
+                        <job1:JState>Running</job1:JState>
+                        <job1:JState>Paused</job1:JState>
+                        <job1:JState>Completed</job1:JState>
+                        <job1:JState>Aborted</job1:JState>
+                    </job:JobGetListReq>
+                </soapenv:Body>
+            </soapenv:Envelope>"""
+        #reponse_xml = Thomson().get_response(self.headers, body)
+        reponse_xml = File().get_response('JobGetListRsp.xml')
+        return self.count_object(reponse_xml)
+
     def get_Waiting(self):
         body = """<soapenv:Envelope
             xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
@@ -421,8 +458,24 @@ class Job:
                     </job:JobGetListReq>
                 </soapenv:Body>
             </soapenv:Envelope>"""
-        reponse_xml = Thomson().get_response(self.headers, body)
+        #reponse_xml = Thomson().get_response(self.headers, body)
+        reponse_xml = File().get_response('JobGetListRsp.xml')
         return self.parse_xml(reponse_xml)
+
+    def count_Waiting(self):
+        body = """<soapenv:Envelope
+            xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+            xmlns:job="JobGetList" xmlns:job1="JobGlobal">
+                <soapenv:Header/>
+                <soapenv:Body>
+                    <job:JobGetListReq Cmd="Start" OpV="01.00.00" >
+                        <job1:JState>Waiting</job1:JState>
+                    </job:JobGetListReq>
+                </soapenv:Body>
+            </soapenv:Envelope>"""
+        #reponse_xml = Thomson().get_response(self.headers, body)
+        reponse_xml = File().get_response('JobGetListRsp.xml')
+        return self.count_object(reponse_xml)
 
     def get_Running(self):
         body = """<soapenv:Envelope
@@ -439,6 +492,21 @@ class Job:
         reponse_xml = File().get_response('JobGetListRsp.xml')
         return self.parse_xml(reponse_xml)
 
+    def count_Running(self):
+        body = """<soapenv:Envelope
+            xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+            xmlns:job="JobGetList" xmlns:job1="JobGlobal">
+                <soapenv:Header/>
+                <soapenv:Body>
+                    <job:JobGetListReq Cmd="Start" OpV="01.00.00" >
+                        <job1:JState>Running</job1:JState>
+                    </job:JobGetListReq>
+                </soapenv:Body>
+            </soapenv:Envelope>"""
+        #reponse_xml = Thomson().get_response(self.headers, body)
+        reponse_xml = File().get_response('JobGetListRsp.xml')
+        return self.count_object(reponse_xml)
+
     def get_Paused(self):
         body = """<soapenv:Envelope
             xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
@@ -453,6 +521,21 @@ class Job:
         #reponse_xml = Thomson().get_response(self.headers, body)
         reponse_xml = File().get_response('JobGetListRsp.xml')
         return self.parse_xml(reponse_xml)
+
+    def count_Paused(self):
+        body = """<soapenv:Envelope
+            xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+            xmlns:job="JobGetList" xmlns:job1="JobGlobal">
+                <soapenv:Header/>
+                <soapenv:Body>
+                    <job:JobGetListReq Cmd="Start" OpV="01.00.00" >
+                        <job1:JState>Paused</job1:JState>
+                    </job:JobGetListReq>
+                </soapenv:Body>
+            </soapenv:Envelope>"""
+        #reponse_xml = Thomson().get_response(self.headers, body)
+        reponse_xml = File().get_response('JobGetListRsp.xml')
+        return self.count_object(reponse_xml)
 
     def get_Completed(self):
         body = """<soapenv:Envelope
@@ -469,6 +552,21 @@ class Job:
         reponse_xml = File().get_response('JobGetListRsp.xml')
         return self.parse_xml(reponse_xml)
 
+    def count_Completed(self):
+        body = """<soapenv:Envelope
+            xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+            xmlns:job="JobGetList" xmlns:job1="JobGlobal">
+                <soapenv:Header/>
+                <soapenv:Body>
+                    <job:JobGetListReq Cmd="Start" OpV="01.00.00" >
+                        <job1:JState>Completed</job1:JState>
+                    </job:JobGetListReq>
+                </soapenv:Body>
+            </soapenv:Envelope>"""
+        #reponse_xml = Thomson().get_response(self.headers, body)
+        reponse_xml = File().get_response('JobGetListRsp.xml')
+        return self.count_object(reponse_xml)
+
     def get_Aborted(self):
         body = """<soapenv:Envelope
             xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
@@ -483,6 +581,21 @@ class Job:
         #reponse_xml = Thomson().get_response(self.headers, body)
         reponse_xml = File().get_response('JobGetListRsp.xml')
         return self.parse_xml(reponse_xml)
+
+    def count_Aborted(self):
+        body = """<soapenv:Envelope
+            xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+            xmlns:job="JobGetList" xmlns:job1="JobGlobal">
+                <soapenv:Header/>
+                <soapenv:Body>
+                    <job:JobGetListReq Cmd="Start" OpV="01.00.00" >
+                        <job1:JState>Aborted</job1:JState>
+                    </job:JobGetListReq>
+                </soapenv:Body>
+            </soapenv:Envelope>"""
+        #reponse_xml = Thomson().get_response(self.headers, body)
+        reponse_xml = File().get_response('JobGetListRsp.xml')
+        return self.count_object(reponse_xml)
 
 class JobDetail:
     def __init__(self, jid):
@@ -555,7 +668,7 @@ class JobDetail:
 #                                                                            #
 ##############################################################################
 
-#if __name__ == "__main__":
+if __name__ == "__main__":
     #print Thomson().get_datetime()
     #print Thomson().get_mountpoint()
     #print Log().get_log()
@@ -567,3 +680,4 @@ class JobDetail:
     #Job().get_Running()
     #print WorkflowDetail('dsg').get_param()
     #print Thomson().get_system_status()
+    print Thomson().get_job_status()

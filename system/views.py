@@ -41,3 +41,10 @@ def get_blade_status_json(request):
 
 def get_blade_status(request):
  	return render_to_response('system/blade_status.html')
+
+def get_job_status_json(request):
+	job_status = Thomson().get_job_status()
+	return HttpResponse(job_status, content_type='application/json', status=200)
+
+def get_job_status(request):
+ 	return render_to_response('system/job_status.html')
