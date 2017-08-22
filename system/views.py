@@ -29,3 +29,15 @@ def mountpoint_list_json(request):
 def get_mountpoint(request):
  	return render_to_response('system/mountpoint.html')
 
+def get_system_status_json(request):
+	system_status = Thomson().get_system_status()
+	return HttpResponse(system_status, content_type='application/json', status=200)
+
+def get_system_status(request):
+ 	return render_to_response('system/system_status.html')
+
+def get_blade_status_json(request):
+	pass
+
+def get_blade_status(request):
+ 	return render_to_response('system/blade_status.html')

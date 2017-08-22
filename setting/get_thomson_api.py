@@ -32,8 +32,8 @@ def convert_UTC_2_local(utc_time):
 
 class File:
     def __init__(self):
-        # self.file_path = '/root/thomson_project/setting/responseXml/'
-        self.file_path = '/home/huy/django_env/thomson_huynt/setting/responseXml/'
+        self.file_path = '/root/thomson_project/setting/responseXml/'
+        #self.file_path = '/home/huy/django_env/thomson_huynt/setting/responseXml/'
 
     def read(self, filename):
         print self.file_path + filename
@@ -124,6 +124,36 @@ class Thomson:
             args.append({'name'             : Name if Name else ""
                 })
         return json.dumps(args)
+
+    def get_system_status(self):
+
+        headers = {
+            'content-type': 'text/xml; charset=utf-8',
+            'SOAPAction': 'SystemGetStatus'
+        }
+
+        body = """<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+          <s:Body>
+            <ns67:SystemGetStatusReq xmlns:ns67="SystemGetStatus" Cmd="Start" OpV="01.00.00">
+            </ns67:SystemGetStatusReq>
+           </s:Body>
+        </s:Envelope>"""
+        #reponse_xml = self.get_response(headers, body)
+        reponse_xml = File().get_response('SystemGetStatusRsp.xml')
+        xmldoc = minidom.parseString(reponse_xml)
+        itemlist = xmldoc.getElementsByTagName('sGetStatus:RspOkSGS')
+        Status = itemlist[0].attributes['Status'].value if 'Status' in\
+         str(itemlist[0].attributes.items()) else ""
+        CPU = itemlist[0].attributes['CPU'].value if 'CPU' in\
+         str(itemlist[0].attributes.items()) else ""
+        Mem = itemlist[0].attributes['Mem'].value if 'Mem' in\
+         str(itemlist[0].attributes.items()) else ""
+        agrs = []
+        agrs.append({'status': Status,
+                     'CPU'   : CPU,
+                     'Mem'   : Mem
+                    })
+        return json.dumps(agrs)
         
 ##############################################################################
 #                                                                            #
@@ -154,14 +184,14 @@ class Log:
             Sev = s.attributes['Sev'].value if 'Sev' in str_tmp else ""
             Desc = s.attributes['Desc'].value if 'Desc' in str_tmp else ""
             #Convert response data to Json
-            args.append({'jid'             : JId if JId else "",
-                        'cat'              : Cat if Cat else "",
-                        'lid'              : LId if LId else "",
-                        'res'              : Res if Res else "",
-                        'jname'            : JName if JName else "",
-                        'nid'              : NId if NId else "",
-                        'sev'              : Sev if Sev else "",
-                        'desc'             : Desc if Desc else ""
+            args.append({'jid'             : JId,
+                        'cat'              : Cat,
+                        'lid'              : LId,
+                        'res'              : Res,
+                        'jname'            : JName,
+                        'nid'              : NId,
+                        'sev'              : Sev,
+                        'desc'             : Desc
                 })
         return json.dumps(args)
 
@@ -238,10 +268,10 @@ class Workflow:
             PubVer = s.attributes['PubVer'].value if 'PubVer' in str_tmp else ""
             PriVer = s.attributes['PriVer'].value if 'PriVer' in str_tmp else ""
             #Convert response data to Json
-            args.append({'name'             : Name if Name else "",
-                        'wid'               : WId if WId else "",
-                        'pubver'            : PubVer if PubVer else "",
-                        'priver'            : PriVer if PriVer else ""
+            args.append({'name'             : Name,
+                        'wid'               : WId,
+                        'pubver'            : PubVer,
+                        'priver'            : PriVer
                 })
         return json.dumps(args)   
 
@@ -346,7 +376,7 @@ class Job:
             Ver = s.attributes['Ver'].value if 'Ver' in str_tmp else ""
             EndDate = s.attributes['EndDate'].value if 'EndDate' in str_tmp else ""
             #Convert response data to Json
-            jobname, workflowIdRef = JobDetail(str(JId)).get_job_name()
+            jobname, workflowIdRef = JobDetail(str(JId)).get_job_name() if JId else ''
             args.append({'jname'    : jobname,
                         'wid'       : workflowIdRef,
                         'state'     : State,
@@ -525,7 +555,7 @@ class JobDetail:
 #                                                                            #
 ##############################################################################
 
-if __name__ == "__main__":
+#if __name__ == "__main__":
     #print Thomson().get_datetime()
     #print Thomson().get_mountpoint()
     #print Log().get_log()
@@ -535,4 +565,5 @@ if __name__ == "__main__":
     #Log().get_by_jobID(12810)
     #print Workflow().get_workflow()
     #Job().get_Running()
-    print WorkflowDetail('dsg').get_param()
+    #print WorkflowDetail('dsg').get_param()
+    #print Thomson().get_system_status()
