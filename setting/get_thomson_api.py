@@ -32,8 +32,8 @@ def convert_UTC_2_local(utc_time):
 
 class File:
     def __init__(self):
-        self.file_path = '/root/thomson_project/setting/responseXml/'
-        #self.file_path = '/home/huy/django_env/thomson_huynt/setting/responseXml/'
+        # self.file_path = '/root/thomson_project/setting/responseXml/'
+        self.file_path = '/home/huy/django_env/thomson_huynt/setting/responseXml/'
 
     def read(self, filename):
         print self.file_path + filename
@@ -124,48 +124,6 @@ class Thomson:
             args.append({'name'             : Name if Name else ""
                 })
         return json.dumps(args)
-
-    def get_system_status(self):
-        headers = {
-            'content-type': 'text/xml; charset=utf-8',
-            'SOAPAction': 'SystemGetStatus'
-        }
-
-        body = """<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
-          <s:Body>
-            <ns67:SystemGetStatusReq xmlns:ns67="SystemGetStatus" Cmd="Start" OpV="01.00.00">
-            </ns67:SystemGetStatusReq>
-           </s:Body>
-        </s:Envelope>"""
-        #reponse_xml = self.get_response(headers, body)
-        reponse_xml = File().get_response('SystemGetStatusRsp.xml')
-        xmldoc = minidom.parseString(reponse_xml)
-        itemlist = xmldoc.getElementsByTagName('sGetStatus:RspOkSGS')
-        Status = itemlist[0].attributes['Status'].value if 'Status' in\
-         str(itemlist[0].attributes.items()) else ""
-        CPU = itemlist[0].attributes['CPU'].value if 'CPU' in\
-         str(itemlist[0].attributes.items()) else ""
-        Mem = itemlist[0].attributes['Mem'].value if 'Mem' in\
-         str(itemlist[0].attributes.items()) else ""
-        agrs = []
-        agrs.append({'status': Status,
-                     'CPU'   : CPU,
-                     'Mem'   : Mem
-                    })
-        return json.dumps(agrs)
-
-    def get_job_status(self):
-        agrs = []
-        agrs.append({
-            'total'     :Job().count_job(),
-            'running'   :Job().count_Running(),
-            'completed' :Job().count_Completed(),
-            'waiting'   :Job().count_Waiting(),
-            'paused'    :Job().count_Paused(),
-            'aborted'   :Job().count_Aborted()
-            })
-        return json.dumps(agrs)
-
         
 ##############################################################################
 #                                                                            #
@@ -196,14 +154,14 @@ class Log:
             Sev = s.attributes['Sev'].value if 'Sev' in str_tmp else ""
             Desc = s.attributes['Desc'].value if 'Desc' in str_tmp else ""
             #Convert response data to Json
-            args.append({'jid'             : JId,
-                        'cat'              : Cat,
-                        'lid'              : LId,
-                        'res'              : Res,
-                        'jname'            : JName,
-                        'nid'              : NId,
-                        'sev'              : Sev,
-                        'desc'             : Desc
+            args.append({'jid'             : JId if JId else "",
+                        'cat'              : Cat if Cat else "",
+                        'lid'              : LId if LId else "",
+                        'res'              : Res if Res else "",
+                        'jname'            : JName if JName else "",
+                        'nid'              : NId if NId else "",
+                        'sev'              : Sev if Sev else "",
+                        'desc'             : Desc if Desc else ""
                 })
         return json.dumps(args)
 
@@ -280,10 +238,10 @@ class Workflow:
             PubVer = s.attributes['PubVer'].value if 'PubVer' in str_tmp else ""
             PriVer = s.attributes['PriVer'].value if 'PriVer' in str_tmp else ""
             #Convert response data to Json
-            args.append({'name'             : Name,
-                        'wid'               : WId,
-                        'pubver'            : PubVer,
-                        'priver'            : PriVer
+            args.append({'name'             : Name if Name else "",
+                        'wid'               : WId if WId else "",
+                        'pubver'            : PubVer if PubVer else "",
+                        'priver'            : PriVer if PriVer else ""
                 })
         return json.dumps(args)   
 
@@ -388,7 +346,7 @@ class Job:
             Ver = s.attributes['Ver'].value if 'Ver' in str_tmp else ""
             EndDate = s.attributes['EndDate'].value if 'EndDate' in str_tmp else ""
             #Convert response data to Json
-            jobname, workflowIdRef = JobDetail(str(JId)).get_job_name() if JId else ''
+            jobname, workflowIdRef = JobDetail(str(JId)).get_job_name()
             args.append({'jname'    : jobname,
                         'wid'       : workflowIdRef,
                         'state'     : State,
@@ -401,13 +359,7 @@ class Job:
                         'enddate'   : convert_UTC_2_local(EndDate) \
                         if EndDate else ""
                 })
-        return json.dumps(args)
-
-    def count_object(self, xml):
-        xmldoc = minidom.parseString(xml)
-        itemlist = xmldoc.getElementsByTagName('jGetList:JItem')
-        return len(itemlist)
-
+        return json.dumps(args) 
 
     def get_job(self):
         body = """<soapenv:Envelope
@@ -428,25 +380,6 @@ class Job:
         reponse_xml = File().get_response('JobGetListRsp.xml')
         return self.parse_xml(reponse_xml)
 
-    def count_job(self):
-        body = """<soapenv:Envelope
-            xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
-            xmlns:job="JobGetList" xmlns:job1="JobGlobal">
-                <soapenv:Header/>
-                <soapenv:Body>
-                    <job:JobGetListReq Cmd="Start" OpV="01.00.00" >
-                        <job1:JState>Waiting</job1:JState>
-                        <job1:JState>Running</job1:JState>
-                        <job1:JState>Paused</job1:JState>
-                        <job1:JState>Completed</job1:JState>
-                        <job1:JState>Aborted</job1:JState>
-                    </job:JobGetListReq>
-                </soapenv:Body>
-            </soapenv:Envelope>"""
-        #reponse_xml = Thomson().get_response(self.headers, body)
-        reponse_xml = File().get_response('JobGetListRsp.xml')
-        return self.count_object(reponse_xml)
-
     def get_Waiting(self):
         body = """<soapenv:Envelope
             xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
@@ -458,24 +391,8 @@ class Job:
                     </job:JobGetListReq>
                 </soapenv:Body>
             </soapenv:Envelope>"""
-        #reponse_xml = Thomson().get_response(self.headers, body)
-        reponse_xml = File().get_response('JobGetListRsp.xml')
+        reponse_xml = Thomson().get_response(self.headers, body)
         return self.parse_xml(reponse_xml)
-
-    def count_Waiting(self):
-        body = """<soapenv:Envelope
-            xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
-            xmlns:job="JobGetList" xmlns:job1="JobGlobal">
-                <soapenv:Header/>
-                <soapenv:Body>
-                    <job:JobGetListReq Cmd="Start" OpV="01.00.00" >
-                        <job1:JState>Waiting</job1:JState>
-                    </job:JobGetListReq>
-                </soapenv:Body>
-            </soapenv:Envelope>"""
-        #reponse_xml = Thomson().get_response(self.headers, body)
-        reponse_xml = File().get_response('JobGetListRsp.xml')
-        return self.count_object(reponse_xml)
 
     def get_Running(self):
         body = """<soapenv:Envelope
@@ -492,21 +409,6 @@ class Job:
         reponse_xml = File().get_response('JobGetListRsp.xml')
         return self.parse_xml(reponse_xml)
 
-    def count_Running(self):
-        body = """<soapenv:Envelope
-            xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
-            xmlns:job="JobGetList" xmlns:job1="JobGlobal">
-                <soapenv:Header/>
-                <soapenv:Body>
-                    <job:JobGetListReq Cmd="Start" OpV="01.00.00" >
-                        <job1:JState>Running</job1:JState>
-                    </job:JobGetListReq>
-                </soapenv:Body>
-            </soapenv:Envelope>"""
-        #reponse_xml = Thomson().get_response(self.headers, body)
-        reponse_xml = File().get_response('JobGetListRsp.xml')
-        return self.count_object(reponse_xml)
-
     def get_Paused(self):
         body = """<soapenv:Envelope
             xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
@@ -521,21 +423,6 @@ class Job:
         #reponse_xml = Thomson().get_response(self.headers, body)
         reponse_xml = File().get_response('JobGetListRsp.xml')
         return self.parse_xml(reponse_xml)
-
-    def count_Paused(self):
-        body = """<soapenv:Envelope
-            xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
-            xmlns:job="JobGetList" xmlns:job1="JobGlobal">
-                <soapenv:Header/>
-                <soapenv:Body>
-                    <job:JobGetListReq Cmd="Start" OpV="01.00.00" >
-                        <job1:JState>Paused</job1:JState>
-                    </job:JobGetListReq>
-                </soapenv:Body>
-            </soapenv:Envelope>"""
-        #reponse_xml = Thomson().get_response(self.headers, body)
-        reponse_xml = File().get_response('JobGetListRsp.xml')
-        return self.count_object(reponse_xml)
 
     def get_Completed(self):
         body = """<soapenv:Envelope
@@ -552,21 +439,6 @@ class Job:
         reponse_xml = File().get_response('JobGetListRsp.xml')
         return self.parse_xml(reponse_xml)
 
-    def count_Completed(self):
-        body = """<soapenv:Envelope
-            xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
-            xmlns:job="JobGetList" xmlns:job1="JobGlobal">
-                <soapenv:Header/>
-                <soapenv:Body>
-                    <job:JobGetListReq Cmd="Start" OpV="01.00.00" >
-                        <job1:JState>Completed</job1:JState>
-                    </job:JobGetListReq>
-                </soapenv:Body>
-            </soapenv:Envelope>"""
-        #reponse_xml = Thomson().get_response(self.headers, body)
-        reponse_xml = File().get_response('JobGetListRsp.xml')
-        return self.count_object(reponse_xml)
-
     def get_Aborted(self):
         body = """<soapenv:Envelope
             xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
@@ -581,21 +453,6 @@ class Job:
         #reponse_xml = Thomson().get_response(self.headers, body)
         reponse_xml = File().get_response('JobGetListRsp.xml')
         return self.parse_xml(reponse_xml)
-
-    def count_Aborted(self):
-        body = """<soapenv:Envelope
-            xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
-            xmlns:job="JobGetList" xmlns:job1="JobGlobal">
-                <soapenv:Header/>
-                <soapenv:Body>
-                    <job:JobGetListReq Cmd="Start" OpV="01.00.00" >
-                        <job1:JState>Aborted</job1:JState>
-                    </job:JobGetListReq>
-                </soapenv:Body>
-            </soapenv:Envelope>"""
-        #reponse_xml = Thomson().get_response(self.headers, body)
-        reponse_xml = File().get_response('JobGetListRsp.xml')
-        return self.count_object(reponse_xml)
 
 class JobDetail:
     def __init__(self, jid):
@@ -678,6 +535,4 @@ if __name__ == "__main__":
     #Log().get_by_jobID(12810)
     #print Workflow().get_workflow()
     #Job().get_Running()
-    #print WorkflowDetail('dsg').get_param()
-    #print Thomson().get_system_status()
-    print Thomson().get_job_status()
+    print WorkflowDetail('dsg').get_param()
