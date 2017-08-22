@@ -31,19 +31,6 @@
 		</table>
 	</div>
 </div>
-<style type="text/css">
-        /* Specify styling for tooltip contents */
-        .tooltip.customClass .tooltip-inner {
-          color: #880000;
-          background-color: #337ab7;
-          box-shadow: 0 6px 12px rgba(0,0,0,.175);
-          max-width: none;
-        }
-         /*Hide arrow */
-        .tooltip.customClass .tooltip-arrow {
-          display: none;
-        }
-</style>
 <script>
 	var app = angular.module('Workflow',['ui.bootstrap']).config(['$tooltipProvider', function ($tooltipProvider) {
         $tooltipProvider.options({
@@ -61,7 +48,7 @@
 				console.log($scope.workflow_list);
 			});
 			$timeout(function(){
-				// $scope.reload();
+				$scope.reload();
 			},10000)
 		};
 		$scope.reload();
@@ -71,15 +58,15 @@
 				function(response){
 					var oj = response.data[0];
 					var vid = oj.id;
-					var vcategory = oj.category;
-					var vname = oj.name;
+					var vcategory ="category:\t"+oj.category;
+					var vname ="name:\t"+oj.name;
 					var vpagrams;
 					for(param in oj.params){
 						vparams = "<p>"+oj.params[param].name+":\t"+oj.params[param].value+"</p>"
 					}
 					tootcontents ="<div class='showinfo'>"+vcategory+"</br>"+vname+"</br>"+vparams+"</div>";
 					$scope.text = $sce.trustAsHtml(tootcontents);
-					// console.log(vname);
+					// console.log(oj);
 				});	
 			$scope.text = $sce.trustAsHtml(tootcontents);
 		}

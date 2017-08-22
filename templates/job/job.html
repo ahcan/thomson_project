@@ -1,27 +1,30 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-app="Job" ng-controller="jobCtrl" >
 	<h2 class="sub-header">Jobs</h2>
-	<div class="panel-body">
+	<div class="panel-body" >
 		<div>
-			<label class="checkbox-inline">
-				<input type="checkbox" id="inlineCheckbox1" value="option1"> Running
+			<!-- <label class="checkbox-inline">
+				<input type="checkbox" id="inlineCheckbox1" value="option1" ng-model="state.Runing" ng-true-vale="'Runing'" data-ng-false-value=''> Runing
 			</label>
 			<label class="checkbox-inline">
-				<input type="checkbox" id="inlineCheckbox2" value="option2"> Aborted
+				<input type="checkbox" id="inlineCheckbox2" value="option2" ng-model="state.Aborted" ng-true-vale="Aborted" data-ng-false-value=''> Aborted
 			</label>
 			<label class="checkbox-inline">
-				<input type="checkbox" id="inlineCheckbox3" value="option3"> Waiting
+				<input type="checkbox" id="inlineCheckbox3" value="option3" ng-model="state.Waiting" ng-true-vale="Waiting" data-ng-false-value=''> Waiting
 			</label>
 			<label class="checkbox-inline">
-				<input type="checkbox" id="inlineCheckbox4" value="option4"> Paused
+				<input type="checkbox" id="inlineCheckbox4" value="option4" ng-model="state.Paused" ng-true-vale="Paused" data-ng-false-value=''> Paused
 			</label>
 			<label class="checkbox-inline">
-				<input type="checkbox" id="inlineCheckbox5" value="option5"> Stopped
+				<input type="checkbox" id="inlineCheckbox5" value="option5" ng-model="state.Stopped" ng-true-vale="Stopped" data-ng-false-value=''> Stopped
+			</label> -->
+			<label class="checkbox-inline" ng-repeat="state in getStates()">
+				<input type="checkbox" ng-model="filters[state]">{{'{{state}'}}}</input>
 			</label>
 		</div>
 	</div>
-	<div class="table-responsive" ng-app="Job" ng-controller="jobCtrl">
+	<div class="table-responsive">
 		<table class="table table-bordered table-hover table-striped">
 			<thead>
 				<tr>
@@ -35,7 +38,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr ng-repeat="job in job_list">
+				<tr ng-repeat="job in (job_list | filter:filterByState)">
 					<td>{{'{{$index + 1}'}}}</td>
 					<td>{{'{{job.jid}'}}}</td>
 					<td>{{'{{job.status}'}}}</td>
@@ -43,6 +46,8 @@
 					<td>{{'{{job.prog}'}}}</td>
 					<td>{{'{{job.startdate}'}}}</td>
 					<td>{{'{{job.enddate}'}}}</td>
+					<td>{{'{{job.jname}'}}}</td>
+					<td>{{'{{job.wid}'}}}</td>
 				</tr>
 			</tbody>
 			<tr>
@@ -64,9 +69,21 @@
 				console.log($scope.job_list);
 			});
 			$timeout(function(){
-				$scope.reload();
+				// $scope.reload();
 			},10000)
 		};
+		// Fiter By State checkbox
+		$scope.filters = {};
+		//function
+		$scope.filterByState = function(job){
+			return $scope.filters[job.state] || noFilter($scope.filters);
+		};
+		$scope.getStates = function(){
+			return ($scope.job_list || []).map(function(job){return job.state;}).filter(function (cat, idx, arr) { return arr.indexOf(cat) === idx;});
+		};
+		function noFilter(filterObj){
+			return Object.keys(filterObj).every(function(key){return !filterObj[key];});
+		}
 		$scope.reload();
 	});
 </script>
