@@ -32,7 +32,7 @@ def convert_UTC_2_local(utc_time):
 
 class File:
     def __init__(self):
-        self.file_path = '/home/huy/django_env/thomson_huynt/setting/responseXml/'
+        self.file_path = '/root/thomson_project/setting/responseXml/'
 
     def read(self, filename):
         print self.file_path + filename
@@ -345,13 +345,16 @@ class Job:
             Ver = s.attributes['Ver'].value if 'Ver' in str_tmp else ""
             EndDate = s.attributes['EndDate'].value if 'EndDate' in str_tmp else ""
             #Convert response data to Json
-            args.append({'state'    : State if State else "",
-                        'status'    : Status if Status else "",
-                        'jid'       : JId if JId else "",
-                        'prog'      : Prog if Prog else "",
+            jobname, workflowIdRef = JobDetail(str(JId)).get_job_name()
+            args.append({'jname'    : jobname,
+                        'wid'       : workflowIdRef,
+                        'state'     : State,
+                        'status'    : Status,
+                        'jid'       : JId,
+                        'prog'      : Prog,
                         'startdate' : convert_UTC_2_local(StartDate) \
                         if StartDate else "",
-                        'ver'       : Ver if Ver else "",
+                        'ver'       : Ver,
                         'enddate'   : convert_UTC_2_local(EndDate) \
                         if EndDate else ""
                 })
@@ -462,9 +465,9 @@ class JobDetail:
                   xmlns:job="JobGetParams">
                     <soapenv:Body>
                       <job:JobGetParamsReq Cmd="Start" OpV="01.00.00"
-                      JId="10976"/>
+                      JId="%s"/>
                     </soapenv:Body>
-                  </soapenv:Envelope>"""
+                  </soapenv:Envelope>"""%(jid)
         self.headers = headers
         self.body = body
         self.jid = jid
@@ -503,7 +506,7 @@ class JobDetail:
 
     def get_job_name(self):
         #reponse_xml = Thomson().get_response(self.headers, self.body)
-        reponse_xml = File().get_response('WorkflowGetParamsRsp.xml')
+        reponse_xml = File().get_response('JobGetParamsRsp.xml')
         #print response_xml
         xmldoc = minidom.parseString(reponse_xml)
         joblist = xmldoc.getElementsByTagName('wd:Job')
