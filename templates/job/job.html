@@ -35,10 +35,17 @@
 					<th>Process</th>
 					<th>Start Date</th>
 					<th>End Date</th>
+					<th>Name</th>
+					<th>WorkID</th>
 				</tr>
 			</thead>
+			<tfoot>
+				<tr>
+					<td colspan="9" class="text-center">Total: {{'{{filterState.length}'}}}</td>
+				</tr>
+			</tfoot>
 			<tbody>
-				<tr ng-repeat="job in (job_list | filter:filterByState)">
+				<tr ng-repeat="job in (job_list | filter:filterByState) as filterState">
 					<td>{{'{{$index + 1}'}}}</td>
 					<td>{{'{{job.jid}'}}}</td>
 					<td>{{'{{job.status}'}}}</td>
@@ -50,10 +57,6 @@
 					<td>{{'{{job.wid}'}}}</td>
 				</tr>
 			</tbody>
-			<tr>
-				<td colspan="7" class="text-center">Total: {{'{{total}'}}}</td>
-			</tr>
-			</tfoot>
 		</table>
 	</div>
 </div>
