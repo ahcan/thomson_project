@@ -2,6 +2,10 @@
 .table-hover tbody tr:hover {
   background-color: #419BE8;
   color: #fff; }
+  .table-hover tbody tr:hover td {
+    background-color: #419BE8; }
+.table-hover.rowlink tr:hover {
+  background-color: #419BE8; }
 
 .nav .menu .head-menu {
   background-color: #337ab7;
@@ -29,5 +33,14 @@
 .tooltip .showinfo {
   text-align: left;
   font-size: 15px; }
+
+/*Modal style*/
+.modal-title {
+  text-align: center; }
+
+.modal-header {
+  background-color: whitesmoke;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px; }
 
 /*# sourceMappingURL=main.css.map */
