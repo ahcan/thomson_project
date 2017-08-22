@@ -16,8 +16,8 @@ from setting.get_thomson_api import *
 #                                                                            #
 ##############################################################################
 def job_json(request):
-    date_time = Job().get_job()
-    return HttpResponse(date_time, content_type='application/json', status=200)
+    job_list = Job().get_job()
+    return HttpResponse(job_list, content_type='application/json', status=200)
 
 def get_job(request):
 	return render_to_response('job/job.html')
@@ -29,8 +29,8 @@ def get_job(request):
 #############################################################################
 
 def waiting_job_json(request):
-    date_time = Job().get_Waiting()
-    return HttpResponse(date_time, content_type='application/json', status=200)
+    waiting_job_list = Job().get_Waiting()
+    return HttpResponse(waiting_job_list, content_type='application/json', status=200)
 
 def get_waiting_job(request):
 	return render_to_response('job/job_waiting.html')
@@ -42,8 +42,8 @@ def get_waiting_job(request):
 ##############################################################################
 
 def running_job_json(request):
-    date_time = Job().get_Running()
-    return HttpResponse(date_time, content_type='application/json', status=200)
+    running_job_list = Job().get_Running()
+    return HttpResponse(running_job_list, content_type='application/json', status=200)
 
 def get_running_job(request):
 	return render_to_response('job/job_running.html')
@@ -55,8 +55,8 @@ def get_running_job(request):
 ##############################################################################
 
 def paused_job_json(request):
-    date_time = Job().get_Paused()
-    return HttpResponse(date_time, content_type='application/json', status=200)
+    paused_job_list = Job().get_Paused()
+    return HttpResponse(paused_job_list, content_type='application/json', status=200)
 
 def get_paused_job(request):
 	return render_to_response('job/job_paused.html')
@@ -68,8 +68,8 @@ def get_paused_job(request):
 ##############################################################################
 
 def completed_job_json(request):
-    date_time = Job().get_Completed()
-    return HttpResponse(date_time, content_type='application/json', status=200)
+    completed_job_list = Job().get_Completed()
+    return HttpResponse(completed_job_list, content_type='application/json', status=200)
 
 def get_completed_job(request):
 	return render_to_response('job/job_completed.html')
@@ -81,8 +81,8 @@ def get_completed_job(request):
 ##############################################################################
 
 def aborted_job_json(request):
-    date_time = Job().get_Aborted()
-    return HttpResponse(date_time, content_type='application/json', status=200)
+    aborted_job_list = Job().get_Aborted()
+    return HttpResponse(aborted_job_list, content_type='application/json', status=200)
 
 def get_aborted_job(request):
 	return render_to_response('job/job_aborted.html')
