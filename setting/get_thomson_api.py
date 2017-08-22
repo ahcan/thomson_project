@@ -32,8 +32,8 @@ def convert_UTC_2_local(utc_time):
 
 class File:
     def __init__(self):
-        # self.file_path = '/root/thomson_project/setting/responseXml/'
-        self.file_path = '/home/huy/django_env/thomson_huynt/setting/responseXml/'
+        self.file_path = '/root/thomson_project/setting/responseXml/'
+        #self.file_path = '/home/huy/django_env/thomson_huynt/setting/responseXml/'
 
     def read(self, filename):
         print self.file_path + filename
@@ -124,6 +124,36 @@ class Thomson:
             args.append({'name'             : Name if Name else ""
                 })
         return json.dumps(args)
+
+    def get_system_status(self):
+
+        headers = {
+            'content-type': 'text/xml; charset=utf-8',
+            'SOAPAction': 'SystemGetStatus'
+        }
+
+        body = """<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+          <s:Body>
+            <ns67:SystemGetStatusReq xmlns:ns67="SystemGetStatus" Cmd="Start" OpV="01.00.00">
+            </ns67:SystemGetStatusReq>
+           </s:Body>
+        </s:Envelope>"""
+        #reponse_xml = self.get_response(headers, body)
+        reponse_xml = File().get_response('SystemGetStatusRsp.xml')
+        xmldoc = minidom.parseString(reponse_xml)
+        itemlist = xmldoc.getElementsByTagName('sGetStatus:RspOkSGS')
+        Status = itemlist[0].attributes['Status'].value if 'Status' in\
+         str(itemlist[0].attributes.items()) else ""
+        CPU = itemlist[0].attributes['CPU'].value if 'CPU' in\
+         str(itemlist[0].attributes.items()) else ""
+        Mem = itemlist[0].attributes['Mem'].value if 'Mem' in\
+         str(itemlist[0].attributes.items()) else ""
+        agrs = []
+        agrs.append({'status': Status,
+                     'CPU'   : CPU,
+                     'Mem'   : Mem
+                    })
+        return json.dumps(agrs)
         
 ##############################################################################
 #                                                                            #
@@ -536,3 +566,4 @@ class JobDetail:
     #print Workflow().get_workflow()
     #Job().get_Running()
     #print WorkflowDetail('dsg').get_param()
+    #print Thomson().get_system_status()
