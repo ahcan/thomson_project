@@ -54,7 +54,7 @@
 		$scope.reload();
 		$scope.showinfo = function(id){
 			var tootcontents = '<div>loading....</div>';
-			$http.get('/workflow/api/workflow/2sdrg3/').then(
+			$http.get('/workflow/api/workflow/'+id+'/').then(
 				function(response){
 					var oj = response.data[0];
 					var vid = oj.id;
