@@ -13,4 +13,6 @@ urlpatterns = [
     url(r'^status/$', views.get_system_status, name='status'),
     url(r'^bladestatus/$', views.get_blade_status, name='bladestatus'),
     url(r'^jobstatus/$', views.get_job_status, name='jobstatus'),
+
+    url(r'^$', views.get_system, name="system"),
 ]

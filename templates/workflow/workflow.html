@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
+<script type="text/javascript" src="/static/assets/js/jasny-bootstrap.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/static/assets/css/jasny-bootstrap.css">
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 	<h2 class="sub-header">Workflows</h2>
 	<div class="table-responsive" ng-app="Workflow" ng-controller="workflowCtrl">
@@ -14,11 +16,11 @@
 					<th>Option</th>
 				</tr>
 			</thead>
-			<tbody>
+			<tbody class="rowlink" data-link="row">
 				<tr ng-repeat="workflow in workflow_list">
-					<td>{{'{{$index + 1}'}}}</td>
+					<td>{{'{{$index + 1}'}}} <a href="#rowWorkflow"></a></td>
 					<td>{{'{{workflow.name}'}}}</td>
-					<td ng-mouseenter="showinfo(workflow.wid)"><p uib-tooltip-html="text">{{'{{workflow.wid}'}}}</p></td>
+					<td ng-mousedown="showinfo(workflow.wid)"><p uib-tooltip-html="text">{{'{{workflow.wid}'}}}</p></td>
 					<td>{{'{{workflow.pubver}'}}}</td>
 					<td>{{'{{workflow.priver}'}}}</td>
 					<td>Add job</td>
@@ -35,7 +37,7 @@
 	var app = angular.module('Workflow',['ui.bootstrap']).config(['$tooltipProvider', function ($tooltipProvider) {
         $tooltipProvider.options({
             placement: 'bottom',
-             trigger: 'mouseenter',
+            trigger: 'click',
         });
     }])
 	app.controller("workflowCtrl", function ($scope,$http,$timeout,$element,$sce){
@@ -62,11 +64,11 @@
 					var vname ="name:\t"+oj.name;
 					var vpagrams;
 					for(param in oj.params){
-						vparams = "<p>"+oj.params[param].name+":\t"+oj.params[param].value+"</p>"
+						vparams = "<p>"+param.name+":\t"+param.value+"</p>"
 					}
 					tootcontents ="<div class='showinfo'>"+vcategory+"</br>"+vname+"</br>"+vparams+"</div>";
 					$scope.text = $sce.trustAsHtml(tootcontents);
-					// console.log(oj);
+					console.log(oj.params);
 				});	
 			$scope.text = $sce.trustAsHtml(tootcontents);
 		}
