@@ -15,6 +15,9 @@ from setting.get_thomson_api import *
 #-------------------------------SYSTEM--------------------------------#
 #                                                                     #
 #######################################################################
+
+def get_system(request):
+	return render_to_response('system/system.html')
 def datetime_json(request):
     date_time = Thomson().get_datetime()
     return HttpResponse(date_time, content_type='application/json', status=200)
