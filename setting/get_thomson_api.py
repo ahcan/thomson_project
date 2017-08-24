@@ -188,7 +188,6 @@ class Log:
         itemlist = xmldoc.getElementsByTagName('lGet:RspOkLog')
         for log in itemlist.item(0).childNodes:
             text = str(log.attributes.items())
-            print text
             JId = log.attributes['JId'].value if 'JId' in text else ""
             Cat = log.attributes['Cat'].value if 'Cat' in text else ""
             LId = log.attributes['LId'].value if 'LId' in text else ""
