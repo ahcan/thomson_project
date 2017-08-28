@@ -1,9 +1,153 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-app="System" ng-controller="systemCtrl">
 	<h2 class="sub-header">System</h2>
-	<div class="col-md-5"></div>
-	<div class="col-md-3"></div>
-	<div class="col-md-2"></div>
+	<div style="display: flex;font-size: initial;padding-bottom: 10px;">
+		<p>Time Zone: &nbsp {{'{{systime[0].timeZone}'}}}</p>
+		<p style="margin-left: 10px;">Date Time: &nbsp <label>{{'{{systime[0].dateAndTime}'}}}</label></p>
+	</div>
+	<div class="colpadding col-md-7 table-responsive">
+		<table class="table table-bordered table-hover table-striped">
+			<thead>
+				<td class="col-md-1">Device</td>
+				<td class="col-md-1">Status</td>
+				<td class="col-md-5">Cpu</td>
+				<td class="col-md-5">Mem</td>
+			</thead>
+			<tbody>
+				<tr ng-repeat="status in lstStatus | orderBy: 'cpu'">
+					<td class="col-md-1 ">{{'{{status.device}'}}}</td>
+					<td class="col-md-1"><p>{{'{{status.status}'}}}</p></td>
+					<td class="col-md-5">
+						<div class="progress"><div class="progress-bar-success" role="progressbar" aria-valuenow="70%" aria-valuemin="0" aria-valuemax="100" style="width:{{'{{status.cpu}'}}}%;" ng-if="status.cpu <= 50"><span>{{'{{status.cpu}'}}}</span></div>
+						<div class="progress-bar-warning" role="progressbar" aria-valuenow="70%" aria-valuemin="0" aria-valuemax="100" style="width:{{'{{status.cpu}'}}}%;" ng-if="status.cpu <= 70 && status.cpu > 50"><span>{{'{{status.cpu}'}}}</span></div>
+						<div class="progress-bar-danger" role="progressbar" aria-valuenow="70%" aria-valuemin="0" aria-valuemax="100" style="width:{{'{{status.cpu}'}}}%;" ng-if="status.cpu > 70">{{'{{status.cpu}'}}}</div></div>
+					</td>
+					<td class="col-md-5">
+						<div class="progress"><div class="progress-bar-success" role="progressbar" aria-valuenow="70%" aria-valuemin="0" aria-valuemax="100" style="width:{{'{{status.mem}'}}}%;" ng-if="status.mem <= 50"><span>{{'{{status.mem}'}}}</span></div>
+						<div class="progress-bar-warning" role="progressbar" aria-valuenow="70%" aria-valuemin="0" aria-valuemax="100" style="width:{{'{{status.mem}'}}}%;" ng-if="status.mem <= 70 && status.mem > 50"><span>{{'{{status.mem}'}}}</span></div>
+						<div class="progress-bar-danger" role="progressbar" aria-valuenow="70%" aria-valuemin="0" aria-valuemax="100" style="width:{{'{{status.mem}'}}}%;" ng-if="status.mem > 70">{{'{{status.mem}'}}}</div></div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="body-right">
+		<div class="colpadding col-md-3">
+			<div>
+				<div class="row-head">
+					<h4>Job Status</h4>
+				</div>
+				<div class="content">
+					<table class="table table-bordered table-hover table-striped">
+						<tr>
+							<td><label>Completed:</label></td>
+							<td><p>{{'{{jobStatus[0].completed}'}}}</p></td>
+						</tr>
+						<tr>
+							<td><label>Waiting:</label></td>
+							<td><p>{{'{{jobStatus[0].waiting}'}}}</p></td>
+						</tr>
+						<tr>
+							<td><label>Paused:</label></td>
+							<td><p>{{'{{jobStatus[0].paused}'}}}</p></td>
+						</tr>
+						<tr>
+							<td><label>Running:</label></td>
+							<td><p>{{'{{jobStatus[0].running}'}}}</p></td>
+						</tr>
+						<tr>
+							<td><label>Aborted:</label></td>
+							<td><p>{{'{{jobStatus[0].aborted}'}}}</p></td>
+						</tr>
+						<tr>
+							<td><label>Total:</label></td>
+							<td><p>{{'{{jobStatus[0].total}'}}}</p></td>
+						</tr>
+					</table>
+					</div>
+			</div>
+			<div>
+				<div class="row-head">
+					<h4>Mount point</h4>
+				</div>
+				<div class="content"></div>
+			</div>
+		</div>
+		<div class="colpadding col-md-2">
+			<div class="row-head">
+				<h4>License</h4>
+			</div>
+		</div>
+	</div>
 </div>
+<script type="text/javascript">
+	var app =angular.module('System', []);
+	app.controller('systemCtrl', function($scope, $http, $timeout) {
+		// body...
+		$scope.reloadTime=function(){
+			$http.get("/system/api/datetime/").then(function(reponse){
+				$scope.systime = reponse.data;
+			});
+			$timeout(function(){
+				// $scope.reload();
+			},10000)
+		};
+		$scope.reloadJobStatus=function(){
+			$http.get("/system/api/jobstatus/").then(function(reponse){
+				$scope.jobStatus = reponse.data;
+				console.log($scope.jobStatus);
+			});
+			$timeout(function(){
+				// $scope.reloadJobStatus();
+			},20000);
+		}
+		$scope.reloadJobStatus();
+		$scope.reloadTime();
+		$scope.lstStatus = [{device:'Thomson',
+		status:'OK', mem:'14' ,cpu:'50'},{device:'API',
+		status:'ER', mem:'100' ,cpu:'80'},{device:'Thomson',
+		status:'OK', mem:'70' ,cpu:'50'},{device:'Thomson',
+		status:'OK', mem:'14' ,cpu:'50'},
+		{device:'Thomson',
+		status:'WAT', mem:'20' ,cpu:'10'},{device:'API',
+		status:'OK', mem:'14' ,cpu:'50'},{device:'Thomson',
+		status:'OK', mem:'14' ,cpu:'50'},{device:'Thomson',
+		status:'OK', mem:'14' ,cpu:'50'},{device:'Thomson',
+		status:'OK', mem:'14' ,cpu:'50'},
+		{device:'Thomson',
+		status:'OK', mem:'14' ,cpu:'50'},
+		{device:'Thomson',
+		status:'OK', mem:'14' ,cpu:'50'},
+		{device:'Thomson',
+		status:'OK', mem:'14' ,cpu:'50'},
+		{device:'Thomson',
+		status:'OK', mem:'14' ,cpu:'50'},
+		{device:'Thomson',
+		status:'OK', mem:'14' ,cpu:'50'},
+		{device:'Thomson',
+		status:'OK', mem:'14' ,cpu:'50'}]
+
+	});
+</script>
+<!-- <script type="text/javascript">
+	// fix columns
+	// Change the selector if needed
+	var $table = $('table.scroll'),
+    $bodyCells = $table.find('tbody tr:first').children(),
+    colWidth;
+
+	// Adjust the width of thead cells when window resizes
+	$(window).resize(function() {
+    // Get the tbody columns width array
+    colWidth = $bodyCells.map(function() {
+        return $(this).width();
+    }).get();
+    
+    // Set the width of thead columns
+    $table.find('thead tr').children().each(function(i, v) {
+        $(v).width(colWidth[i]);
+    });    
+	}).resize(); // Trigger resize handler
+</script> -->
 {% endblock %}
