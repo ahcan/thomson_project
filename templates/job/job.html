@@ -11,19 +11,17 @@
 			</label>
 		</div>
 	</div>
-	<div class="table-responsive">
+	<div class="table-responsive col-md-5">
 		<table class="table table-bordered table-hover table-striped">
 			<thead>
 				<tr>
 					<th>#</th>
-					<th>JobID</th>
+					<th>Name</th>
 					<th>Status</th>
 					<th>State</th>
-					<th>Process</th>
+					<!-- <th>Process</th> -->
 					<th>Start Date</th>
 					<th>End Date</th>
-					<th>Name</th>
-					<th>WorkID</th>
 				</tr>
 			</thead>
 			<tfoot>
@@ -34,19 +32,19 @@
 			<tbody data-link="row" class="rowlink">
 				<tr ng-repeat="job in (job_list | filter:filterByState) as filterState" >
 					<td><a href="#rowlinkModal" data-toggle="modal" data-target="#modal{{'{{job.jid}'}}}" ng-click="moreinfo(job.jid)">{{'{{$index + 1}'}}}</a></td>
-					<td>{{'{{job.jid}'}}}</td>
+					<td>{{'{{job.jname}'}}}</td>
 					<td>{{'{{job.status}'}}}</td>
 					<td>{{'{{job.state}'}}}</td>
-					<td>{{'{{job.prog}'}}}</td>
+					<!-- <td>{{'{{job.prog}'}}}</td> -->
 					<td>{{'{{job.startdate}'}}}</td>
 					<td>{{'{{job.enddate}'}}}</td>
-					<td>{{'{{job.jname}'}}}</td>
-					<td>{{'{{job.wid}'}}}
 					<!-- Modal -->
-					</td>
 				</tr>
 			</tbody>
 		</table>
+	</div>
+	<div class="col-md-7">
+		
 	</div>
 	<!-- Modal -->
 	<div ng-repeat="job in (job_list | filter:filterByState)">
