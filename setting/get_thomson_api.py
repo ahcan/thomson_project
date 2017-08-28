@@ -196,6 +196,8 @@ class Log:
             NId =  log.attributes['NId'].value if 'NId' in text else ""
             Sev = log.attributes['Sev'].value if 'Sev' in text else ""
             Desc = log.attributes['Desc'].value if 'Desc' in text else ""
+            OpDate = log.attributes['OpDate'].value if 'OpDate' in text else ""
+            ClDate = log.attributes['ClDate'].value if 'ClDate' in text else ""
             #Convert response data to Json
             args.append({'jid'             : JId,
                         'cat'              : Cat,
@@ -204,7 +206,9 @@ class Log:
                         'jname'            : JName,
                         'nid'              : NId,
                         'sev'              : Sev,
-                        'desc'             : Desc
+                        'desc'             : Desc,
+                        'opdate'           : OpDate,
+                        'cldate'           : ClDate
                 })
         return json.dumps(args)
 
@@ -227,15 +231,15 @@ class Log:
     #Getting Open Logs of All Severities
     def get_open(self):
         body = """<soapenv:Envelope
-            xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
-            xmlns:log="LogsGet" xmlns:mal="MalteseGlobal"
-            xmlns:job="JobGlobal">
-                <soapenv:Body>
-                    <log:LogsGetReq Cmd="Start" OpV="01.00.00" Sev="Info to critical" />
-                </soapenv:Body>
-            </soapenv:Envelope>"""
+         xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+         xmlns:log="LogsGet" xmlns:mal="MalteseGlobal"
+         xmlns:job="JobGlobal">
+          <soapenv:Body>
+            <log:LogsGetReq Cmd="Start" OpV="01.00.00" Sev="Info to critical" />
+          </soapenv:Body>
+        </soapenv:Envelope>"""
         #reponse_xml = Thomson().get_response(self.headers, body)
-        reponse_xml = File().get_response('LogsGetRsp.xml')
+        reponse_xml = File().get_response('LogsOpenGetRsp.xml')
         print reponse_xml
         return self.parse_xml(reponse_xml)
 
@@ -253,6 +257,18 @@ class Log:
           </soapenv:Body>
         </soapenv:Envelope>"""%(jobID)
         reponse_xml = File().get_response('LogsGetByJobIDRsp.xml')
+        #reponse_xml = Thomson().get_response(self.headers, body)
+        return self.parse_xml(reponse_xml)
+
+    def get_sys_log(self):
+        body="""<soapenv:Envelope
+         xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+         xmlns:log="LogsGet" xmlns:mal="MalteseGlobal" xmlns:job="JobGlobal">
+          <soapenv:Body>
+            <log:LogsGetReq Cmd="Start" OpV="01.00.00" Sys="true" Nb="30" PastCloseNb="500"/>
+          </soapenv:Body>
+        </soapenv:Envelope>"""
+        reponse_xml = File().get_response('LogsGetSysRsp.xml')
         #reponse_xml = Thomson().get_response(self.headers, body)
         return self.parse_xml(reponse_xml)
 

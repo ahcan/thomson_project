@@ -34,7 +34,7 @@ def get_log(request):
 
 def open_log_list_json(request):
     """
-    List all Logs.
+    List all open Logs.
     """
     log_list = Log().get_open()
     return HttpResponse(log_list, content_type='application/json', status=200)
@@ -54,3 +54,19 @@ def log_by_jobID_list_json(request, job_id):
 
 def get_log_by_jobID(request, job_id):
     return render_to_response('log/log_by_jobID.html')
+
+##############################################################################
+#                                                                            #
+#---------------------------------SYSTEM LOG---------------------------------#
+#                                                                            #
+##############################################################################
+
+def system_log_list_json(request):
+    """
+    List all open Logs.
+    """
+    log_list = Log().get_sys_log()
+    return HttpResponse(log_list, content_type='application/json', status=200)
+
+# def get_open_log(request):
+#     return render_to_response('log/log_open.html')
