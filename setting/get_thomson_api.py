@@ -184,20 +184,7 @@ class Log:
 
     def parse_xml(self, xml):
         xmldoc = minidom.parseString(xml)
-<<<<<<< HEAD
-        itemlist = xmldoc.getElementsByTagName('lGet:RspAddCl')
-        args = []
-        for s in itemlist:
-            str_tmp = str(s.attributes.items())
-            JId = s.attributes['JId'].value if 'JId' in str_tmp else ""
-            Cat = s.attributes['Cat'].value if 'Cat' in str_tmp else ""
-            LId = s.attributes['LId'].value if 'LId' in str_tmp else ""
-            Res = s.attributes['Res'].value if 'Res' in str_tmp else ""
-            JName = s.attributes['JName'].value if 'JName' in str_tmp else ""
-            NId =  s.attributes['NId'].value if 'NId' in str_tmp else ""
-            Sev = s.attributes['Sev'].value if 'Sev' in str_tmp else ""
-            Desc = s.attributes['Desc'].value if 'Desc' in str_tmp else ""
-=======
+
         itemlist = xmldoc.getElementsByTagName('lGet:RspOkLog')
         for log in itemlist.item(0).childNodes:
             text = str(log.attributes.items())
@@ -211,7 +198,6 @@ class Log:
             Desc = log.attributes['Desc'].value if 'Desc' in text else ""
             OpDate = log.attributes['OpDate'].value if 'OpDate' in text else ""
             ClDate = log.attributes['ClDate'].value if 'ClDate' in text else ""
->>>>>>> 529feafb143893346aee2bdfaeacbbfceda27efb
             #Convert response data to Json
             args.append({'jid'             : JId,
                         'cat'              : Cat,
