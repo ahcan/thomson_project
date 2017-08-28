@@ -145,13 +145,13 @@ class Thomson:
         Status = itemlist[0].attributes['Status'].value if 'Status' in\
          str(itemlist[0].attributes.items()) else ""
         CPU = itemlist[0].attributes['CPU'].value if 'CPU' in\
-         str(itemlist[0].attributes.items()) else ""
+         str(itemlist[0].attributes.items()) else "-1"
         Mem = itemlist[0].attributes['Mem'].value if 'Mem' in\
-         str(itemlist[0].attributes.items()) else ""
+         str(itemlist[0].attributes.items()) else "-1"
         agrs = []
         agrs.append({'status': Status,
-                     'cpu'   : CPU,
-                     'mem'   : Mem
+                     'cpu'   : int(CPU),
+                     'mem'   : int(Mem)
                     })
         return json.dumps(agrs)
 
@@ -183,8 +183,8 @@ class Log:
         self.headers = headers
 
     def parse_xml(self, xml):
+        args = []
         xmldoc = minidom.parseString(xml)
-
         itemlist = xmldoc.getElementsByTagName('lGet:RspOkLog')
         for log in itemlist.item(0).childNodes:
             text = str(log.attributes.items())
@@ -215,15 +215,15 @@ class Log:
     #Getting All Logs
     def get_log(self):
         body = """<soapenv:Envelope
-xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
-xmlns:log="LogsGet" xmlns:mal="MalteseGlobal"
-xmlns:job="JobGlobal">
- <soapenv:Body>
-<log:LogsGetReq Cmd="Start" OpV="01.00.00" Open="true"
-Close="true" Sys="true" Sev="Info to
-critical" Nb="100" PastCloseNb="500"/>
- </soapenv:Body>
-</soapenv:Envelope>"""
+                  xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+                  xmlns:log="LogsGet" xmlns:mal="MalteseGlobal"
+                  xmlns:job="JobGlobal">
+                    <soapenv:Body>
+                      <log:LogsGetReq Cmd="Start" OpV="01.00.00" Open="true"
+                      Close="true" Sys="true" Sev="Info to critical" Nb="500"
+                      PastCloseNb="500"/>
+                    </soapenv:Body>
+                  </soapenv:Envelope>"""
         #reponse_xml = Thomson().get_response(self.headers, body)
         reponse_xml = File().get_response('LogsAllGetRsp.xml')
         return self.parse_xml(reponse_xml)
@@ -245,19 +245,19 @@ critical" Nb="100" PastCloseNb="500"/>
 
     #Getting All open log of Specific Jobs
     def get_by_jobID(self, jobID):
-        body = """<soapenv:Envelope
-xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
-xmlns:log="LogsGet" xmlns:mal="MalteseGlobal"
-xmlns:job="JobGlobal">
- <soapenv:Body>
-<log:LogsGetReq Cmd="Start" OpV="01.00.00" Open="true"
-Close="false" Sys="false" JSelect="Selected jobs" Sev="Info
-to critical">
- <job:JId>%d</job:JId>
- </log:LogsGetReq>
-</soapenv:Body>
-</soapenv:Envelope>"""%(jobID)
-        reponse_xml = Thomson().get_response(self.headers, body)
+        body="""<soapenv:Envelope
+         xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+         xmlns:log="LogsGet" xmlns:mal="MalteseGlobal" xmlns:job="JobGlobal">
+          <soapenv:Body>
+            <log:LogsGetReq Cmd="Start" OpV="01.00.00" Open="true"
+             Close="true" Sys="true" JSelect="Selected jobs"
+             Sev="Info to critical" Nb="100" PastCloseNb="500">
+              <job:JId>%d</job:JId>
+            </log:LogsGetReq>
+          </soapenv:Body>
+        </soapenv:Envelope>"""%(jobID)
+        reponse_xml = File().get_response('LogsGetByJobIDRsp.xml')
+        #reponse_xml = Thomson().get_response(self.headers, body)
         return self.parse_xml(reponse_xml)
 
     def get_sys_log(self):
