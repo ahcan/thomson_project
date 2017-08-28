@@ -184,6 +184,7 @@ class Log:
 
     def parse_xml(self, xml):
         xmldoc = minidom.parseString(xml)
+<<<<<<< HEAD
         itemlist = xmldoc.getElementsByTagName('lGet:RspAddCl')
         args = []
         for s in itemlist:
@@ -196,6 +197,21 @@ class Log:
             NId =  s.attributes['NId'].value if 'NId' in str_tmp else ""
             Sev = s.attributes['Sev'].value if 'Sev' in str_tmp else ""
             Desc = s.attributes['Desc'].value if 'Desc' in str_tmp else ""
+=======
+        itemlist = xmldoc.getElementsByTagName('lGet:RspOkLog')
+        for log in itemlist.item(0).childNodes:
+            text = str(log.attributes.items())
+            JId = log.attributes['JId'].value if 'JId' in text else ""
+            Cat = log.attributes['Cat'].value if 'Cat' in text else ""
+            LId = log.attributes['LId'].value if 'LId' in text else ""
+            Res = log.attributes['Res'].value if 'Res' in text else ""
+            JName = log.attributes['JName'].value if 'JName' in text else ""
+            NId =  log.attributes['NId'].value if 'NId' in text else ""
+            Sev = log.attributes['Sev'].value if 'Sev' in text else ""
+            Desc = log.attributes['Desc'].value if 'Desc' in text else ""
+            OpDate = log.attributes['OpDate'].value if 'OpDate' in text else ""
+            ClDate = log.attributes['ClDate'].value if 'ClDate' in text else ""
+>>>>>>> 529feafb143893346aee2bdfaeacbbfceda27efb
             #Convert response data to Json
             args.append({'jid'             : JId,
                         'cat'              : Cat,
@@ -204,7 +220,9 @@ class Log:
                         'jname'            : JName,
                         'nid'              : NId,
                         'sev'              : Sev,
-                        'desc'             : Desc
+                        'desc'             : Desc,
+                        'opdate'           : OpDate,
+                        'cldate'           : ClDate
                 })
         return json.dumps(args)
 
@@ -227,15 +245,15 @@ critical" Nb="100" PastCloseNb="500"/>
     #Getting Open Logs of All Severities
     def get_open(self):
         body = """<soapenv:Envelope
-            xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
-            xmlns:log="LogsGet" xmlns:mal="MalteseGlobal"
-            xmlns:job="JobGlobal">
-                <soapenv:Body>
-                    <log:LogsGetReq Cmd="Start" OpV="01.00.00" Sev="Info to critical" />
-                </soapenv:Body>
-            </soapenv:Envelope>"""
+         xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+         xmlns:log="LogsGet" xmlns:mal="MalteseGlobal"
+         xmlns:job="JobGlobal">
+          <soapenv:Body>
+            <log:LogsGetReq Cmd="Start" OpV="01.00.00" Sev="Info to critical" />
+          </soapenv:Body>
+        </soapenv:Envelope>"""
         #reponse_xml = Thomson().get_response(self.headers, body)
-        reponse_xml = File().get_response('LogsGetRsp.xml')
+        reponse_xml = File().get_response('LogsOpenGetRsp.xml')
         print reponse_xml
         return self.parse_xml(reponse_xml)
 
@@ -254,6 +272,18 @@ to critical">
 </soapenv:Body>
 </soapenv:Envelope>"""%(jobID)
         reponse_xml = Thomson().get_response(self.headers, body)
+        return self.parse_xml(reponse_xml)
+
+    def get_sys_log(self):
+        body="""<soapenv:Envelope
+         xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+         xmlns:log="LogsGet" xmlns:mal="MalteseGlobal" xmlns:job="JobGlobal">
+          <soapenv:Body>
+            <log:LogsGetReq Cmd="Start" OpV="01.00.00" Sys="true" Nb="30" PastCloseNb="500"/>
+          </soapenv:Body>
+        </soapenv:Envelope>"""
+        reponse_xml = File().get_response('LogsGetSysRsp.xml')
+        #reponse_xml = Thomson().get_response(self.headers, body)
         return self.parse_xml(reponse_xml)
 
 ##############################################################################
