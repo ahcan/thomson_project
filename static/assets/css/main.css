@@ -46,6 +46,10 @@ body {
   background-color: #419BE8;
   color: #fff; }
 
+.sidebar {
+  border-color: #101010;
+  background-color: #333; }
+
 /* Specify styling for tooltip contents */
 .tooltip-inner {
   max-width: none;

@@ -2,6 +2,7 @@
 {% block content %}
 <script src="/static/assets/js/jasny-bootstrap.min.js"></script>
 <link rel="stylesheet" href="/static/assets/css/jasny-bootstrap.css">
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-app="Job" ng-controller="jobCtrl" >
 	<h2 class="sub-header">Jobs</h2>
 	<div class="panel-body">
@@ -47,8 +48,9 @@
 		<div>
 			<div class="row-head">
 	 			<h4>{{'{{workflow[0].jobname}'}}}</h4>
+	 			<i ng-click="showpara=!showpara" ng-class="{'fa-arrow-down': showpara}" class="close fa fa-arrow-left" style="font-size:25px"></i> 
 	 		</div>
-	 		<div class="content">
+	 		<div class="content" ng-show="showpara">
 	 			<table class="table table-bordered table-hover table-striped">
 	 				<tbody>
 	 					<tr>
@@ -71,7 +73,7 @@
 	 			<table class="table table-bordered table-hover table-striped">
 	 				<thead>
  						<th><label><span>Severity</span></label></th>
- 						<th><label><span>Cat</span></label></th>
+ 						<th><label><span>Catogory</span></label></th>
  						<th><label><span>Node ID</span></label></th>
  						<th><label><span>Resource</span></label></th>
  						<th><label><span>Descriptipn</span></label></th>
@@ -85,8 +87,8 @@
 		 					<td><span>{{'{{log.nid}'}}}</span></td>
 		 					<td><span>{{'{{log.res}'}}}</span></td>
 		 					<td><span>{{'{{log.desc}'}}}</span></td>
-		 					<td><span>{{'{{log.opdate}'}}}</span></td>
-		 					<td><span>{{'{{log.cldate}'}}}</span></td>
+		 					<td><span>{{'{{log.opdate | date:"dd-M-yyyy H:mm" }'}}}</span></td>
+		 					<td><span>{{'{{log.cldate | date:"dd-M-yyyy H:mm" }'}}}</span></td>
 	 					</tr>
 	 				</tbody>
 	 			</table>
@@ -127,7 +129,7 @@
 				console.log($scope.job_list);
 			});
 			$timeout(function(){
-				// $scope.reload();
+				$scope.reload();
 			},10000)
 		};
 		// Fiter By State checkbox
@@ -153,7 +155,8 @@
 				$scope.lstLogJob = response.data;
 				console.log($scope.lstLogJob);
 			});
-			$scope.clickrow=true;
+			$scope.clickrow = true;
+			$scope.showpara = true;
 		}
 	});
 </script>
