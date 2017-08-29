@@ -16,14 +16,19 @@ from setting.get_thomson_api import *
 #                                                                            #
 ##############################################################################
 
-def log_list_json(request):
+def get_log_list_json(request):
     """
     List all Logs.
+    /log/api/log
     """
     log_list = Log().get_log()
     return HttpResponse(log_list, content_type='application/json', status=200)
 
 def get_log(request):
+    """
+    Template show list all Logs.
+    /log/
+    """
     return render_to_response('log/log.html')
 
 ##############################################################################
@@ -32,14 +37,19 @@ def get_log(request):
 #                                                                            #
 ##############################################################################
 
-def open_log_list_json(request):
+def get_open_log_list_json(request):
     """
     List all open Logs.
+    /log/api/open/
     """
     log_list = Log().get_open()
     return HttpResponse(log_list, content_type='application/json', status=200)
 
 def get_open_log(request):
+    """
+    Template show list all open Logs.
+    /log/open/
+    """
     return render_to_response('log/log_open.html')
 
 ##############################################################################
@@ -48,12 +58,13 @@ def get_open_log(request):
 #                                                                            #
 ##############################################################################
 
-def log_by_jobID_list_json(request, job_id):
+def get_log_by_jobID_list_json(request, job_id):
+    """
+    List all Logs by Job_ID.
+    /log/api/<Job_ID>/
+    """
     log_list = Log().get_by_jobID(int(job_id))
     return HttpResponse(log_list, content_type='application/json', status=200)
-
-def get_log_by_jobID(request, job_id):
-    return render_to_response('log/log_by_jobID.html')
 
 ##############################################################################
 #                                                                            #
@@ -61,12 +72,10 @@ def get_log_by_jobID(request, job_id):
 #                                                                            #
 ##############################################################################
 
-def system_log_list_json(request):
+def get_system_log_list_json(request):
     """
-    List all open Logs.
+    Template show list all system Logs.
+    /log/api/system
     """
     log_list = Log().get_sys_log()
     return HttpResponse(log_list, content_type='application/json', status=200)
-
-# def get_open_log(request):
-#     return render_to_response('log/log_open.html')
