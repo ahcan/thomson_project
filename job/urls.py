@@ -2,18 +2,31 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
-    url(r'^api/job/$', views.job_json, name='job_json'),
-    url(r'^api/waiting/$', views.waiting_job_json, name='waiting_job_json'),
-    url(r'^api/running/$', views.running_job_json, name='running_job_json'),
-    url(r'^api/paused/$', views.paused_job_json, name='paused_job_json'),
-    url(r'^api/completed/$', views.completed_job_json, name='completed_job_json'),
-    url(r'^api/aborted/$', views.aborted_job_json, name='aborted_job_json'),
+    #link response all job data: /job/api/job
+    url(r'^api/job/$', views.get_job_json, name='job_api'),
+    #link response all job waiting data: /job/api/waiting
+    url(r'^api/waiting/$', views.get_waiting_json, name='waiting_api'),
+    #link response all job running data: /job/api/running
+    url(r'^api/running/$', views.get_running_json, name='running_api'),
+    #link response all job paused data: /job/api/paused
+    url(r'^api/paused/$', views.get_paused_json, name='paused_api'),
+    #link response all job completed data: /job/api/completed
+    url(r'^api/completed/$', views.get_completed_json, name='completed_api'),
+    #link response all job aborted data: /job/api/aborted
+    url(r'^api/aborted/$', views.get_aborted_json, name='aborted_api'),
+    #link response job pamrams data: /job/api/<job_id>
     url(r'^api/job/(?P<jid>.+)/$', views.get_job_params, name='jparams'),
 
+    #link response template show all job data: /job/
     url(r'^$', views.get_job, name='job'),
-    url(r'^waiting/$', views.get_waiting_job, name='waiting'),
-    url(r'^running/$', views.get_running_job, name='running'),
-    url(r'^paused/$', views.get_paused_job, name='paused'),
-    url(r'^completed/$', views.get_completed_job, name='completed'),
-    url(r'^aborted/$', views.get_aborted_job, name='aborted'),
+    #link response template show all job waiting data: /job/waiting
+    url(r'^waiting/$', views.get_waiting, name='waiting'),
+    #link response template show all job running data: /job/running
+    url(r'^running/$', views.get_running, name='running'),
+    #link response template show all job paused data: /job/paused
+    url(r'^paused/$', views.get_paused, name='paused'),
+    #link response template show all job completed data: /job/completed
+    url(r'^completed/$', views.get_completed, name='completed'),
+    #link response template show all job aborted data: /job/aborted
+    url(r'^aborted/$', views.get_aborted, name='aborted'),
 ]
