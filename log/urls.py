@@ -11,4 +11,6 @@ urlpatterns = [
     url(r'^$', views.get_log, name='log'),
     #Link template show all open logs
     url(r'^open/$', views.get_open_log, name='open'),
+    #Link template show all system logs
+    url(r'^system/$', views.get_system_log, name='systemlog'),
 ]
