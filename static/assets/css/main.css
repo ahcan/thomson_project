@@ -25,6 +25,15 @@ table.scroll tbody {
   overflow-y: scroll;
   /*position: absolute;*/ }
 
+/*Body layout*/
+body {
+  font-size: 12.5px; }
+
+.body-right .td-left {
+  text-align: right; }
+.body-right .td-right {
+  text-align: left; }
+
 .nav .menu .head-menu {
   background-color: #337ab7;
   color: #fff; }
@@ -84,7 +93,6 @@ table.scroll tbody {
   height: 30px;
   margin-bottom: 0px; }
   .progress div {
-    height: 100%;
-    padding: 5px; }
+    height: 100%; }
 
 /*# sourceMappingURL=main.css.map */
