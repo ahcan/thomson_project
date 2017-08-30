@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-app="System" ng-controller="systemCtrl">
+<!-- <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-app="System" ng-controller="systemCtrl"> -->
+<div ng-app="System" ng-controller="systemCtrl">
 	<h2 class="sub-header">System</h2>
 	<div style="display: flex;font-size: initial;padding-bottom: 10px;">
 		<p>Time Zone: &nbsp {{'{{systime[0].timeZone}'}}}</p>
@@ -41,28 +42,28 @@
 				<div class="content">
 					<table class="table table-bordered table-hover table-striped">
 						<tr>
-							<td><label>Completed:</label></td>
-							<td><p>{{'{{jobStatus[0].completed}'}}}</p></td>
+							<td><span><label>Completed:</label></span></td>
+							<td><span>{{'{{jobStatus[0].completed}'}}}</span></td>
 						</tr>
 						<tr>
-							<td><label>Waiting:</label></td>
-							<td><p>{{'{{jobStatus[0].waiting}'}}}</p></td>
+							<td><span><label>Waiting:</label></span></td>
+							<td><span>{{'{{jobStatus[0].waiting}'}}}</span></td>
 						</tr>
 						<tr>
 							<td><label>Paused:</label></td>
-							<td><p>{{'{{jobStatus[0].paused}'}}}</p></td>
+							<td><span>{{'{{jobStatus[0].paused}'}}}</span></td>
 						</tr>
 						<tr>
 							<td><label>Running:</label></td>
-							<td><p>{{'{{jobStatus[0].running}'}}}</p></td>
+							<td><span>{{'{{jobStatus[0].running}'}}}</span></td>
 						</tr>
 						<tr>
 							<td><label>Aborted:</label></td>
-							<td><p>{{'{{jobStatus[0].aborted}'}}}</p></td>
+							<td><span>{{'{{jobStatus[0].aborted}'}}}</span></td>
 						</tr>
 						<tr>
 							<td><label>Total:</label></td>
-							<td><p>{{'{{jobStatus[0].total}'}}}</p></td>
+							<td><span>{{'{{jobStatus[0].total}'}}}</span></td>
 						</tr>
 					</table>
 					</div>

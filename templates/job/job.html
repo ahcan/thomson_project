@@ -1,9 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
 <script src="/static/assets/js/jasny-bootstrap.min.js"></script>
-<link rel="stylesheet" href="/static/assets/css/jasny-bootstrap.css">
-<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-app="Job" ng-controller="jobCtrl" >
+<!-- <link rel="stylesheet" href="/static/assets/css/jasny-bootstrap.css"> -->
+<!-- <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> --><!-- 
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-app="Job" ng-controller="jobCtrl" > -->
+<div ng-app="Job" ng-controller="jobCtrl">
 	<h2 class="sub-header">Jobs</h2>
 	<div class="panel-body">
 		<div>
@@ -129,7 +130,7 @@
 				console.log($scope.job_list);
 			});
 			$timeout(function(){
-				$scope.reload();
+				// $scope.reload();
 			},10000)
 		};
 		// Fiter By State checkbox
@@ -144,6 +145,7 @@
 		function noFilter(filterObj){
 			return Object.keys(filterObj).every(function(key){return !filterObj[key];});
 		}
+		//end filter
 		$scope.reload();
 		$scope.moreinfo = function(jobID){
 			// console.log(jobID);

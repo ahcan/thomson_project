@@ -35,6 +35,8 @@
     <script src="https://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.14.3.js"></script>
     <!-- Custom css -->
     <link rel="stylesheet" type="text/css" href="/static/assets/css/main.css">
+    <!-- <script type="text/javascript" src="/static/assets/js/jasny-bootstrap.min.js"></script> -->
+    <link rel="stylesheet" type="text/css" href="/static/assets/css/jasny-bootstrap.css">
   </head>
 
   <body>
@@ -52,8 +54,11 @@
     <!-- end navbar -->
 
     <!-- content -->
+
+    <div class="col-sm-10 col-sm-offset-2 col-md-11 col-md-offset-1 main">
       {% block content %}
       {% endblock %}
+    </div>
     <!-- end content -->
       </div>
     </div>
@@ -67,21 +72,21 @@
     <script src="/static/assets/js/vendor/holder.min.js"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="/static/assets/js/ie10-viewport-bug-workaround.js"></script>
-  <script>
-  var app = angular.module('DateTime',[]);
-  app.controller("datetimeCtrl", function ($scope,$http,$timeout){
-    $scope.reload = function () {
-      $http.get('/system/api/datetime/').
-      then(function (response) {
-        $scope.date_time = response.data;
-        console.log($scope.date_time);
-      });
-      $timeout(function(){
-        $scope.reload();
-      },600000)
-    };
-    $scope.reload();
-  });
-  </script>
+ <!--  <script>
+  // var app = angular.module('DateTime',[]);
+  // app.controller("datetimeCtrl", function ($scope,$http,$timeout){
+  //   $scope.reload = function () {
+  //     $http.get('/system/api/datetime/').
+  //     then(function (response) {
+  //       $scope.date_time = response.data;
+  //       console.log($scope.date_time);
+  //     });
+  //     $timeout(function(){
+  //       $scope.reload();
+  //     },600000)
+  //   };
+  //   $scope.reload();
+  // });
+  </script> -->
   </body>
 </html>

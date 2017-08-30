@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+<!-- <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main"> -->
 	<h2 class="sub-header">Job Paused</h2>
 	<div class="table-responsive" ng-app="JobPaused" ng-controller="jobpausedCtrl">
 		<table class="table table-bordered table-hover table-striped">
@@ -32,7 +32,7 @@
 			</tfoot>
 		</table>
 	</div>
-</div>
+<!-- </div> -->
 <script>
 	var app = angular.module('JobPaused',[]);
 	app.controller("jobpausedCtrl", function ($scope,$http,$timeout){
