@@ -79,3 +79,10 @@ def get_system_log_list_json(request):
     """
     log_list = Log().get_sys_log()
     return HttpResponse(log_list, content_type='application/json', status=200)
+
+def get_system_log(request):
+    """
+    Template show list all system Logs.
+    /log/api/system
+    """
+    return render_to_response('log/log_system.html')

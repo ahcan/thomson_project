@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-	<h2 class="sub-header">Log Of Job</h2>
+	<h2 class="sub-header">System Log</h2>
 	<div class="panel-body">
 		<div>
 			<label class="checkbox-inline">
@@ -15,11 +15,11 @@
 			</label>
 		</div>
 	</div>
-	<div class="table-responsive" ng-app="Log" ng-controller="logCtrl">
+	<div class="table-responsive" ng-app="SystemLog" ng-controller="SystemlogCtrl">
 		<table class="table table-bordered table-hover table-striped">
 			<thead>
 				<tr>
-					<th>#</th>
+					<th>STT</th>
 					<th>Serverily</th>
 					<th>Node ID</th>
 					<th>Resource</th>
@@ -39,7 +39,6 @@
 					<td>{{'{{log.jname}'}}}</td>
 				</tr>
 			</tbody>
-			<tfoot>
 			<tr>
 				<td colspan="8" class="text-center">Total: {{'{{total}'}}}</td>
 			</tr>
@@ -48,11 +47,11 @@
 	</div>
 </div>
 <script>
-	var app = angular.module('Log',[]);
-	app.controller("logCtrl", function ($scope,$http,$timeout){
+	var app = angular.module('SystemLog',[]);
+	app.controller("SystemlogCtrl", function ($scope,$http,$timeout){
 		$scope.reload = function () {
 			$scope.total = 0;
-			$http.get('/log/api/18010/').
+			$http.get('/log/api/system').
 			then(function (response) {
 				$scope.log_list = response.data;
 				$scope.total = $scope.log_list.length;
