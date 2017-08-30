@@ -1,16 +1,18 @@
 {% block nav-sidebar %}
 <div class="col-sm-3 col-md-2 sidebar">
   <ul class="nav nav-sidebar">
-  <li class="menu" data-target="#log"><a class="head-menu" href="/log/">Log<span class="arrow"></span></a>
+  <li class="menu" data-target="#log"><a class="head-menu" href="#">Log<span class="arrow"></span></a>
      <ul class="nav sub-menu" id="log">
+      <li><a href="/log/">All Log <span class="sr-only">(current)</span></a></li>
       <li><a href="/log/open/">Open log</a></li>
-      <!-- <li><a href="/log/18010/">By Job ID</a></li> -->
+      <li><a href="/log/18010/">By Job ID</a></li>
     </ul>
   </li>
 </ul>
   <ul class="nav nav-sidebar">
-    <li class="menu" data-target="#job"><a class="head-menu" href="/job/">Job<span class="arrow"></span></a>
+    <li class="menu" data-target="#job"><a class="head-menu" href="#">Job<span class="arrow"></span></a>
     <ul class="nav sub-menu">
+      <li><a href="/job/">All Job</a></li>
       <li><a href="/job/waiting/">Waiting</a></li>
       <li><a href="/job/running/">Running</a></li>
       <li><a href="/job/paused/">Paused</a></li>
@@ -24,10 +26,10 @@
   </ul>
   <ul class="nav nav-sidebar">
     <li class="menu"><a class="head-menu" href="/system/">System<span class="arrow"></span></a>
-<!--       <ul class="nav sub-menu">
+      <ul class="nav sub-menu">
         <li><a href="/system/datetime/">Datetime</a></li>
         <li><a href="/system/mountpoint/">Mount Point</a></li>
-      </ul> -->
+      </ul>
     </li>
   </ul>
 </div>
