@@ -34,12 +34,12 @@
 		</table>
 	</div>
 	<div class="body-right">
+		<!-- Second column -->
 		<div class="colpadding col-md-3">
-			<div>
-				<div class="row-head">
-					<h4>Job Status</h4>
-				</div>
-				<div class="content">
+			<!-- Panel show job status -->
+			<div class="panel panel-primary">
+				<div class="panel-heading">Job Status</div>
+				<div class="panel-body">
 					<table class="table table-bordered table-hover table-striped">
 						<tr>
 							<td><span><label>Completed:</label></span></td>
@@ -66,27 +66,30 @@
 							<td><span>{{'{{jobStatus[0].total}'}}}</span></td>
 						</tr>
 					</table>
-					</div>
-			</div>
-			<div>
-				<div class="row-head">
-					<h4>Mount point</h4>
 				</div>
-				<div class="content">
+			</div><!-- Panel show job status -->
+
+			<!-- Panel show mountpoint -->
+			<div class="panel panel-primary">
+				<div class="panel-heading">Mount Point</div>
+				<div class="panel-body">
 					<table class="table table-bordered table-hover table-striped">
 						<tr ng-repeat="point in mountPoints">
 							<td>{{'{{point.name}'}}}</td>
 						</tr>
 					</table>
 				</div>
-				<div class="content"></div>
-			</div>
-		</div>
+			</div><!-- Panel show mountpoint -->
+		</div><!-- Second column -->
+		<!-- Third column -->
 		<div class="colpadding col-md-2">
-			<div class="row-head">
-				<h4>License</h4>
-			</div>
-		</div>
+			<!-- Panel show Lisense -->
+			<div class="panel panel-primary">
+				<div class="panel-heading">License</div>
+				<div class="panel-body">
+				</div>
+			</div><!-- Panel show License -->
+		</div><!-- Third column -->
 	</div>
 </div>
 <script type="text/javascript">
