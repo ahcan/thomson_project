@@ -78,9 +78,11 @@ body {
   color: #fff; }
 
 .nav-tabs li.active a {
+  color: #e1e7e9;
   background-color: #337ab7; }
   .nav-tabs li.active a:focus {
-    background-color: #337ab7; }
+    background-color: #337ab7;
+    color: #e1e7e9; }
 
 .sidebar {
   border-color: #101010;

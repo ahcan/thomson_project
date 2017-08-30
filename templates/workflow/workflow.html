@@ -5,7 +5,11 @@
 <!-- <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-app="Workflow" ng-controller="workflowCtrl"> -->
 <div ng-app="Workflow" ng-controller="workflowCtrl">
 	<h2 class="sub-header">Workflows <span style="font-size: 15px;">(Total: {{'{{total}'}}})</span></h2>
-	<div class="table-responsive" >
+	<div class="col-md-6 col-sm-6 table-responsive" >
+		<div class="input-group" style="margin-bottom:10px;" >
+			    <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
+			    <input type="text" class="form-control" placeholder="Search..." ng-model="search">
+		</div>
 		<table class="table table-bordered table-hover table-striped">
 			<thead>
 				<tr>
@@ -14,29 +18,57 @@
 					<th>Workflow ID</th>
 					<th>Pubver</th>
 					<th>Priver</th>
-					<th>Option</th>
 				</tr>
 			</thead>
 			<tbody class="rowlink" data-link="row">
-				<tr ng-repeat="workflow in workflow_list" uib-tooltip-html="text" ng-mousedown="showinfo(workflow.wid)"  tooltip-is-open="isOpen">
+				<tr ng-repeat="workflow in workflow_list | filter: search" ng-click="showinfo(workflow.wid)"  tooltip-is-open="isOpen">
 					<td>{{'{{$index + 1}'}}} <a href="" ></a></td>
 					<td>{{'{{workflow.name}'}}}</td>
 					<td><p>{{'{{workflow.wid}'}}}</p></td>
 					<td>{{'{{workflow.pubver}'}}}</td>
 					<td>{{'{{workflow.priver}'}}}</td>
-					<td>Add job</td>
 				</tr>
 			</tbody>
 		</table>
 	</div>
+	<div class="col-md-6 col-sm-6 table-responsive" ng-click="isOpen">
+		<div class="panel panel-default" ng-show="isOpen">
+			<div class="panel-heading">
+			<h4>{{'{{selectedWorkf.name}'}}}</h4>
+			</div>
+			<div class="panel-body">
+				<div class="content">
+					<table class="table table-panel table-bordered table-hover table-striped">
+						<tbody>
+							<tr>
+								<td><span><label>ID</label></span></td>
+								<td>{{'{{selectedWorkf.id}'}}}</td>
+							</tr>
+							<tr>
+								<td><span><label>Category</label></span></td>
+								<td>{{'{{selectedWorkf.category}'}}}</td>
+							</tr>
+							<tr>
+								<td><span><label>Color</label></span></td>
+								<td>{{'{{selectedWorkf.color}'}}}</td>
+							</tr>
+							<tr>
+								<td><span><label>Priority</label></span></td>
+								<td>{{'{{selectedWorkf.priority}'}}}</td>
+							</tr>
+							<tr ng-repeat="param in selectedWorkf.params">
+								<td><span><label>{{'{{param.name}'}}}</label></span></td>
+								<td><span><label>{{'{{param.value}'}}}</label></span></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 <script>
-	var app = angular.module('Workflow',['ui.bootstrap']).config(['$tooltipProvider', function ($tooltipProvider) {
-        $tooltipProvider.options({
-            placement: 'bottom',
-            trigger: 'click',
-        });
-    }])
+	var app = angular.module('Workflow',['ui.bootstrap']);
 	app.controller("workflowCtrl", function ($scope,$http,$timeout,$element,$sce){
 		$scope.reload = function () {
 			$scope.total = 0;
@@ -55,24 +87,24 @@
 			var tootcontents = '<div>loading....</div>';
 			$http.get('/workflow/api/workflow/'+id+'/').then(
 				function(response){
+					$scope.selectedWorkf = response.data[0];
 					var oj = response.data[0];
-					var vid = oj.id;
-					var vcategory ="category:\t"+oj.category;
-					var vname ="name:\t"+oj.name;
-					var vpagrams;
-					for(param in oj.params){
-						vparams = "<p>"+param.name+":\t"+param.value+"</p>"
-					}
-					tootcontents ="<div class='showinfo'>"+vcategory+"</br>"+vname+"</br>"+vparams+"</div>";
-					$scope.text = $sce.trustAsHtml(tootcontents);
+					// var vid = oj.id;
+					// var vcategory ="category:\t"+oj.category;
+					// var vname ="name:\t"+oj.name;
+					// var vpagrams;
+					// for(param in oj.params){
+					// 	vparams = "<p>"+param.name+":\t"+param.value+"</p>"
+					// }
+					// tootcontents ="<div class='showinfo'>"+vcategory+"</br>"+vname+"</br>"+vparams+"</div>";
+					// $scope.text = $sce.trustAsHtml(tootcontents);
+					console.log($scope.selectedWorkf);
 					console.log(oj.params);
-					// $scope.isOpen = true;
+					$scope.isOpen = true;
 				});	
 			$scope.text = $sce.trustAsHtml(tootcontents);
 		}
 	});
-	
-
 </script>
 {% endblock %}
 
