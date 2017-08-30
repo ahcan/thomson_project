@@ -6,14 +6,14 @@
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-app="Job" ng-controller="jobCtrl" > -->
 <div ng-app="Job" ng-controller="jobCtrl">
 	<h2 class="sub-header">Jobs</h2>
-	<div class="panel-body">
-		<div>
-			<label class="checkbox-inline" ng-repeat="state in getStates()">
-				<input type="checkbox" ng-model="filters[state]">{{'{{state}'}}}</input>
-			</label>
-		</div>
-	</div>
 	<div class="table-responsive col-md-5">
+		<div class="panel-body">
+			<div>
+				<label class="checkbox-inline" ng-repeat="state in getStates()">
+					<input type="checkbox" ng-model="filters[state]">{{'{{state}'}}}</input>
+				</label>
+			</div>
+		</div>
 		<table class="table table-bordered table-hover table-striped">
 			<thead>
 				<tr>
@@ -45,56 +45,63 @@
 			</tbody>
 		</table>
 	</div>
-	<div class="colpadding col-md-7 body-right" ng-show="clickrow">
+	<div class="colpadding col-md-7 body-right" ng-show="clickrow" >
+		<!-- tab content -->
 		<div class="panel panel-default">
-			<div class="panel-heading" >
+			<div class="panel-heading">
 	 			<h4>{{'{{workflow[0].jobname}'}}}</h4>
-	 			<span><i ng-click="showpara=!showpara" ng-class="{'glyphicon-chevron-down': !showpara, 'glyphicon-chevron-right': showpara}" class="pull-right glyphicon" style="font-size:25px"></i> </span>
 	 		</div>
-	 		<div class="content panel-body" ng-show="showpara">
-	 			<table class="table table-panel table-bordered table-hover table-striped">
-	 				<tbody>
-	 					<tr>
-	 						<td class="td-left"><label>Workflow</label></td>
-	 						<td class="td-right"><span>{{'{{workflow[0].workflowIdRef}'}}}</span></td>
-	 					</tr>
-	 					<tr ng-repeat="param in workflow[0].params">
-	 						<td class="td-left"><label>{{'{{param.name}'}}}</label></td>
-	 						<td class="td-right">{{'{{param.value}'}}}</td>
-	 					</tr>
-	 				</tbody>
-	 			</table>
-	 		</div>
-	 	</div>
-	 	<div>
-	 		<div class="row-head">
-	 			<h4>Log</h4>
-	 		</div>
-	 		<div class="content">
-	 			<table class="table table-bordered table-hover table-striped">
-	 				<thead>
- 						<th><label><span>Severity</span></label></th>
- 						<th><label><span>Catogory</span></label></th>
- 						<th><label><span>Node ID</span></label></th>
- 						<th><label><span>Resource</span></label></th>
- 						<th><label><span>Descriptipn</span></label></th>
- 						<th><label><span>Raising Date</span></label></th>
- 						<th><label><span>Cealrning Date</span></label></th>
-	 				</thead>
-	 				<tbody>
-	 					<tr ng-repeat="log in lstLogJob">
-		 					<td><span>{{'{{log.sev}'}}}</span></td>
-		 					<td><span>{{'{{log.cat}'}}}</span></td>
-		 					<td><span>{{'{{log.nid}'}}}</span></td>
-		 					<td><span>{{'{{log.res}'}}}</span></td>
-		 					<td><span>{{'{{log.desc}'}}}</span></td>
-		 					<td><span>{{'{{log.opdate | date:"dd-M-yyyy H:mm" }'}}}</span></td>
-		 					<td><span>{{'{{log.cldate | date:"dd-M-yyyy H:mm" }'}}}</span></td>
-	 					</tr>
-	 				</tbody>
-	 			</table>
-	 		</div>
-	 	</div>
+	 		<div class="panel-body">
+				<ul class="nav nav-tabs">
+					<li class="active"><a href="#tab_log" data-toggle="tab">Logs</a></li>
+					<li><a href="#tab_param" data-toggle="tab">Params</a></li>
+				</ul>
+				<div class="tab-content">
+					<div class="tab-pane active" id="tab_log">
+				 		<div class="content">
+				 			<table class="table table-panel table-bordered table-hover table-striped">
+				 				<thead>
+			 						<th><label><span>Severity</span></label></th>
+			 						<th><label><span>Catogory</span></label></th>
+			 						<th><label><span>Node ID</span></label></th>
+			 						<th><label><span>Resource</span></label></th>
+			 						<th><label><span>Descriptipn</span></label></th>
+			 						<th><label><span>Raising Date</span></label></th>
+			 						<th><label><span>Cealrning Date</span></label></th>
+				 				</thead>
+				 				<tbody>
+				 					<tr ng-repeat="log in lstLogJob">
+					 					<td><span>{{'{{log.sev}'}}}</span></td>
+					 					<td><span>{{'{{log.cat}'}}}</span></td>
+					 					<td><span>{{'{{log.nid}'}}}</span></td>
+					 					<td><span>{{'{{log.res}'}}}</span></td>
+					 					<td><span>{{'{{log.desc}'}}}</span></td>
+					 					<td><span>{{'{{log.opdate | date:"dd-M-yyyy H:mm" }'}}}</span></td>
+					 					<td><span>{{'{{log.cldate | date:"dd-M-yyyy H:mm" }'}}}</span></td>
+				 					</tr>
+				 				</tbody>
+				 			</table>
+				 		</div>
+					</div>
+					<div class="tab-pane" id="tab_param">
+				 		<div class="content" ng-show="showpara">
+				 			<table class="table table-panel table-bordered table-hover table-striped">
+				 				<tbody>
+				 					<tr>
+				 						<td class="td-left"><label>Workflow</label></td>
+				 						<td class="td-right"><span>{{'{{workflow[0].workflowIdRef}'}}}</span></td>
+				 					</tr>
+				 					<tr ng-repeat="param in workflow[0].params">
+				 						<td class="td-left"><label>{{'{{param.name}'}}}</label></td>
+				 						<td class="td-right">{{'{{param.value}'}}}</td>
+				 					</tr>
+				 				</tbody>
+				 			</table>
+				 		</div>
+					</div>
+				</div>
+			</div><!-- tab content -->
+		</div>
 	</div>
 	<!-- Modal -->
 	<!-- <div ng-repeat="job in (job_list | filter:filterByState)">

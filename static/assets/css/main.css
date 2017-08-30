@@ -52,7 +52,8 @@ table.scroll tbody {
 /*Panel style*/
 .panel-default .panel-heading {
   color: #fff;
-  background-color: #337ab7; }
+  background-color: #337ab7;
+  text-align: center; }
 
 /*Body layout*/
 body {
@@ -75,6 +76,11 @@ body {
 .nav li a:focus {
   background-color: #419BE8;
   color: #fff; }
+
+.nav-tabs li.active a {
+  background-color: #337ab7; }
+  .nav-tabs li.active a:focus {
+    background-color: #337ab7; }
 
 .sidebar {
   border-color: #101010;
