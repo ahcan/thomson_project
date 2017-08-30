@@ -46,13 +46,13 @@
 		</table>
 	</div>
 	<div class="colpadding col-md-7 body-right" ng-show="clickrow">
-		<div>
-			<div class="row-head">
+		<div class="panel panel-default">
+			<div class="panel-heading" >
 	 			<h4>{{'{{workflow[0].jobname}'}}}</h4>
-	 			<i ng-click="showpara=!showpara" ng-class="{'pull-right glyphicon': showpara, 'glyphicon-chevron-right': showpara}" class="pull-right glyphicon" style="font-size:25px"></i> 
+	 			<span><i ng-click="showpara=!showpara" ng-class="{'glyphicon-chevron-down': !showpara, 'glyphicon-chevron-right': showpara}" class="pull-right glyphicon" style="font-size:25px"></i> </span>
 	 		</div>
-	 		<div class="content" ng-show="showpara">
-	 			<table class="table table-bordered table-hover table-striped">
+	 		<div class="content panel-body" ng-show="showpara">
+	 			<table class="table table-panel table-bordered table-hover table-striped">
 	 				<tbody>
 	 					<tr>
 	 						<td class="td-left"><label>Workflow</label></td>
