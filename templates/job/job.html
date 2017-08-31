@@ -6,7 +6,6 @@
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-app="Job" ng-controller="jobCtrl" > -->
 <div ng-app="Job" ng-controller="jobCtrl">
 	<h2 class="sub-header">Jobs</h2>
-	</div>
 	<div class="table-responsive col-md-5">
 		<div class="panel-body">
 			<div>
@@ -138,7 +137,7 @@
 				console.log($scope.job_list);
 			});
 			$timeout(function(){
-				// $scope.reload();
+				$scope.reload();
 			},10000)
 		};
 		// Fiter By State checkbox

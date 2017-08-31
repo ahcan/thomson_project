@@ -110,8 +110,8 @@
 				console.log($scope.jobStatus);
 			});
 			$timeout(function(){
-				// $scope.reloadJobStatus();
-			},20000)
+				$scope.reloadJobStatus();
+			},60000)
 		}
 		$scope.reloadMountPoint=function(){
 			$http.get("/system/api/mountpoint/").then(function(reponse){
@@ -128,7 +128,7 @@
 				console.log($scope.lstStatus);
 			});
 			$timeout(function() {
-				// $scope.reloadDevice();
+				$scope.reloadDevice();
 			}, 5000)
 		}
 		$scope.reloadDevice();
