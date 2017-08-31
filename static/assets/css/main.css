@@ -50,10 +50,12 @@ table.scroll tbody {
   /*position: absolute;*/ }
 
 /*Panel style*/
-.panel-default .panel-heading {
-  color: #fff;
-  background-color: #337ab7;
-  text-align: center; }
+.panel-default {
+  border-color: #337ab7; }
+  .panel-default .panel-heading {
+    color: #fff;
+    background-color: #337ab7;
+    text-align: center; }
 
 /*Body layout*/
 body {
