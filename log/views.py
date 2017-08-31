@@ -15,7 +15,8 @@ from setting.get_thomson_api import *
 #--------------------------------------ALL LOG-------------------------------#
 #                                                                            #
 ##############################################################################
-
+@require_http_methods(['GET'])
+@csrf_exempt
 def get_log_list_json(request):
     """
     List all Logs.
@@ -36,7 +37,8 @@ def get_log(request):
 #-----------------------------------OPEN LOG---------------------------------#
 #                                                                            #
 ##############################################################################
-
+@require_http_methods(['GET'])
+@csrf_exempt
 def get_open_log_list_json(request):
     """
     List all open Logs.
@@ -57,7 +59,8 @@ def get_open_log(request):
 #-------------------------------GET LOG BY JOBID-----------------------------#
 #                                                                            #
 ##############################################################################
-
+@require_http_methods(['GET'])
+@csrf_exempt
 def get_log_by_jobID_list_json(request, job_id):
     """
     List all Logs by Job_ID.
@@ -71,7 +74,8 @@ def get_log_by_jobID_list_json(request, job_id):
 #---------------------------------SYSTEM LOG---------------------------------#
 #                                                                            #
 ##############################################################################
-
+@require_http_methods(['GET'])
+@csrf_exempt
 def get_system_log_list_json(request):
     """
     Template show list all system Logs.

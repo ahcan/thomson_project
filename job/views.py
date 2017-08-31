@@ -16,6 +16,8 @@ from setting.get_thomson_api import *
 #                                                                            #
 ##############################################################################
 #Link get all job: /job/api/job
+@require_http_methods(['GET'])
+@csrf_exempt
 def get_job_json(request):
     job_list = Job().get_job()
     return HttpResponse(job_list, content_type='application/json', status=200)
@@ -31,6 +33,8 @@ def get_job(request):
 #############################################################################
 
 #Link get all Job Waiting: /job/api/waiting
+@require_http_methods(['GET'])
+@csrf_exempt
 def get_waiting_json(request):
     waiting_list = Job().get_Waiting()
     return HttpResponse(waiting_list, content_type='application/json', status=200)
@@ -46,6 +50,8 @@ def get_waiting(request):
 ##############################################################################
 
 #Link gell all Job running: /job/api/running
+@require_http_methods(['GET'])
+@csrf_exempt
 def get_running_json(request):
     running_list = Job().get_Running()
     return HttpResponse(running_list, content_type='application/json', status=200)
@@ -61,6 +67,8 @@ def get_running(request):
 ##############################################################################
 
 #Link get all Job paused: /job/api/paused
+@require_http_methods(['GET'])
+@csrf_exempt
 def get_paused_json(request):
     paused_list = Job().get_Paused()
     return HttpResponse(paused_list, content_type='application/json', status=200)
@@ -76,6 +84,8 @@ def get_paused(request):
 ##############################################################################
 
 #Link get all job completed: /job/api/completed
+@require_http_methods(['GET'])
+@csrf_exempt
 def get_completed_json(request):
     completed_list = Job().get_Completed()
     return HttpResponse(completed_list, content_type='application/json', status=200)
@@ -91,6 +101,8 @@ def get_completed(request):
 ##############################################################################
 
 #Link get all Job aborted: /job/api/aborted
+@require_http_methods(['GET'])
+@csrf_exempt
 def get_aborted_json(request):
     aborted_list = Job().get_Aborted()
     return HttpResponse(aborted_list, content_type='application/json', status=200)
@@ -106,7 +118,20 @@ def get_aborted(request):
 #######################################################################
 
 #Link get params by job_id
+@require_http_methods(['GET'])
+@csrf_exempt
 def get_job_params(request, jid):
     param_list = JobDetail('jid').get_param()
     return HttpResponse(param_list, content_type='application/json', status=200)
+
+
+@require_http_methods(['POST'])
+@csrf_exempt
+def create_job(request):
+    print "ok"
+    json_data = json.loads(request.body)
+    json_header = json.loads(request.header)
+    print wfname
+    print json_data
+    print json_header
 	
