@@ -17,7 +17,11 @@ urlpatterns = [
     #link response job pamrams data: /job/api/<job_id>
     url(r'^api/job/(?P<jid>.+)/$', views.get_job_params, name='jparams'),
 
-    url(r'^api/create/$', views.create_job, name='create_job'),
+    url(r'^api/(?P<wfid>.+)/create/$', views.create_job, name='create_job'),
+    url(r'^api/(?P<jid>.+)/modify/$', views.modify_job, name='modify_job'),
+    url(r'^api/(?P<jid>.+)/delete/$', views.delete_job, name='delete_job'),
+    url(r'^api/(?P<jid>.+)/start/$', views.start_job, name='start_job'),
+    url(r'^api/(?P<jid>.+)/abort/$', views.abort_job, name='abort_job'),
 
     #link response template show all job data: /job/
     url(r'^$', views.get_job, name='job'),

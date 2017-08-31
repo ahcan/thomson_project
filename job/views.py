@@ -111,11 +111,11 @@ def get_aborted_json(request):
 def get_aborted(request):
 	return render_to_response('job/job_aborted.html')
 
-#######################################################################
-#                                                                     #
-#------------------------------JOB DETAIL-----------------------------#
-#                                                                     #
-#######################################################################
+##############################################################################
+#                                                                            #
+#----------------------------------JOB DETAIL--------------------------------#
+#                                                                            #
+##############################################################################
 
 #Link get params by job_id
 @require_http_methods(['GET'])
@@ -124,12 +124,80 @@ def get_job_params(request, jid):
     param_list = JobDetail('jid').get_param()
     return HttpResponse(param_list, content_type='application/json', status=200)
 
+##############################################################################
+#                                                                            #
+#--------------------------------CREATE NEW JOB------------------------------#
+#                                                                            #
+##############################################################################
 
+"""curl -H "Content-Type: application/json" -X POST -d 
+'{"usernamOST":"xyz","password":"xyz"}'
+ http://localhost:8000/job/api/danang/create/
+ link: /job/api/create/"""
 @require_http_methods(['POST'])
 @csrf_exempt
-def create_job(request):
+def create_job(request, wfid):
+    print wfid
+    json_data = json.loads(request.body)
+    print json_data
+    return HttpResponse(content_type='application/json', status=200)
+
+##############################################################################
+#                                                                            #
+#----------------------------------UPDATE JOB--------------------------------#
+#                                                                            #
+##############################################################################
+
+"""curl -H "Content-Type: application/json" -X PUT -d 
+'{"username":"xyz","password":"xyz"}'
+ http://localhost:8000/job/api/125/modify/
+ link: /job/api/<jid>/modify/"""
+@require_http_methods(['PUT'])
+@csrf_exempt
+def modify_job(request, jid):
     print "ok"
     json_data = json.loads(request.body)
     print json_data
     return HttpResponse(json_data, content_type='application/json', status=200)
 	
+##############################################################################
+#                                                                            #
+#----------------------------------DELETE JOB--------------------------------#
+#                                                                            #
+##############################################################################
+
+"""curl -H "Content-Type: application/json" -X DELETE http://localhost:8000/
+job/api/125/delete/"""
+@csrf_exempt
+def delete_job(request, jid):
+    if request.method == 'DELETE':
+        print "ok"
+        return HttpResponse(content_type='application/json', status=200)
+
+##############################################################################
+#                                                                            #
+#-----------------------------------START JOB--------------------------------#
+#                                                                            #
+##############################################################################
+
+"""curl -H "Content-Type: application/json" -X PUT http://localhost:8000/
+job/api/125/start/
+ link: job/api/<jid>/start/"""
+@require_http_methods(['PUT'])
+@csrf_exempt
+def start_job(request, jid):
+    pass
+
+##############################################################################
+#                                                                            #
+#-----------------------------------ABORT JOB--------------------------------#
+#                                                                            #
+##############################################################################
+
+"""curl -H "Content-Type: application/json" -X PUT http://localhost:8000/
+job/api/125/abort/
+ link: job/api/<jid>/abort/"""
+@require_http_methods(['PUT'])
+@csrf_exempt
+def abort_job(request, jid):
+    pass
