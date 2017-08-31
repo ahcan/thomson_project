@@ -55,6 +55,7 @@
 				<ul class="nav nav-tabs">
 					<li class="active"><a href="#tab_log" data-toggle="tab">Logs</a></li>
 					<li><a href="#tab_param" data-toggle="tab">Params</a></li>
+					<!-- <li><a href="#tab_addJob" data-toggle="tab">Add Job</a></li> -->
 				</ul>
 				<div class="tab-content">
 					<div class="tab-pane active" id="tab_log">
@@ -84,8 +85,8 @@
 				 		</div>
 					</div>
 					<div class="tab-pane" id="tab_param">
-				 		<div class="content" ng-show="showpara">
-				 			<table class="table table-panel table-bordered table-hover table-striped">
+				 		<div class="content">
+				 			<table class="table table-panel table-bordered table-hover table-striped" ng-show="clickrow">
 				 				<tbody>
 				 					<tr>
 				 						<td class="td-left"><label>Workflow</label></td>
@@ -99,6 +100,52 @@
 				 			</table>
 				 		</div>
 					</div>
+					<!-- <div class="tab-pane" id="tab_addJob">
+						<div class="content">
+							<form id="frmAddJob">
+								<div class="input-group">
+									<label>Work Flow: </label>
+									<input ng-model="job.workflowIdRef" type="input" name="workflowIdRef">
+								</div>
+								<div class="input-group">
+									<label>Job Name: </label>
+									<input ng-model="job.jobname" type="input" name="jobname">
+								</div>
+								<div class="input-group">
+									<label>Ip Address: </label>
+									<input ng-model="job.IPaddress" type="input" name="IPaddress">
+								</div>
+								<div class="input-group">
+									<label>UDP port: </label>
+									<input ng-model="job.UDPport" type="input" name="UDPport">
+								</div>
+								<div class="input-group">
+									<label>Define backup input: </label>
+									<input ng-model="job.Definebackupinput" type="input" name="Definebackupinput">
+								</div>
+								<div class="input-group">
+									<label>Backup input IP address: </label>
+									<input ng-model="job.BackupinputIPaddress" type="input" name="BackupinputIP address">
+								</div>
+								<div class="input-group">
+									<label>Backup input UDP port: </label>
+									<input ng-model="job.BackupinputUDPport" type="input" name="BackupinputUDPport">
+								</div>
+								<div class="input-group">
+									<label>Logo file network storage: </label>
+									<input ng-model="job.Logofilenetworkstorage " type="input" name="Logofilenetworkstorage">
+								</div>
+								<div class="input-group">
+									<label>Bitrate Out: </label>
+									<input ng-model="job.BitrateOut" type="input" name="BitrateOut">
+								</div>
+								<div class="input-group">
+									<input type="submit" name="create" value="Save" ng-click="create(job)">
+									<input type="button" name="cancel" value="Cancel" ng-click="reset()">
+								</div>
+							</form>
+						</div>
+					</div> -->
 				</div>
 			</div><!-- tab content -->
 		</div>
@@ -137,7 +184,7 @@
 				console.log($scope.job_list);
 			});
 			$timeout(function(){
-				$scope.reload();
+				// $scope.reload();
 			},10000)
 		};
 		// Fiter By State checkbox

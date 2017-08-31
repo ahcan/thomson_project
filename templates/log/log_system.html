@@ -1,10 +1,11 @@
 {% extends 'base.html' %}
 {% block content %}
 <!-- <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset- main"> -->
+<div ng-app="SystemLog" ng-controller="SystemlogCtrl">
 	<h2 class="sub-header">System Log</h2>
 	<div class="panel-body">
 		<div>
-			<label class="checkbox-inline">
+			<!-- <label class="checkbox-inline">
 				<input type="checkbox" id="inlineCheckbox1" value="option1"> Info
 			</label>
 			<label class="checkbox-inline">
@@ -12,10 +13,13 @@
 			</label>
 			<label class="checkbox-inline">
 				<input type="checkbox" id="inlineCheckbox3" value="option3"> Major
+			</label> -->
+			<label class="checkbox-inline" ng-repeat="sev in getSevs()">
+				<input type="checkbox" ng-model="filters[sev]">{{'{{sev}'}}}</input>
 			</label>
 		</div>
 	</div>
-	<div class="table-responsive" ng-app="SystemLog" ng-controller="SystemlogCtrl">
+	<div class="table-responsive" >
 		<table class="table table-bordered table-hover table-striped">
 			<thead>
 				<tr>
@@ -29,7 +33,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr ng-repeat="log in log_list">
+				<tr ng-repeat="log in log_list | filter:filterBySev">
 					<td>{{'{{$index + 1}'}}}</td>
 					<td>{{'{{log.sev}'}}}</td>
 					<td>{{'{{log.nid}'}}}</td>
@@ -45,7 +49,7 @@
 			</tfoot>
 		</table>
 	</div>
-<!-- </div> -->
+</div>
 <script>
 	var app = angular.module('SystemLog',[]);
 	app.controller("SystemlogCtrl", function ($scope,$http,$timeout){
@@ -62,6 +66,19 @@
 			},10000)
 		};
 		$scope.reload();
+	// Fiter By State checkbox
+		$scope.filters = {};
+		//function
+		$scope.filterBySev = function(job){
+			return $scope.filters[job.sev] || noFilter($scope.filters);
+		};
+		$scope.getSevs = function(){
+			return ($scope.log_list || []).map(function(job){return job.sev;}).filter(function (cat, idx, arr) { return arr.indexOf(cat) === idx;});
+		};
+		function noFilter(filterObj){
+			return Object.keys(filterObj).every(function(key){return !filterObj[key];});
+		}
+	//end filter
 	});
 </script>
 {% endblock %}

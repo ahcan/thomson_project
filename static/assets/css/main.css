@@ -140,4 +140,8 @@ body {
     height: 100%;
     padding: 5px; }
 
+/*Sort table*/
+.sortting a:hover {
+  text-decoration: none; }
+
 /*# sourceMappingURL=main.css.map */
