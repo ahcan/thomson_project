@@ -130,8 +130,6 @@ def get_job_params(request, jid):
 def create_job(request):
     print "ok"
     json_data = json.loads(request.body)
-    json_header = json.loads(request.header)
-    print wfname
     print json_data
-    print json_header
+    return HttpResponse(json_data, content_type='application/json', status=200)
 	
