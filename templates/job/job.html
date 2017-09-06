@@ -33,13 +33,13 @@
 			</tfoot>
 			<tbody data-link="row" class="rowlink">
 				<tr ng-repeat="job in (job_list | filter:filterByState) as filterState" >
-					<td><a href="#rowlinkModal" data-toggle="modal" data-target="#modal{{'{{job.jid}'}}}" ng-click="moreinfo(job.jid)">{{'{{$index + 1}'}}}</a></td>
-					<td>{{'{{job.jname}'}}}</td>
-					<td>{{'{{job.status}'}}}</td>
-					<td>{{'{{job.state}'}}}</td>
+					<td class="col-md-1"><a href="#rowlinkModal" data-toggle="modal" data-target="#modal{{'{{job.jid}'}}}" ng-click="moreinfo(job.jid)">{{'{{$index + 1}'}}}</a></td>
+					<td class="col-md-2"><sapn>{{'{{job.jname}'}}}</sapn></td>
+					<td class="col-md-1"><span>{{'{{job.status}'}}}</span></td>
+					<td class="col-md-1" ng-class="{'running': job.state == 'Running', 'aborted': job.state == 'Aborted', 'watting': job.state == 'Watting', 'paused': job.state == 'Paused', 'completed': job.state == 'Completed'}"><span>{{'{{job.state}'}}}</span></td>
 					<!-- <td>{{'{{job.prog}'}}}</td> -->
-					<td>{{'{{job.startdate}'}}}</td>
-					<td>{{'{{job.enddate}'}}}</td>
+					<td class="col-md-3" n><span>{{'{{job.startdate}'}}}</span></td>
+					<td class="col-md-3"><span>{{'{{job.enddate}'}}}</span></td>
 					<!-- Modal -->
 				</tr>
 			</tbody>
@@ -94,7 +94,7 @@
 				 					</tr>
 				 					<tr ng-repeat="param in workflow[0].params">
 				 						<td class="td-left"><label>{{'{{param.name}'}}}</label></td>
-				 						<td class="td-right">{{'{{param.value}'}}}</td>
+				 						<td class="td-right"><i ng-class="{'glyphicon glyphicon-ok': param.value ==  'true', 'glyphicon glyphicon-remove': param.value =='false'}"></i><span ng-hide="param.value ==  'true' || param.value == 'false'">{{'{{param.value}'}}}</span></td>
 				 					</tr>
 				 				</tbody>
 				 			</table>

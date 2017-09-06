@@ -1,11 +1,14 @@
 /*Hover table*/
 .table-hover tbody tr:hover {
-  background-color: #419BE8;
-  color: #fff; }
+  background-color: #cfd8dc;
+  /*background-color:#419BE8;*/
+  color: #3A579A; }
   .table-hover tbody tr:hover td {
-    background-color: #419BE8; }
-.table-hover.rowlink tr:hover {
-  background-color: #419BE8; }
+    background-color: #cfd8dc; }
+.table-hover .rowlink tr:hover {
+  background-color: #cfd8dc; }
+  .table-hover .rowlink tr:hover td {
+    background-color: #cfd8dc; }
 
 /*####Table####*/
 table {
@@ -26,7 +29,7 @@ table {
   background-color: #dff0d8;
   color: #3c763d; }
   .table-striped tbody tr:nth-of-type(2n+1):hover {
-    color: #fff; }
+    color: #3A579A; }
 
 .table-panel {
   margin-bottom: 0px; }
@@ -138,10 +141,41 @@ body {
   margin-bottom: 0px; }
   .progress div {
     height: 100%;
-    padding: 5px; }
+    padding: 5px;
+    color: #333; }
 
 /*Sort table*/
 .sortting a:hover {
   text-decoration: none; }
+
+.watting span {
+  color: #ffc107; }
+
+.running span {
+  color: #25C829;
+  /*color: #0277bd;*/
+  font-size: 13px; }
+
+.paused span {
+  color: #ef6c00; }
+
+.completed span {
+  color: #0255BD; }
+
+.aborted span {
+  color: #dd2c00; }
+
+/*Status system*/
+.oke span {
+  color: #25C829; }
+
+.error span {
+  color: #dd2c00; }
+
+.glyphicon-ok {
+  color: #25C829; }
+
+.glyphicon-remove {
+  color: #dd2c00; }
 
 /*# sourceMappingURL=main.css.map */

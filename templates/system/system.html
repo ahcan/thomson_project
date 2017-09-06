@@ -18,16 +18,12 @@
 			<tbody>
 				<tr ng-repeat="status in lstStatus | orderBy: '-cpu' | orderBy: orderByField: reverseSort">
 					<td class="col-md-1 ">{{'{{status.device}'}}}</td>
-					<td class="col-md-1"><p>{{'{{status.status}'}}}</p></td>
+					<td class="col-md-1" ng-class="{'oke': status.status == 'OK', 'error': status.status == 'ER', 'watting': status.status == 'WAT'}"><span>{{'{{status.status}'}}}</span></td>
 					<td class="col-md-5">
-						<div class="progress"><div class="progress-bar-success" role="progressbar" aria-valuenow="{{'{{status.cpu}'}}}" aria-valuemin="0" aria-valuemax="100" style="width:{{'{{status.cpu}'}}}%;" ng-if="status.cpu <= 50"><span>{{'{{status.cpu}'}}}</span></div>
-						<div class="progress-bar-warning" role="progressbar" aria-valuenow="{{'{{status.cpu}'}}}" aria-valuemin="0" aria-valuemax="100" style="width:{{'{{status.cpu}'}}}%;" ng-if="status.cpu <= 70 && status.cpu > 50"><span>{{'{{status.cpu}'}}}</span></div>
-						<div class="progress-bar-danger" role="progressbar" aria-valuenow="{{'{{status.cpu}'}}}" aria-valuemin="0" aria-valuemax="100" style="width:{{'{{status.cpu}'}}}%;" ng-if="status.cpu > 70">{{'{{status.cpu}'}}}</div></div>
+						<div class="progress"><div class="progress-bar-success" role="progressbar" aria-valuenow="{{'{{status.cpu}'}}}" aria-valuemin="0" aria-valuemax="100" style="width:{{'{{status.cpu}'}}}%;" ng-class="{'progress-bar-success': status.cpu <= 50, 'progress-bar-success': status.cpu <= 70 && status.cpu > 50, 'progress-bar-danger': status.cpu > 70}"><span>{{'{{status.cpu}'}}}%</span></div>
 					</td>
 					<td class="col-md-5">
-						<div class="progress"><div class="progress-bar-success" role="progressbar" aria-valuenow="{{'{{status.mem}'}}}" aria-valuemin="0" aria-valuemax="100" style="width:{{'{{status.mem}'}}}%;" ng-if="status.mem <= 50"><span>{{'{{status.mem}'}}}</span></div>
-						<div class="progress-bar-warning" role="progressbar" aria-valuenow="{{'{{status.mem}'}}}" aria-valuemin="0" aria-valuemax="100" style="width:{{'{{status.mem}'}}}%;" ng-if="status.mem <= 70 && status.mem > 50"><span>{{'{{status.mem}'}}}</span></div>
-						<div class="progress-bar-danger" role="progressbar" aria-valuenow="{{'{{status.mem}'}}}" aria-valuemin="0" aria-valuemax="100" style="width:{{'{{status.mem}'}}}%;" ng-if="status.mem > 70">{{'{{status.mem}'}}}</div></div>
+						<div class="progress"><div class="" role="progressbar" aria-valuenow="{{'{{status.mem}'}}}" aria-valuemin="0" aria-valuemax="100" style="width:{{'{{status.mem}'}}}%;" ng-class="{'progress-bar-success': status.mem <= 50, 'progress-bar-warning': status.mem <= 70 && status.mem > 50, 'progress-bar-danger': status.mem > 70}"><span>{{'{{status.mem}'}}}%</span></div>
 					</td>
 				</tr>
 			</tbody>

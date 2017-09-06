@@ -58,7 +58,7 @@
 							</tr>
 							<tr ng-repeat="param in selectedWorkf.params">
 								<td><span><label>{{'{{param.name}'}}}</label></span></td>
-								<td><span><label>{{'{{param.value}'}}}</label></span></td>
+								<td><i ng-class="{'glyphicon glyphicon-ok': param.value ==  'true', 'glyphicon glyphicon-remove': param.value =='false'}"></i><span ng-hide="param.value ==  'true' || param.value == 'false'"><label>{{'{{param.value}'}}}</label></span></td>
 							</tr>
 						</tbody>
 					</table>
