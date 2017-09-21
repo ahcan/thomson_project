@@ -121,7 +121,7 @@ def get_aborted(request):
 @require_http_methods(['GET'])
 @csrf_exempt
 def get_job_params(request, jid):
-    param_list = JobDetail('jid').get_param()
+    param_list = JobDetail(jid).get_param()
     return HttpResponse(param_list, content_type='application/json', status=200)
 
 ##############################################################################

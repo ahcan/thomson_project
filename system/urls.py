@@ -11,6 +11,9 @@ urlpatterns = [
     #Link get job status: /system/api/jobstatus
     url(r'^api/jobstatus/$', views.get_job_status_json, name='jobstatus_json'),
 
+    #Link get thomson info CPU, RAAM: /system/api/status
+    url(r'^api/nstatus/$', views.get_nodes_status_json, name='nstatus_json'),
+
     #Main template dashboard
     url(r'^$', views.get_system, name="system"),
 ]

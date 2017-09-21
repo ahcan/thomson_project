@@ -38,12 +38,19 @@ def mountpoint_list_json(request):
 @require_http_methods(['GET'])
 @csrf_exempt
 def get_system_status_json(request):
-	system_status = Thomson().get_system_status()
-	return HttpResponse(system_status, content_type='application/json', status=200)
+    system_status = Thomson().get_system_status()
+    return HttpResponse(system_status, content_type='application/json', status=200)
 
 #Link get job status: /system/api/jobstatus
 @require_http_methods(['GET'])
 @csrf_exempt
 def get_job_status_json(request):
-	job_status = Thomson().get_job_status()
-	return HttpResponse(job_status, content_type='application/json', status=200)
+    job_status = Thomson().get_job_status()
+    return HttpResponse(job_status, content_type='application/json', status=200)
+
+#Link get info CPU, RAM... each node: /system/api/status
+@require_http_methods(['GET'])
+@csrf_exempt
+def get_nodes_status_json(request):
+    nodes_status = Thomson().get_nodes_status()
+    return HttpResponse(nodes_status, content_type='application/json', status=200)
