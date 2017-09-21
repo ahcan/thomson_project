@@ -113,8 +113,8 @@ class Thomson:
                 <get:GetMountPointsReq Cmd="Start" OpV="01.00.00"/>
               </soapenv:Body>
             </soapenv:Envelope>"""
-        response_xml = self.get_response(headers, body)
-        #response_xml = File().get_response('GetMountPointsRsp.xml')
+        #response_xml = self.get_response(headers, body)
+        response_xml = File().get_response('GetMountPointsRsp.xml')
         #print response_xml
         xmldoc = minidom.parseString(response_xml)
         itemlist = xmldoc.getElementsByTagName('GetMountPoints:MountPoint')
@@ -217,7 +217,8 @@ class Thomson:
             </ns67:SystemGetNodesStatsReq>
            </s:Body>
         </s:Envelope>"""
-        response_xml = self.get_response(headers, body)
+        #response_xml = self.get_response(headers, body)
+        response_xml = File().get_response('SystemGetNodesStatsRsp.xml')
         return self.parse_nodes_status(response_xml)
 
         
@@ -278,7 +279,6 @@ class Log:
                     </soapenv:Body>
                   </soapenv:Envelope>"""
         #response_xml = Thomson().get_response(self.headers, body)
-        print response_xml
         response_xml = File().get_response('LogsAllGetRsp.xml')
         return self.parse_xml(response_xml)
 
