@@ -63,7 +63,7 @@ class Thomson:
     def __init__(self):
         self.user = 'nguyennt9'
         self.passwd = '123456'
-        self.url = 'http://10.0.200.150/services/Maltese'
+        self.url = 'http://172.29.3.189/services/Maltese'
 
     def get_response(self, headers, body):
         response = requests.post(self.url, data=body, headers=headers, \
@@ -85,9 +85,9 @@ class Thomson:
                     <get:GetDateAndTimeReq Cmd="Start" OpV="01.00.00"/>
                 </soapenv:Body>
             </soapenv:Envelope>"""
-        reponse_xml = File().get_response('GetDateAndTimeRsp.xml')
-        #print reponse_xml
-        xmldoc = minidom.parseString(reponse_xml)
+        #response_xml = Thomson().get_response(headers, body)
+        #print response_xml
+        xmldoc = minidom.parseString(response_xml)
         itemlist = xmldoc.getElementsByTagName('GetDateAndTime:RspOkGetDate')
         DateAndTime = itemlist[0].attributes['DateAndTime'].value if \
         'DateAndTime' in str(itemlist[0].attributes.items()) else ""
@@ -113,10 +113,10 @@ class Thomson:
                 <get:GetMountPointsReq Cmd="Start" OpV="01.00.00"/>
               </soapenv:Body>
             </soapenv:Envelope>"""
-        #reponse_xml = self.get_response(headers, body)
-        reponse_xml = File().get_response('GetMountPointsRsp.xml')
-        #print reponse_xml
-        xmldoc = minidom.parseString(reponse_xml)
+        response_xml = self.get_response(headers, body)
+        #response_xml = File().get_response('GetMountPointsRsp.xml')
+        #print response_xml
+        xmldoc = minidom.parseString(response_xml)
         itemlist = xmldoc.getElementsByTagName('GetMountPoints:MountPoint')
         args = []
         for s in itemlist:
@@ -138,9 +138,9 @@ class Thomson:
             </ns67:SystemGetStatusReq>
            </s:Body>
         </s:Envelope>"""
-        #reponse_xml = self.get_response(headers, body)
-        reponse_xml = File().get_response('SystemGetStatusRsp.xml')
-        xmldoc = minidom.parseString(reponse_xml)
+        #response_xml = self.get_response(headers, body)
+        response_xml = File().get_response('SystemGetStatusRsp.xml')
+        xmldoc = minidom.parseString(response_xml)
         itemlist = xmldoc.getElementsByTagName('sGetStatus:RspOkSGS')
         Status = itemlist[0].attributes['Status'].value if 'Status' in\
          str(itemlist[0].attributes.items()) else ""
@@ -167,6 +167,59 @@ class Thomson:
             })
         return json.dumps(agrs)
 
+    def parse_nodes_status(self, xml):
+        args = []
+        xmldoc = minidom.parseString(xml)
+        itemlist = xmldoc.getElementsByTagName('sGetNodesStats:RspSGNSOk')
+        for node_status in itemlist.item(0).childNodes:
+            text = str(node_status.attributes.items())
+            NStatus = node_status.attributes['NStatus'].value if 'NStatus' in text else ""
+            Cpu = node_status.attributes['Cpu'].value if 'Cpu' in text else ""
+            Unreachable = node_status.attributes['Unreachable'].value if 'Unreachable' in text else ""
+            NId = node_status.attributes['NId'].value if 'NId' in text else ""
+            NState = node_status.attributes['NState'].value if 'NState' in text else ""
+            Mem =  node_status.attributes['Mem'].value if 'Mem' in text else ""
+            """#Convert response data to Json
+            args.append({'status'             : NStatus,
+                        'cpu'                 : Cpu,
+                        'uncreahable'         : Unreachable,
+                        'nid'                 : NId,
+                        'state'               : NState,
+                        'mem'                 : Mem
+                })"""
+            #parse jodid for each node
+            args_node = []
+            for node_status_detail in node_status.childNodes:
+                text = str(node_status_detail.attributes.items())
+                jid = node_status_detail.attributes['JId'].value if 'JId' in text else ''
+                if jid:
+                    args_node.append({'jid'             : jid})
+            #Convert response data to Json
+            args.append({'status'             : NStatus,
+                        'cpu'                 : Cpu,
+                        'uncreahable'         : Unreachable,
+                        'nid'                 : NId,
+                        'state'               : NState,
+                        'mem'                 : Mem,
+                        'list_jid'            : args_node
+                })
+        return json.dumps(args)
+
+    def get_nodes_status(self):
+        headers = {
+            'content-type': 'text/xml; charset=utf-8',
+            'SOAPAction': 'SystemGetNodesStats'
+        }
+
+        body = """<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+          <s:Body>
+            <ns67:SystemGetNodesStatsReq xmlns:ns67="SystemGetNodesStats" Cmd="Start" OpV="01.00.00">
+            </ns67:SystemGetNodesStatsReq>
+           </s:Body>
+        </s:Envelope>"""
+        response_xml = self.get_response(headers, body)
+        return self.parse_nodes_status(response_xml)
+
         
 ##############################################################################
 #                                                                            #
@@ -191,7 +244,7 @@ class Log:
             JId = log.attributes['JId'].value if 'JId' in text else ""
             Cat = log.attributes['Cat'].value if 'Cat' in text else ""
             LId = log.attributes['LId'].value if 'LId' in text else ""
-            Res = log.attributes['Res'].value if 'Res' in text else ""
+            Res = log.attributes['Res'].value if 'Res' in text else ''
             JName = log.attributes['JName'].value if 'JName' in text else ""
             NId =  log.attributes['NId'].value if 'NId' in text else ""
             Sev = log.attributes['Sev'].value if 'Sev' in text else ""
@@ -224,9 +277,10 @@ class Log:
                       PastCloseNb="500"/>
                     </soapenv:Body>
                   </soapenv:Envelope>"""
-        #reponse_xml = Thomson().get_response(self.headers, body)
-        reponse_xml = File().get_response('LogsAllGetRsp.xml')
-        return self.parse_xml(reponse_xml)
+        #response_xml = Thomson().get_response(self.headers, body)
+        print response_xml
+        response_xml = File().get_response('LogsAllGetRsp.xml')
+        return self.parse_xml(response_xml)
 
     #Getting Open Logs of All Severities
     def get_open(self):
@@ -238,10 +292,10 @@ class Log:
             <log:LogsGetReq Cmd="Start" OpV="01.00.00" Sev="Info to critical" />
           </soapenv:Body>
         </soapenv:Envelope>"""
-        #reponse_xml = Thomson().get_response(self.headers, body)
-        reponse_xml = File().get_response('LogsOpenGetRsp.xml')
-        print reponse_xml
-        return self.parse_xml(reponse_xml)
+        #response_xml = Thomson().get_response(self.headers, body)
+        response_xml = File().get_response('LogsOpenGetRsp.xml')
+        print response_xml
+        return self.parse_xml(response_xml)
 
     #Getting All open log of Specific Jobs
     def get_by_jobID(self, jobID):
@@ -251,14 +305,14 @@ class Log:
           <soapenv:Body>
             <log:LogsGetReq Cmd="Start" OpV="01.00.00" Open="true"
              Close="true" Sys="true" JSelect="Selected jobs"
-             Sev="Info to critical" Nb="100" PastCloseNb="500">
+             Sev="Info to critical" Nb="30" PastCloseNb="500">
               <job:JId>%d</job:JId>
             </log:LogsGetReq>
           </soapenv:Body>
         </soapenv:Envelope>"""%(jobID)
-        reponse_xml = File().get_response('LogsGetByJobIDRsp.xml')
-        #reponse_xml = Thomson().get_response(self.headers, body)
-        return self.parse_xml(reponse_xml)
+        response_xml = File().get_response('LogsGetByJobIDRsp.xml')
+        #response_xml = Thomson().get_response(self.headers, body)
+        return self.parse_xml(response_xml)
 
     def get_sys_log(self):
         body="""<soapenv:Envelope
@@ -268,9 +322,10 @@ class Log:
             <log:LogsGetReq Cmd="Start" OpV="01.00.00" Sys="true" Nb="30" PastCloseNb="500"/>
           </soapenv:Body>
         </soapenv:Envelope>"""
-        reponse_xml = File().get_response('LogsGetSysRsp.xml')
-        #reponse_xml = Thomson().get_response(self.headers, body)
-        return self.parse_xml(reponse_xml)
+        response_xml = File().get_response('LogsGetSysRsp.xml')
+        #response_xml = Thomson().get_response(self.headers, body)
+        return self.parse_xml(response_xml)
+
 
 ##############################################################################
 #                                                                            #
@@ -312,9 +367,9 @@ class Workflow:
                     <wor:WorkflowGetListReq Cmd="Start" OpV="01.00.00"/>
                 </soapenv:Body>
             </soapenv:Envelope>"""
-        #reponse_xml = Thomson().get_response(self.headers, body)
-        reponse_xml = File().get_response('WorklowGetListRsp.xml')
-        return self.parse_xml(reponse_xml)
+        #response_xml = Thomson().get_response(self.headers, body)
+        response_xml = File().get_response('WorklowGetListRsp.xml')
+        return self.parse_xml(response_xml)
 
 class WorkflowDetail:
     def __init__(self, wfid):
@@ -328,10 +383,10 @@ class WorkflowDetail:
                     <soapenv:Body>
                       <wor:WorkflowGetPublicDescReq Cmd="Start"
                       OpV="01.00.00">
-                        <wor:WInfReq WId="WorkflowUser_DaNang1DuplicatedMyTV"/>
+                        <wor:WInfReq WId="%s"/>
                       </wor:WorkflowGetPublicDescReq>
                     </soapenv:Body>
-                  </soapenv:Envelope>"""
+                  </soapenv:Envelope>"""%(wfid)
         self.headers = headers
         self.body = body
         self.wfid = wfid
@@ -371,10 +426,10 @@ class WorkflowDetail:
         return json.dumps(args)
 
     def get_param(self):
-        #reponse_xml = Thomson().get_response(self.headers, self.body)
-        reponse_xml = File().get_response('WorkflowGetParamsRsp.xml')
+        #response_xml = Thomson().get_response(self.headers, self.body)
+        response_xml = File().get_response('WorkflowGetParamsRsp.xml')
         #print response_xml
-        return self.parse_xml(reponse_xml)
+        return self.parse_xml(response_xml)
 
 ##############################################################################
 #                                                                            #
@@ -441,9 +496,9 @@ class Job:
                     </job:JobGetListReq>
                 </soapenv:Body>
             </soapenv:Envelope>"""
-        #reponse_xml = Thomson().get_response(self.headers, body)
-        reponse_xml = File().get_response('JobGetListRsp.xml')
-        return self.parse_xml(reponse_xml)
+        #response_xml = Thomson().get_response(self.headers, body)
+        response_xml = File().get_response('JobGetListRsp.xml')
+        return self.parse_xml(response_xml)
 
     def count_job(self):
         body = """<soapenv:Envelope
@@ -460,9 +515,9 @@ class Job:
                     </job:JobGetListReq>
                 </soapenv:Body>
             </soapenv:Envelope>"""
-        #reponse_xml = Thomson().get_response(self.headers, body)
-        reponse_xml = File().get_response('JobGetListRsp.xml')
-        return self.count_object(reponse_xml)
+        #response_xml = Thomson().get_response(self.headers, body)
+        response_xml = File().get_response('JobGetListRsp.xml')
+        return self.count_object(response_xml)
 
     def get_Waiting(self):
         body = """<soapenv:Envelope
@@ -475,9 +530,9 @@ class Job:
                     </job:JobGetListReq>
                 </soapenv:Body>
             </soapenv:Envelope>"""
-        #reponse_xml = Thomson().get_response(self.headers, body)
-        reponse_xml = File().get_response('JobGetListRsp.xml')
-        return self.parse_xml(reponse_xml)
+        #response_xml = Thomson().get_response(self.headers, body)
+        response_xml = File().get_response('JobGetListRsp.xml')
+        return self.parse_xml(response_xml)
 
     def count_Waiting(self):
         body = """<soapenv:Envelope
@@ -490,9 +545,9 @@ class Job:
                     </job:JobGetListReq>
                 </soapenv:Body>
             </soapenv:Envelope>"""
-        #reponse_xml = Thomson().get_response(self.headers, body)
-        reponse_xml = File().get_response('JobGetListRsp.xml')
-        return self.count_object(reponse_xml)
+        #response_xml = Thomson().get_response(self.headers, body)
+        response_xml = File().get_response('JobGetListRsp.xml')
+        return self.count_object(response_xml)
 
     def get_Running(self):
         body = """<soapenv:Envelope
@@ -505,9 +560,9 @@ class Job:
                     </job:JobGetListReq>
                 </soapenv:Body>
             </soapenv:Envelope>"""
-        #reponse_xml = Thomson().get_response(self.headers, body)
-        reponse_xml = File().get_response('JobGetListRsp.xml')
-        return self.parse_xml(reponse_xml)
+        #response_xml = Thomson().get_response(self.headers, body)
+        response_xml = File().get_response('JobGetListRsp.xml')
+        return self.parse_xml(response_xml)
 
     def count_Running(self):
         body = """<soapenv:Envelope
@@ -520,9 +575,9 @@ class Job:
                     </job:JobGetListReq>
                 </soapenv:Body>
             </soapenv:Envelope>"""
-        #reponse_xml = Thomson().get_response(self.headers, body)
-        reponse_xml = File().get_response('JobGetListRsp.xml')
-        return self.count_object(reponse_xml)
+        #response_xml = Thomson().get_response(self.headers, body)
+        response_xml = File().get_response('JobGetListRsp.xml')
+        return self.count_object(response_xml)
 
     def get_Paused(self):
         body = """<soapenv:Envelope
@@ -535,9 +590,9 @@ class Job:
                     </job:JobGetListReq>
                 </soapenv:Body>
             </soapenv:Envelope>"""
-        #reponse_xml = Thomson().get_response(self.headers, body)
-        reponse_xml = File().get_response('JobGetListRsp.xml')
-        return self.parse_xml(reponse_xml)
+        #response_xml = Thomson().get_response(self.headers, body)
+        response_xml = File().get_response('JobGetListRsp.xml')
+        return self.parse_xml(response_xml)
 
     def count_Paused(self):
         body = """<soapenv:Envelope
@@ -550,9 +605,9 @@ class Job:
                     </job:JobGetListReq>
                 </soapenv:Body>
             </soapenv:Envelope>"""
-        #reponse_xml = Thomson().get_response(self.headers, body)
-        reponse_xml = File().get_response('JobGetListRsp.xml')
-        return self.count_object(reponse_xml)
+        #response_xml = Thomson().get_response(self.headers, body)
+        response_xml = File().get_response('JobGetListRsp.xml')
+        return self.count_object(response_xml)
 
     def get_Completed(self):
         body = """<soapenv:Envelope
@@ -565,9 +620,9 @@ class Job:
                     </job:JobGetListReq>
                 </soapenv:Body>
             </soapenv:Envelope>"""
-        #reponse_xml = Thomson().get_response(self.headers, body)
-        reponse_xml = File().get_response('JobGetListRsp.xml')
-        return self.parse_xml(reponse_xml)
+        #response_xml = Thomson().get_response(self.headers, body)
+        response_xml = File().get_response('JobGetListRsp.xml')
+        return self.parse_xml(response_xml)
 
     def count_Completed(self):
         body = """<soapenv:Envelope
@@ -580,9 +635,9 @@ class Job:
                     </job:JobGetListReq>
                 </soapenv:Body>
             </soapenv:Envelope>"""
-        #reponse_xml = Thomson().get_response(self.headers, body)
-        reponse_xml = File().get_response('JobGetListRsp.xml')
-        return self.count_object(reponse_xml)
+        #response_xml = Thomson().get_response(self.headers, body)
+        response_xml = File().get_response('JobGetListRsp.xml')
+        return self.count_object(response_xml)
 
     def get_Aborted(self):
         body = """<soapenv:Envelope
@@ -595,9 +650,9 @@ class Job:
                     </job:JobGetListReq>
                 </soapenv:Body>
             </soapenv:Envelope>"""
-        #reponse_xml = Thomson().get_response(self.headers, body)
-        reponse_xml = File().get_response('JobGetListRsp.xml')
-        return self.parse_xml(reponse_xml)
+        #response_xml = Thomson().get_response(self.headers, body)
+        response_xml = File().get_response('JobGetListRsp.xml')
+        return self.parse_xml(response_xml)
 
     def count_Aborted(self):
         body = """<soapenv:Envelope
@@ -610,9 +665,9 @@ class Job:
                     </job:JobGetListReq>
                 </soapenv:Body>
             </soapenv:Envelope>"""
-        #reponse_xml = Thomson().get_response(self.headers, body)
-        reponse_xml = File().get_response('JobGetListRsp.xml')
-        return self.count_object(reponse_xml)
+        #response_xml = Thomson().get_response(self.headers, body)
+        response_xml = File().get_response('JobGetListRsp.xml')
+        return self.count_object(response_xml)
 
 class JobDetail:
     def __init__(self, jid):
@@ -659,17 +714,17 @@ class JobDetail:
         return json.dumps(args)
 
     def get_param(self):
-        #reponse_xml = Thomson().get_response(self.headers, self.body)
-        reponse_xml = File().get_response('JobGetParamsRsp.xml')
+        #response_xml = Thomson().get_response(self.headers, self.body)
+        response_xml = File().get_response('JobGetParamsRsp.xml')
         #print response_xml
-        return self.parse_xml(reponse_xml)
+        return self.parse_xml(response_xml)
 
 
     def get_job_name(self):
-        #reponse_xml = Thomson().get_response(self.headers, self.body)
-        reponse_xml = File().get_response('JobGetParamsRsp.xml')
+        #response_xml = Thomson().get_response(self.headers, self.body)
+        response_xml = File().get_response('JobGetParamsRsp.xml')
         #print response_xml
-        xmldoc = minidom.parseString(reponse_xml)
+        xmldoc = minidom.parseString(response_xml)
         joblist = xmldoc.getElementsByTagName('wd:Job')
         job = joblist[0]
         jobname = job.attributes['name'].value if 'name' in \
@@ -686,13 +741,14 @@ class JobDetail:
 ##############################################################################
 
 #if __name__ == "__main__":
+    #print Thomson().get_nodes_status()
     #print Thomson().get_datetime()
     #print Thomson().get_mountpoint()
     #print Log().get_log()
     #print Log().get_open()
     #print Job().get_Running()
     #Log().get_log()
-    #Log().get_by_jobID(12810)
+    #print Log().get_by_jobID(530)
     #print Workflow().get_workflow()
     #Job().get_Running()
     #print WorkflowDetail('dsg').get_param()

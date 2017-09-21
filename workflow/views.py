@@ -34,7 +34,7 @@ def get_workflow(request):
 @require_http_methods(['GET'])
 @csrf_exempt
 def get_workflow_params(request, wfid):
-	param_list = WorkflowDetail('wfid').get_param()
+	param_list = WorkflowDetail(wfid).get_param()
 	return HttpResponse(param_list, content_type='application/json', status=200)
 
 
