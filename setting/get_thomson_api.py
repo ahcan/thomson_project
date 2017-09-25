@@ -85,7 +85,8 @@ class Thomson:
                     <get:GetDateAndTimeReq Cmd="Start" OpV="01.00.00"/>
                 </soapenv:Body>
             </soapenv:Envelope>"""
-        #response_xml = Thomson().get_response(headers, body)
+        #response_xml = self.get_response(headers, body)
+        response_xml = File().get_response('GetDateAndTimeRsp.xml')
         #print response_xml
         xmldoc = minidom.parseString(response_xml)
         itemlist = xmldoc.getElementsByTagName('GetDateAndTime:RspOkGetDate')
@@ -167,45 +168,15 @@ class Thomson:
             })
         return json.dumps(agrs)
 
-    def parse_nodes_status(self, xml):
-        args = []
-        xmldoc = minidom.parseString(xml)
-        itemlist = xmldoc.getElementsByTagName('sGetNodesStats:RspSGNSOk')
-        for node_status in itemlist.item(0).childNodes:
-            text = str(node_status.attributes.items())
-            NStatus = node_status.attributes['NStatus'].value if 'NStatus' in text else ""
-            Cpu = node_status.attributes['Cpu'].value if 'Cpu' in text else ""
-            Unreachable = node_status.attributes['Unreachable'].value if 'Unreachable' in text else ""
-            NId = node_status.attributes['NId'].value if 'NId' in text else ""
-            NState = node_status.attributes['NState'].value if 'NState' in text else ""
-            Mem =  node_status.attributes['Mem'].value if 'Mem' in text else ""
-            """#Convert response data to Json
-            args.append({'status'             : NStatus,
-                        'cpu'                 : Cpu,
-                        'uncreahable'         : Unreachable,
-                        'nid'                 : NId,
-                        'state'               : NState,
-                        'mem'                 : Mem
-                })"""
-            #parse jodid for each node
-            args_node = []
-            for node_status_detail in node_status.childNodes:
-                text = str(node_status_detail.attributes.items())
-                jid = node_status_detail.attributes['JId'].value if 'JId' in text else ''
-                if jid:
-                    args_node.append({'jid'             : jid})
-            #Convert response data to Json
-            args.append({'status'             : NStatus,
-                        'cpu'                 : Cpu,
-                        'uncreahable'         : Unreachable,
-                        'nid'                 : NId,
-                        'state'               : NState,
-                        'mem'                 : Mem,
-                        'list_jid'            : args_node
-                })
-        return json.dumps(args)
 
-    def get_nodes_status(self):
+##############################################################################
+#                                                                            #
+#------------------------------------NODES-----------------------------------#
+#                                                                            #
+##############################################################################
+
+class Node:
+    def __init__(self):
         headers = {
             'content-type': 'text/xml; charset=utf-8',
             'SOAPAction': 'SystemGetNodesStats'
@@ -217,10 +188,111 @@ class Thomson:
             </ns67:SystemGetNodesStatsReq>
            </s:Body>
         </s:Envelope>"""
-        #response_xml = self.get_response(headers, body)
-        response_xml = File().get_response('SystemGetNodesStatsRsp.xml')
-        return self.parse_nodes_status(response_xml)
 
+        self.headers = headers
+        self.body = body
+
+    def get_nodes_xml(self):
+        headers = {
+            'content-type': 'text/xml; charset=utf-8',
+            'SOAPAction': 'SystemGetNodesStats'
+        }
+
+        body = """<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+          <s:Body>
+            <ns67:SystemGetNodesStatsReq xmlns:ns67="SystemGetNodesStats" Cmd="Start" OpV="01.00.00">
+            </ns67:SystemGetNodesStatsReq>
+           </s:Body>
+        </s:Envelope>"""
+        #response_xml = Thomson().get_response(headers, body)
+        response_xml = File().get_response('SystemGetNodesStatsRsp.xml')
+        return response_xml
+
+    def parse_dom_object(self, dom_object):
+        text = str(dom_object.attributes.items())
+        NStatus = dom_object.attributes['NStatus'].value if 'NStatus' in text else ""
+        Cpu = dom_object.attributes['Cpu'].value if 'Cpu' in text else "-1"
+        Unreachable = dom_object.attributes['Unreachable'].value if 'Unreachable' in text else ""
+        NId = dom_object.attributes['NId'].value if 'NId' in text else "-1"
+        NState = dom_object.attributes['NState'].value if 'NState' in text else ""
+        Mem =  dom_object.attributes['Mem'].value if 'Mem' in text else "-1"
+        return NStatus,Cpu,Unreachable,NId,NState,Mem
+
+    def parse_xml(self, xml):
+        args = []
+        xmldoc = minidom.parseString(xml)
+        itemlist = xmldoc.getElementsByTagName('sGetNodesStats:RspSGNSOk')
+        for node in itemlist.item(0).childNodes:
+            NStatus,Cpu,Unreachable,NId,NState,Mem = self.parse_dom_object(node)
+            JError, JCounter = NodeDetail(NId).count_job_error()
+            args.append({'status'             : NStatus,
+                        'cpu'                 : int(Cpu),
+                        'uncreahable'         : Unreachable,
+                        'nid'                 : int(NId),
+                        'state'               : NState,
+                        'mem'                 : int(Mem),
+                        'jerror'              : JError,
+                        'jcounter'            : JCounter
+                })
+        return json.dumps(args)
+
+    def get_info(self):
+        xml = self.get_nodes_xml()
+        return self.parse_xml(xml)
+
+class NodeDetail:
+    def __init__(self, node_id):
+        self.nid = int(node_id)
+
+    def get_dom_node(self):
+        dom_node = None
+        nodes_xml = Node().get_nodes_xml()
+        xmldoc = minidom.parseString(nodes_xml)
+        itemlist = xmldoc.getElementsByTagName('sGetNodesStats:RspSGNSOk')
+        for node in itemlist.item(0).childNodes:
+            text = str(node.attributes.items())
+            NId = node.attributes['NId'].value if 'NId' in text else -1
+            if int(NId) == self.nid:
+                dom_node = node
+        return dom_node
+
+    def get_array_job_id(self):
+        array_jid = []
+        dom_node = self.get_dom_node()
+        for node_status_detail in dom_node.childNodes:
+            text = str(node_status_detail.attributes.items())
+            jid = node_status_detail.attributes['JId'].value if 'JId' in text else ''
+            if jid:
+                array_jid.append(int(jid))
+        return array_jid
+
+    def get_list_job(self):
+        args = []
+        array_jid = self.get_array_job_id()
+        dom_node = self.get_dom_node()
+        NStatus,Cpu,Unreachable,NId,NState,Mem = Node().parse_dom_object(dom_node)
+        JError, JCounter = self.count_job_error()
+        job_list = Job().get_job_detail_by_job_id(array_jid)
+        args.append({'status'             : NStatus,
+                    'cpu'                 : int(Cpu),
+                    'uncreahable'         : Unreachable,
+                    'nid'                 : int(NId),
+                    'state'               : NState,
+                    'mem'                 : int(Mem),
+                    'jerror'              : JError,
+                    'jcounter'            : JCounter,
+                    'job_list'            : job_list
+            })
+        return json.dumps(args)
+
+    def count_job_error(self):
+        array_jid = self.get_array_job_id()
+        job_list = Job().get_job_detail_by_job_id(array_jid)
+        error=0
+        for job in job_list:
+            if job['status'] != 'Ok':
+                error += 1
+        return error, len(array_jid)
         
 ##############################################################################
 #                                                                            #
@@ -242,7 +314,7 @@ class Log:
         itemlist = xmldoc.getElementsByTagName('lGet:RspOkLog')
         for log in itemlist.item(0).childNodes:
             text = str(log.attributes.items())
-            JId = log.attributes['JId'].value if 'JId' in text else ""
+            JId = log.attributes['JId'].value if 'JId' in text else "-1"
             Cat = log.attributes['Cat'].value if 'Cat' in text else ""
             LId = log.attributes['LId'].value if 'LId' in text else ""
             Res = log.attributes['Res'].value if 'Res' in text else ''
@@ -253,12 +325,12 @@ class Log:
             OpDate = log.attributes['OpDate'].value if 'OpDate' in text else ""
             ClDate = log.attributes['ClDate'].value if 'ClDate' in text else ""
             #Convert response data to Json
-            args.append({'jid'             : JId,
+            args.append({'jid'             : int(JId),
                         'cat'              : Cat,
-                        'lid'              : LId,
+                        'lid'              : int(LId),
                         'res'              : Res,
                         'jname'            : JName,
-                        'nid'              : NId,
+                        'nid'              : int(NId),
                         'sev'              : Sev,
                         'desc'             : Desc,
                         'opdate'           : OpDate,
@@ -354,8 +426,8 @@ class Workflow:
             #Convert response data to Json
             args.append({'name'             : Name,
                         'wid'               : WId,
-                        'pubver'            : PubVer,
-                        'priver'            : PriVer
+                        'pubver'            : int(PubVer),
+                        'priver'            : int(PriVer)
                 })
         return json.dumps(args)   
 
@@ -445,31 +517,34 @@ class Job:
         }
         self.headers = headers
 
+    def parse_dom_object(self, dom_object):
+        str_tmp = str(dom_object.attributes.items())
+        State = dom_object.attributes['State'].value if 'State' in str_tmp else ""
+        Status = dom_object.attributes['Status'].value if 'Status' in str_tmp else ""
+        JId = dom_object.attributes['JId'].value if 'JId' in str_tmp else ""
+        Prog = dom_object.attributes['Prog'].value if 'Prog' in str_tmp else ""
+        StartDate =  dom_object.attributes['StartDate'].value \
+        if 'StartDate' in str_tmp else ""
+        Ver = dom_object.attributes['Ver'].value if 'Ver' in str_tmp else ""
+        EndDate = dom_object.attributes['EndDate'].value if 'EndDate' in str_tmp else ""
+        jobname, workflowIdRef = JobDetail(str(JId)).get_job_name() if JId else ''
+        return State,Status,JId,Prog,StartDate,EndDate,Ver,jobname,workflowIdRef
+
     def parse_xml(self, xml):
         xmldoc = minidom.parseString(xml)
         itemlist = xmldoc.getElementsByTagName('jGetList:JItem')
         args=[]
         for s in itemlist:
-            str_tmp = str(s.attributes.items())
-            State = s.attributes['State'].value if 'State' in str_tmp else ""
-            Status = s.attributes['Status'].value if 'Status' in str_tmp else ""
-            JId = s.attributes['JId'].value if 'JId' in str_tmp else ""
-            Prog = s.attributes['Prog'].value if 'Prog' in str_tmp else ""
-            StartDate =  s.attributes['StartDate'].value \
-            if 'StartDate' in str_tmp else ""
-            Ver = s.attributes['Ver'].value if 'Ver' in str_tmp else ""
-            EndDate = s.attributes['EndDate'].value if 'EndDate' in str_tmp else ""
-            #Convert response data to Json
-            jobname, workflowIdRef = JobDetail(str(JId)).get_job_name() if JId else ''
+            State,Status,JId,Prog,StartDate,EndDate,Ver,jobname,workflowIdRef = self.parse_dom_object(s)
             args.append({'jname'    : jobname,
                         'wid'       : workflowIdRef,
                         'state'     : State,
                         'status'    : Status,
-                        'jid'       : JId,
-                        'prog'      : Prog,
+                        'jid'       : int(JId),
+                        'prog'      : int(Prog),
                         'startdate' : convert_UTC_2_local(StartDate) \
                         if StartDate else "",
-                        'ver'       : Ver,
+                        'ver'       : int(Ver),
                         'enddate'   : convert_UTC_2_local(EndDate) \
                         if EndDate else ""
                 })
@@ -549,7 +624,7 @@ class Job:
         response_xml = File().get_response('JobGetListRsp.xml')
         return self.count_object(response_xml)
 
-    def get_Running(self):
+    def get_Running_xml(self):
         body = """<soapenv:Envelope
             xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
             xmlns:job="JobGetList" xmlns:job1="JobGlobal">
@@ -562,7 +637,11 @@ class Job:
             </soapenv:Envelope>"""
         #response_xml = Thomson().get_response(self.headers, body)
         response_xml = File().get_response('JobGetListRsp.xml')
-        return self.parse_xml(response_xml)
+        return response_xml
+
+    def get_Running(self):
+        xml = self.get_Running_xml()
+        return self.parse_xml(xml)
 
     def count_Running(self):
         body = """<soapenv:Envelope
@@ -668,6 +747,30 @@ class Job:
         #response_xml = Thomson().get_response(self.headers, body)
         response_xml = File().get_response('JobGetListRsp.xml')
         return self.count_object(response_xml)
+
+    def get_job_detail_by_job_id(self, arr_job_id):
+        running_job_xml = self.get_Running_xml()
+        xmldoc = minidom.parseString(running_job_xml)
+        itemlist = xmldoc.getElementsByTagName('jGetList:JItem')
+        args=[]
+        for job in itemlist:
+            str_tmp = str(job.attributes.items())
+            JId = job.attributes['JId'].value if 'JId' in str_tmp else "-1"
+            if int(JId) in arr_job_id:
+                State,Status,JId,Prog,StartDate,EndDate,Ver,jobname,workflowIdRef = self.parse_dom_object(job)
+                args.append({'jname'    : jobname,
+                            'wid'       : workflowIdRef,
+                            'state'     : State,
+                            'status'    : Status,
+                            'jid'       : JId,
+                            'prog'      : Prog,
+                            'startdate' : convert_UTC_2_local(StartDate) \
+                            if StartDate else "",
+                            'ver'       : Ver,
+                            'enddate'   : convert_UTC_2_local(EndDate) \
+                            if EndDate else ""
+                    })
+        return args
 
 class JobDetail:
     def __init__(self, jid):

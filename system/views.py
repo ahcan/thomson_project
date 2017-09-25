@@ -52,5 +52,12 @@ def get_job_status_json(request):
 @require_http_methods(['GET'])
 @csrf_exempt
 def get_nodes_status_json(request):
-    nodes_status = Thomson().get_nodes_status()
+    nodes_status = Node().get_info()
+    return HttpResponse(nodes_status, content_type='application/json', status=200)
+
+#Link get list job on node: /system/api/<nid>/
+@require_http_methods(['GET'])
+@csrf_exempt
+def get_node_job_json(request, node_id):
+    nodes_status = NodeDetail(node_id).get_list_job()
     return HttpResponse(nodes_status, content_type='application/json', status=200)
