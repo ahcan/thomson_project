@@ -241,6 +241,7 @@ class Node:
         return self.parse_xml(xml)
 
 class NodeDetail:
+
     def __init__(self, node_id):
         self.nid = int(node_id)
 
