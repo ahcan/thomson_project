@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 <!-- <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-app="Log" ng-controller="logCtrl"> -->
+<script type="text/javascript" src="/static/assets/js/jquery.floatThead.min.js"></script>
 <div ng-app="Log" ng-controller="logCtrl">
 	<div>
 		<div max-width="40%">
@@ -33,28 +34,32 @@
 			</div>
 		</div>
 	</div>
-	<div class="">
-		<table class="table table-bordered table-hover table-striped">
-			<thead>
+	<div class="wrapper" style="overflow-y: auto;">
+		<table class="table table-bordered table-hover table-striped scrollTable">
+			<thead class="width-col-default">
 				<tr>
-					<th>#</th>
-					<th>Serverily</th>
-					<th>Node ID</th>
-					<th>Resource</th>
-					<th>Description</th>
-					<th>Job ID</th>
-					<th>Job name</th>
+					<th style="width: 4%;">#</th>
+					<th style="width: 2%;">Serverily</th>
+					<th style="width: 2%;">Node ID</th>
+					<th style="width: 20%;">Resource</th>
+					<th style="width: 20%;">Description</th>
+					<th style="width: 10%;">Open date</th>
+					<th style="width: 10%;">Clean date</th>
+					<th style="width: 4%;">Job ID</th>
+					<th style="width: 8%;">Job name</th>
 				</tr>
 			</thead>
-			<tbody>
+			<tbody class="width-col-default">
 				<tr ng-repeat="log in log_list | filter:search | filter:filterBySev">
-					<td><span>{{'{{$index + 1}'}}}</span></td>
-					<td ><span>{{'{{log.sev}'}}}</span></td>
-					<td ><span>{{'{{log.nid}'}}}</span></td>
-					<td class="col-md-4"><span>{{'{{log.res}'}}}</span></td>
-					<td class="col-md-4"><span>{{'{{log.desc}'}}}</span></td>
-					<td><span>{{'{{log.jid}'}}}</span></td>
-					<td class="col-md-1"><span>{{'{{log.jname}'}}}</span></td>
+					<td style="width: 4%;"><span>{{'{{$index + 1}'}}}</span></td>
+					<td style="width: 2%;"><span>{{'{{log.sev}'}}}</span></td>
+					<td style="width: 2%;"><span>{{'{{log.nid}'}}}</span></td>
+					<td style="width: 20%;"><span>{{'{{log.res}'}}}</span></td>
+					<td style="width: 20%;"><span>{{'{{log.desc}'}}}</span></td>
+					<td style="width: 10%;"><span>{{'{{log.opdate | date:"dd-MM-yyyy H:MM"}'}}}</span></td>
+					<td style="width: 10%;"><span>{{'{{log.cldate | date:"dd-MM-yyyy H:MM"}'}}}</span></td>
+					<td style="width: 4%;"><span>{{'{{log.jid}'}}}</span></td>
+					<td style="width: 10%;"><span>{{'{{log.jname}'}}}</span></td>
 				</tr>
 			</tbody>
 			<tfoot>
@@ -77,7 +82,7 @@
 				console.log($scope.log_list);
 			});
 			$timeout(function(){
-				$scope.reload();
+				// $scope.reload();
 			},10000)
 		};
 	// Fiter By State checkbox
@@ -96,4 +101,22 @@
 		$scope.reload();
 	});
 </script>
+<script type="text/javascript">
+	var $scroll = $('table.scrollTable');
+	$scroll.floatThead({
+		scrollContainer: function($table){
+	    return $table.closest('.wrapper');
+		}
+	});
+</script>
+<style type="text/css">
+	table.floatThead-table {
+    border-top: none;
+    border-bottom: none;
+    /*background-color: #eee;*/
+    }
+    @media only screen and (min-height: 320px){
+		.wrapper{ height: 320px; }
+    }
+</style>
 {% endblock %}

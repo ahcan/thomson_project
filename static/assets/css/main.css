@@ -13,6 +13,10 @@
 /*####Table####*/
 table {
   background-color: #fff; }
+  table .width-col-default th {
+    width: 6%; }
+  table .width-col-default td {
+    width: 6%; }
 
 .table-bordered {
   border: 1px solid #a8a1a1; }
@@ -20,10 +24,11 @@ table {
     border: 1px solid #a8a1a1; }
   .table-bordered tbody tr th {
     border: 1px solid #a8a1a1; }
-  .table-bordered thead tr th {
-    border: 1px solid #a8a1a1; }
-  .table-bordered thead tr td {
-    border: 1px solid #a8a1a1; }
+  .table-bordered thead tr {
+    background-color: #337ab7;
+    color: #fff; }
+    .table-bordered thead tr th {
+      border: 1px solid #a8a1a1; }
 
 .table-striped tbody tr:nth-of-type(2n+1) {
   background-color: #dff0d8;
@@ -35,22 +40,49 @@ table {
   margin-bottom: 0px; }
 
 /*sroll table*/
-table.scroll tbody, table.scroll thead {
-  display: block; }
-  table.scroll tbody tr:after, table.scroll thead tr:after {
-    content: ' ';
-    display: block;
-    visibility: hidden;
-    clear: both; }
+/*@column_1_width: 2%;
+@column_2_width: 20%;
+@column_3_width: 20%;
+@column_4_width: 20%;
+@column_5_width: 20%;
+@column_6_width: 20%;
+@column_7_width: 20%;
+@column_8_width: 20%;
+@column_9_width: 20%;*/
+div .tableContainer {
+  clear: both;
+  /*border: 1px solid #963;*/
+  /*height: 285px;*/
+  overflow-y: auto;
+  width: 100%;
+  height: 100px; }
 
-/*table.scroll tr{
-	display: inline-table;
-	table-layout: fixed;
-}*/
-table.scroll tbody {
-  height: 800px;
+table.scroll tbody.scrollContent {
+  height: 1024px;
+  width: 100%;
   overflow-y: scroll;
-  /*position: absolute;*/ }
+  display: block; }
+  table.scroll tbody.scrollContent tr {
+    display: table;
+    width: 100%;
+    /*&:nth-child(1){
+    	min-width: @column_one_width;
+    }*/ }
+    table.scroll tbody.scrollContent tr td {
+      padding: 3px;
+      /*float: left;*/
+      width: 10%; }
+table.scroll thead.fixedHeader {
+  display: table;
+  overflow: auto;
+  width: 100%; }
+  table.scroll thead.fixedHeader tr {
+    /*display: block;*/
+    position: relative; }
+    table.scroll thead.fixedHeader tr th {
+      padding: 3px;
+      /*float: left;*/
+      width: 10%; }
 
 /*Panel style*/
 .panel-default {
@@ -69,6 +101,9 @@ body {
   text-align: right; }
 .body-right .td-right {
   text-align: left; }
+
+.sub-header {
+  margin-top: 1px; }
 
 .nav .menu .head-menu {
   background-color: #337ab7;
