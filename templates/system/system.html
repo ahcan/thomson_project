@@ -2,104 +2,117 @@
 {% block content %}
 <!-- <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-app="System" ng-controller="systemCtrl"> -->
 <div ng-app="System" ng-controller="systemCtrl">
-	<h2 class="sub-header">System</h2>
-	<div style="display: flex;font-size: initial;padding-bottom: 10px;">
-		<p>Time Zone: &nbsp {{'{{systime[0].timeZone}'}}}</p>
-		<p style="margin-left: 10px;">Date Time: &nbsp <label>{{'{{systime[0].dateAndTime}'}}}</label></p>
-	</div>
-	<div class="colpadding col-md-7 table-responsive">
-		<table class="table table-bordered table-hover table-striped">
-			<thead>
-				<td class="col-md-1" >Device</td>
-				<td class="col-md-1">Status</td>
-				<td class="col-md-5 sortting"><a  role="button" ng-click="orderByField = 'cpu'; reverseSort = !reverseSort">Cpu <i class="glyphicon" ng-show="orderByField=='cpu'" ng-class="{'glyphicon-chevron-up': !reverseSort, 'glyphicon-chevron-down': reverseSort}"></i></a></td>
-				<td class="col-md-5 sortting"><a role="button" ng-click="orderByField = 'mem'; reverseSort = !reverseSort">Mem <i class="glyphicon" ng-show="orderByField=='mem'" ng-class="{'glyphicon-chevron-up': !reverseSort, 'glyphicon-chevron-down': reverseSort}"></i></a></td>
-			</thead>
-			<tbody>
-				<tr ng-repeat="status in lstStatus | orderBy: '-cpu' | orderBy: orderByField: reverseSort">
-					<td class="col-md-1 ">{{'{{status.device}'}}}</td>
-					<td class="col-md-1" ng-class="{'oke': status.status == 'OK', 'error': status.status == 'ER', 'watting': status.status == 'WAT'}"><span>{{'{{status.status}'}}}</span></td>
-					<td class="col-md-5">
-						<div class="progress"><div class="progress-bar-success" role="progressbar" aria-valuenow="{{'{{status.cpu}'}}}" aria-valuemin="0" aria-valuemax="100" style="width:{{'{{status.cpu}'}}}%;" ng-class="{'progress-bar-success': status.cpu <= 50, 'progress-bar-success': status.cpu <= 70 && status.cpu > 50, 'progress-bar-danger': status.cpu > 70}"><span>{{'{{status.cpu}'}}}%</span></div>
-					</td>
-					<td class="col-md-5">
-						<div class="progress"><div class="" role="progressbar" aria-valuenow="{{'{{status.mem}'}}}" aria-valuemin="0" aria-valuemax="100" style="width:{{'{{status.mem}'}}}%;" ng-class="{'progress-bar-success': status.mem <= 50, 'progress-bar-warning': status.mem <= 70 && status.mem > 50, 'progress-bar-danger': status.mem > 70}"><span>{{'{{status.mem}'}}}%</span></div>
+	<div class="content">
+		<h2 class="sub-header">System</h2>
+		<div style="display: inline; font-size: 13px; padding-right: 10px; float: right;">
+			<table style="width: 200px;">
+				<tr>
+					<td style="width: 30px;">dsfhsdkfhd</td>
+					<td style="width: 170px;">
+						<table>
+						<tr>
+							<td>
+								jafhkjsdfh
+							</td>
+						</tr>
+						<tr>
+							<td>
+								dskjfhksjdfh
+							</td>
+						</tr>
+						</table>
 					</td>
 				</tr>
-			</tbody>
-		</table>
+			</table>
+		</div>
 	</div>
-	<div class="body-right">
-		<!-- Second column -->
-		<div class="colpadding col-md-3">
-			<!-- Panel show job status -->
-			<div class="panel panel-primary">
-				<div class="panel-heading">Job Status</div>
-				<div class="panel-body">
-					<table class="table table-panel table-bordered table-hover table-striped">
-						<tr>
-							<td><span><label>Completed:</label></span></td>
-							<td><span>{{'{{jobStatus[0].completed}'}}}</span></td>
-						</tr>
-						<tr>
-							<td><span><label>Waiting:</label></span></td>
-							<td><span>{{'{{jobStatus[0].waiting}'}}}</span></td>
-						</tr>
-						<tr>
-							<td><label>Paused:</label></td>
-							<td><span>{{'{{jobStatus[0].paused}'}}}</span></td>
-						</tr>
-						<tr>
-							<td><label>Running:</label></td>
-							<td><span>{{'{{jobStatus[0].running}'}}}</span></td>
-						</tr>
-						<tr>
-							<td><label>Aborted:</label></td>
-							<td><span>{{'{{jobStatus[0].aborted}'}}}</span></td>
-						</tr>
-						<tr>
-							<td><label>Total:</label></td>
-							<td><span>{{'{{jobStatus[0].total}'}}}</span></td>
-						</tr>
-					</table>
-				</div>
-			</div><!-- Panel show job status -->
+	<div class="content">
+		<div class="colpadding col-md-7 table-responsive">
+			<table class="table table-bordered table-hover table-striped">
+				<thead>
+					<th class="col-md-1" >Device</th>
+					<th class="col-md-1">Status</th>
+					<th class="col-md-5 sortting"><a style="color:#fff;" role="button" ng-click="orderByField = 'cpu'; reverseSort = !reverseSort">Cpu <i class="glyphicon" ng-show="orderByField=='cpu'" ng-class="{'glyphicon-chevron-up': !reverseSort, 'glyphicon-chevron-down': reverseSort}"></i></a></th>
+					<th class="col-md-5 sortting"><a style="color: #fff;" role="button" ng-click="orderByField = 'mem'; reverseSort = !reverseSort">Mem <i class="glyphicon" ng-show="orderByField=='mem'" ng-class="{'glyphicon-chevron-up': !reverseSort, 'glyphicon-chevron-down': reverseSort}"></i></a></th>
+				</thead>
+				<tbody>
+					<tr ng-repeat="status in lstStatus | orderBy: '-cpu' | orderBy: orderByField: reverseSort">
+						<td class="col-md-1 ">{{'{{status.device}'}}}</td>
+						<td class="col-md-1" ng-class="{'oke': status.status == 'OK', 'error': status.status == 'ER', 'watting': status.status == 'WAT'}"><span>{{'{{status.status}'}}}</span></td>
+						<td class="col-md-5">
+							<div class="progress"><div class="progress-bar-success" role="progressbar" aria-valuenow="{{'{{status.cpu}'}}}" aria-valuemin="0" aria-valuemax="100" style="width:{{'{{status.cpu}'}}}%;" ng-class="{'progress-bar-success': status.cpu <= 50, 'progress-bar-success': status.cpu <= 70 && status.cpu > 50, 'progress-bar-danger': status.cpu > 70}"><span>{{'{{status.cpu}'}}}%</span></div>
+						</td>
+						<td class="col-md-5">
+							<div class="progress"><div class="" role="progressbar" aria-valuenow="{{'{{status.mem}'}}}" aria-valuemin="0" aria-valuemax="100" style="width:{{'{{status.mem}'}}}%;" ng-class="{'progress-bar-success': status.mem <= 50, 'progress-bar-warning': status.mem <= 70 && status.mem > 50, 'progress-bar-danger': status.mem > 70}"><span>{{'{{status.mem}'}}}%</span></div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="body-right">
+			<!-- Second column -->
+			<div class="colpadding col-md-3">
+				<!-- Panel show job status -->
+				<div class="panel panel-primary">
+					<div class="panel-heading">Job Status</div>
+					<div class="panel-body">
+						<table class="table table-panel table-bordered table-hover table-striped">
+							<tr>
+								<td><span><label>Completed:</label></span></td>
+								<td><span>{{'{{jobStatus[0].completed}'}}}</span></td>
+							</tr>
+							<tr>
+								<td><span><label>Waiting:</label></span></td>
+								<td><span>{{'{{jobStatus[0].waiting}'}}}</span></td>
+							</tr>
+							<tr>
+								<td><label>Paused:</label></td>
+								<td><span>{{'{{jobStatus[0].paused}'}}}</span></td>
+							</tr>
+							<tr>
+								<td><label>Running:</label></td>
+								<td><span>{{'{{jobStatus[0].running}'}}}</span></td>
+							</tr>
+							<tr>
+								<td><label>Aborted:</label></td>
+								<td><span>{{'{{jobStatus[0].aborted}'}}}</span></td>
+							</tr>
+							<tr>
+								<td><label>Total:</label></td>
+								<td><span>{{'{{jobStatus[0].total}'}}}</span></td>
+							</tr>
+						</table>
+					</div>
+				</div><!-- Panel show job status -->
 
-			<!-- Panel show mountpoint -->
-			<div class="panel panel-primary">
-				<div class="panel-heading">Mount Point</div>
-				<div class="panel-body">
-					<table class="table table-bordered table-panel table-hover table-striped">
-						<tr ng-repeat="point in mountPoints">
-							<td>{{'{{point.name}'}}}</td>
-						</tr>
-					</table>
-				</div>
-			</div><!-- Panel show mountpoint -->
-		</div><!-- Second column -->
-		<!-- Third column -->
-		<div class="colpadding col-md-2">
-			<!-- Panel show Lisense -->
-			<div class="panel panel-primary">
-				<div class="panel-heading">License</div>
-				<div class="panel-body">
-				</div>
-			</div><!-- Panel show License -->
-		</div><!-- Third column -->
+				<!-- Panel show mountpoint -->
+				<div class="panel panel-primary">
+					<div class="panel-heading">Mount Point</div>
+					<div class="panel-body">
+						<table class="table table-bordered table-panel table-hover table-striped">
+							<tr ng-repeat="point in mountPoints">
+								<td>{{'{{point.name}'}}}</td>
+							</tr>
+						</table>
+					</div>
+				</div><!-- Panel show mountpoint -->
+			</div><!-- Second column -->
+			<!-- Third column -->
+			<div class="colpadding col-md-2">
+				<!-- Panel show Lisense -->
+				<div class="panel panel-primary">
+					<div class="panel-heading">License</div>
+					<div class="panel-body">
+					</div>
+				</div><!-- Panel show License -->
+			</div><!-- Third column -->
+		</div>
 	</div>
 </div>
 <script type="text/javascript">
 	var app =angular.module('System', []);
 	app.controller('systemCtrl', function($scope, $http, $timeout) {
 		// body...
-		$scope.reloadTime=function(){
-			$http.get("/system/api/datetime/").then(function(reponse){
-				$scope.systime = reponse.data;
-			});
-			$timeout(function(){
-				// $scope.reload();
-			},10000)
-		};
 		$scope.reloadJobStatus=function(){
 			$http.get("/system/api/jobstatus/").then(function(reponse){
 				$scope.jobStatus = reponse.data;
@@ -120,42 +133,41 @@
 		}
 		$scope.reloadDevice = function(){
 			$http.get("/system/api/status/").then(function(reponse){
-				// $scope.lstStatus = reponse.data;
-				console.log($scope.lstStatus);
+				$scope.lstStatus = reponse.data;
+				console.log($scope.lstStatus[0].cpu);
 			});
 			$timeout(function() {
-				$scope.reloadDevice();
+				// $scope.reloadDevice();
 			}, 5000)
 		}
 		// $scope.orderByField = 'cpu'
 		$scope.reverseSort = false;
 		$scope.reloadDevice();
 		$scope.reloadJobStatus();
-		$scope.reloadTime();
 		$scope.reloadMountPoint();
-		$scope.lstStatus = [{device:'Thomson',
-		status:'OK', mem:14 ,cpu:1},{device:'API',
-		status:'ER', mem:100 ,cpu:80},{device:'Thomson',
-		status:'OK', mem:70 ,cpu:11},{device:'Thomson',
-		status:'OK', mem:14 ,cpu:20},
-		{device:'Thomson',
-		status:'WAT', mem:20 ,cpu:1},{device:'API',
-		status:'OK', mem:14 ,cpu:2},{device:'Thomson',
-		status:'OK', mem:14 ,cpu:50},{device:'Thomson',
-		status:'OK', mem:14 ,cpu:100},{device:'Thomson',
-		status:'OK', mem:14 ,cpu:50},
-		{device:'Thomson',
-		status:'OK', mem:14 ,cpu:50},
-		{device:'Thomson',
-		status:'OK', mem:14 ,cpu:50},
-		{device:'Thomson',
-		status:'OK', mem:14 ,cpu:50},
-		{device:'Thomson',
-		status:'OK', mem:14 ,cpu:50},
-		{device:'Thomson',
-		status:'OK', mem:14 ,cpu:50},
-		{device:'Thomson',
-		status:'OK', mem:14 ,cpu:50}]
+		// $scope.lstStatus = [{device:'Thomson',
+		// status:'OK', mem:14 ,cpu:1},{device:'API',
+		// status:'ER', mem:100 ,cpu:80},{device:'Thomson',
+		// status:'OK', mem:70 ,cpu:11},{device:'Thomson',
+		// status:'OK', mem:14 ,cpu:20},
+		// {device:'Thomson',
+		// status:'WAT', mem:20 ,cpu:1},{device:'API',
+		// status:'OK', mem:14 ,cpu:2},{device:'Thomson',
+		// status:'OK', mem:14 ,cpu:50},{device:'Thomson',
+		// status:'OK', mem:14 ,cpu:100},{device:'Thomson',
+		// status:'OK', mem:14 ,cpu:50},
+		// {device:'Thomson',
+		// status:'OK', mem:14 ,cpu:50},
+		// {device:'Thomson',
+		// status:'OK', mem:14 ,cpu:50},
+		// {device:'Thomson',
+		// status:'OK', mem:14 ,cpu:50},
+		// {device:'Thomson',
+		// status:'OK', mem:14 ,cpu:50},
+		// {device:'Thomson',
+		// status:'OK', mem:14 ,cpu:50},
+		// {device:'Thomson',
+		// status:'OK', mem:14 ,cpu:50}]
 
 	});
 </script>

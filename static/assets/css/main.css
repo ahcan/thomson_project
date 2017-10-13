@@ -22,8 +22,6 @@ table {
   border: 1px solid #a8a1a1; }
   .table-bordered tbody tr td {
     border: 1px solid #a8a1a1; }
-  .table-bordered tbody tr th {
-    border: 1px solid #a8a1a1; }
   .table-bordered thead tr {
     background-color: #337ab7;
     color: #fff; }
@@ -103,7 +101,8 @@ body {
   text-align: left; }
 
 .sub-header {
-  margin-top: 1px; }
+  margin-top: 1px;
+  display: inline; }
 
 .nav .menu .head-menu {
   background-color: #337ab7;
@@ -167,7 +166,8 @@ body {
   padding-left: 5px; }
 
 .content {
-  padding: 0px; }
+  padding: 0px;
+  margin-bottom: 10px; }
 
 /*progressbar*/
 .progress {
@@ -212,5 +212,25 @@ body {
 
 .glyphicon-remove {
   color: #dd2c00; }
+
+table.floatThead-table {
+  border-top: none;
+  border-bottom: none;
+  /*background-color: #eee;*/ }
+
+@media only screen and (min-height: 320px) {
+  .wrapper {
+    height: 720px; } }
+div#systemTime {
+  position: fixed;
+  left: 32%;
+  margin-top: 10px;
+  color: #fff;
+  font-size: 16px; }
+
+.row .main {
+  padding-right: 20px;
+  padding-left: 0px;
+  padding: 10px; }
 
 /*# sourceMappingURL=main.css.map */
