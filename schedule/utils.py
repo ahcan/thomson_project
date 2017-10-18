@@ -114,7 +114,8 @@ class ReadCrontab:
     def __init__(self, task):
         self.task = task
     def serialization(self):
-        cron_pattern=re.compile("\d{1,2}\ \d{1,2}\ \d{1,2}\ \d{1,2}\ \d{1,2}\ sleep \d{1,2}; /bin/python /script/crontabSMP/job.py -[Jj] \d{3,10}\ -[Ss] (?:[Ss]tart|[Ss]top)")
+        cron_pattern=re.compile("[ ?\d{1,2}]*\ sleep \d{1,2}; /bin/python /script/crontabSMP/job.py -[Jj] [,?\d{3,10}]*\ -[Ss] (?:[Ss]tart|[Ss]top)")
+        #cron_pattern=re.compile("\d{1,2}\ \d{1,2}\ \d{1,2}\ \d{1,2}\ \d{1,2}\ sleep \d{1,2}; /bin/python /script/crontabSMP/job.py -[Jj] \d{3,10}\ -[Ss] (?:[Ss]tart|[Ss]top)")
         cron = re.findall(cron_pattern, self.task):
         if cron:
             return cron[0]
