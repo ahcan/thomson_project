@@ -5,7 +5,7 @@ import time
 from datetime import datetime
 import re
 import json
-#from setting.get_thomson_api import *
+from setting.get_thomson_api import *
 
 class Crontab:
 
@@ -182,4 +182,4 @@ class ReadCrontab:
 #print ReadCrontab('7 14 18 10 3 sleep 5; /bin/python /script/crontabSMP/job.py -j 13429,13430,13431,13432 -s start').get_pattern()
 
 #print Crontab().get_all()
-print Crontab().create('2017-10-19 11:32:11', '1111', 'start')
+#print Crontab().create('2017-10-19 11:32:11', '1111', 'start')
