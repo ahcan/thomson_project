@@ -39,6 +39,8 @@ def get_add(request):
 		list_jobid = ''
 		for job in list_job:
 			list_jobid = list_jobid + job + ','
+		if list_jobid:
+			list_jobid = list_jobid[:-1]
 		schedule = Crontab().create(date_time, list_jobid, 'start')
 		if schedule:
 			Crontab().append(schedule)
