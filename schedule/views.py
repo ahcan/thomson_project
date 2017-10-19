@@ -7,6 +7,7 @@ from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect, Http404, HttpResponse 
 from rest_framework import status
 from utils import *
+import re
 
 # Create your views here.
 
@@ -28,11 +29,20 @@ def get_index(request):
 def get_add(request):
 	if request.method == 'POST':
 		# get value post
-		date = request.POST.get('ipDay', '').strip()
+		date_time = request.POST.get('day', '').strip()
 		jobID = request.POST.get('jobID', '').strip()
-		print date
-		print jobID
-		return render_to_response("schedule/addJob.html")
+		##validate jobid input
+		job_pattern = re.compile("\d{3,10}")
+		list_job = re.findall(job_pattern,jobID)
+		##end validate
+		list_jobid = ''
+		for job in list_job:
+			list_jobid = list_jobid + job + ','
+		schedule = Crontab().create(date_time, list_jobid, 'start')
+		if schedule:
+			Crontab().append(schedule)
+			return render_to_response("schedule/addJob.html")
+		#return render_to_response("schedule/addJob.html")
 		# return HttpResponse(date)
 		# return render_to_response("schedule/index.html")
 	else:

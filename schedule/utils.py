@@ -157,7 +157,7 @@ class ReadCrontab:
         full_date = 0
         action = None
         alarm = ''
-        state = 0
+        state = 1
         jid_pattern = re.compile("\d{3,10}")    
         list_jid = re.findall(jid_pattern, cron)
         reaction_pattern = re.compile("(?:-[Ss] [Ss]tart|-[Ss] [Ss]top)")
@@ -173,7 +173,7 @@ class ReadCrontab:
             mm, ss = divmod(minus_dt, 60)
             hh, mm = divmod(mm, 60)
             alarm = "%d:%02d:%02d" % (hh, mm, ss)
-            state = 1
+            state = 0
         return ss,mm,hh,DD,MM,YYYY,dayofweek,list_jid,action,full_date,state,alarm
 #Crontab().append(content='11 11 * * * /bin/sh /home/thomson_crontab/add_aa.sh', override=False)
 #Crontab().pop(content='35 15 * * * /bin/sh /home/thomson_crontab/add_aa.sh')
