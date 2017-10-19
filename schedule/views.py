@@ -17,8 +17,21 @@ from utils import *
 ##############################################################################
 #Link get all job: /job/api/job
 @require_http_methods(['GET'])
-@csrf_exempt
+# @csrf_exempt
 def get_schedule_json(request):
     schedule_list = Crontab().get_all()
     print schedule_list
     return HttpResponse(schedule_list, content_type='application/json', status=200)
+@csrf_exempt
+def get_add(request):
+	if request.method == 'POST':
+		# get value post
+		date = request.POST.get('ipDay', '').strip()
+		jobID = request.POST.get('jobID', '').strip()
+		print date
+		print jobID
+		return render_to_response("schedule/addJob.html")
+		# return HttpResponse(date)
+		# return render_to_response("schedule/index.html")
+	else:
+		return render_to_response("schedule/addJob.html")

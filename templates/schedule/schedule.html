@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block content %}
+<script src="/static/ajax/libs/jquery/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/ui/1.11.3/jquery-ui.min.js" ></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.1/moment.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css">
+<div class="content">
+	<form id="jobID">
+		<label>Jod ID:</label>&nbsp<input type="text" name="jID" id="jID">
+		<div class="body-right">
+		<div class="form-group">
+			 <div class="input-group date" id="daypicker">
+	            <input type="text" class="form-control" id="ipDay" name="day"> <span class="input-group-addon">
+	                <span class="glyphicon glyphicon-calendar"></span>
+				</span>
+			</div>
+		</div>
+		<input type="button" name="submit" id="submit" value="Submit">
+	</form>
+	</div>
+</div>
+<script type="text/javascript">
+	$(document).ready(function () {
+		// body...
+		$('#daypicker').datetimepicker({
+		    format: 'DD-MM-YYYY hh:mm:ss',
+		    allowInputToggle: true
+		});
+		$('#submit').click(function(){
+			var datestring = $('#ipDay').val().replace(/-/g,"/");
+			// var date = Date.parseExact(datestring, "dd/MM/yyyy");
+			// console.log(date.getFullYear());
+			console.log(datestring);
+		});
+	});
+</script>
+{% endblock %}
