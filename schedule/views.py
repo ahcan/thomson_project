@@ -34,6 +34,7 @@ def get_add(request):
 		##validate jobid input
 		job_pattern = re.compile("\d{3,10}")
 		list_job = re.findall(job_pattern,jobID)
+		print list_job
 		##end validate
 		list_jobid = ''
 		for job in list_job:
@@ -41,9 +42,9 @@ def get_add(request):
 		schedule = Crontab().create(date_time, list_jobid, 'start')
 		if schedule:
 			Crontab().append(schedule)
-			return render_to_response("schedule/addJob.html")
+			return render_to_response("schedule/schedule.html")
 		#return render_to_response("schedule/addJob.html")
 		# return HttpResponse(date)
-		# return render_to_response("schedule/index.html")
+		return render_to_response("schedule/schedule.html")
 	else:
 		return render_to_response("schedule/addJob.html")
