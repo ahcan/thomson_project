@@ -13,7 +13,7 @@
 					<!-- <label class="checkbox-inline" ng-repeat="state in getStates()">
 						<input type="checkbox" ng-model="filters[state]">{{'{{state}'}}}
 					</label> -->
-					<a href="#addModal" role="button" data-toggle="modal" class="btn btn-success btn-xs">Add new process <span class="glyphicon glyphicon-plus"></span></a>
+					<a href="/schedule/add" role="button" data-parent="#createJob" data-toggle="modal" class="btn btn-success btn-xs">Add new process <span class="glyphicon glyphicon-plus"></span></a>
 				</div>
 			</div>
 			<div class="wrapper" style="overflow-y: auto;"">
@@ -68,6 +68,9 @@
 </script>
 <script type="text/javascript">
 	$(document).ready(function () {
+		$('#createJob').on('click', function(e){
+			console.log("$$$$$$$");
+		});
 		var $scroll = $('table.scrollTable');
 		$scroll.floatThead({
 		scrollContainer: function($table){
