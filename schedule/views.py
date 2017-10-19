@@ -29,7 +29,7 @@ def get_index(request):
 def get_add(request):
 	if request.method == 'POST':
 		# get value post
-		date_time = request.POST.get('day', '').strip()
+		date_time = request.POST.get('ipDay', '').strip()
 		jobID = request.POST.get('jobID', '').strip()
 		##validate jobid input
 		job_pattern = re.compile("\d{3,10}")
@@ -44,9 +44,7 @@ def get_add(request):
 		schedule = Crontab().create(date_time, list_jobid, 'start')
 		if schedule:
 			Crontab().append(schedule)
-			return render_to_response("schedule/schedule.html")
-		#return render_to_response("schedule/addJob.html")
-		# return HttpResponse(date)
-		return render_to_response("schedule/schedule.html")
+			return HttpResponseRedirect('/schedule/')
+		return HttpResponseRedirect('/schedule/')
 	else:
 		return render_to_response("schedule/addJob.html")

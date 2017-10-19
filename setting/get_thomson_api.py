@@ -760,7 +760,7 @@ class Job:
         return self.count_object(response_xml)
 
     def get_job_detail_by_job_id(self, arr_job_id):
-        #print arr_job_id
+        print arr_job_id
         job_xml = self.get_job_xml()
         xmldoc = minidom.parseString(job_xml)
         itemlist = xmldoc.getElementsByTagName('jGetList:JItem')
