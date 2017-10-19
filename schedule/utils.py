@@ -5,10 +5,16 @@ import time
 from datetime import datetime
 import re
 import json
+#from setting.get_thomson_api import *
 
 class Crontab:
 
     def create(self, date_time, jobid, action):
+        if not date_time.isdigit():
+            try:
+                date_time = int(time.mktime(time.strptime(date_time, '%Y-%m-%d %H:%M:%S')))
+            except Exception as e:
+                return None
         dt=datetime.fromtimestamp(date_time)
         #print dt
         DD = dt.day
@@ -18,7 +24,7 @@ class Crontab:
         mm = dt.minute
         ss = dt.second
         dayofweek = dt.isocalendar()[2]
-        task = """%s %s %s %s %s sleep %s; /bin/python /home/thomson_crontab/start_job/thomson_job.py -j %s -s %s"""%(mm,hh,DD,MM,dayofweek,ss,jobid,action )
+        task = """%s %s %s %s %s sleep %s; /bin/python /script/crontabSMP/job.py -j %s -s %s"""%(mm,hh,DD,MM,dayofweek,ss,jobid,action )
         return task
 
     def _runcmd(self, cmd, input=None):
@@ -95,17 +101,24 @@ class Crontab:
             id+=1
             schedule = ReadCrontab(task).serialization()
             if schedule:
-                SS,MM,HH,dd,mm,dayofweek,jid,action,full_date = ReadCrontab(schedule).get_pattern()
+                ss,mm,hh,DD,MM,YYYY,dayofweek,list_jid,action,full_date,state,alarm = ReadCrontab(schedule).get_pattern()
+                array_jid = []
+                for jid in list_jid:
+                    array_jid.append(int(jid))
+                list_job = Job().get_job_detail_by_job_id(array_jid)
                 agrs.append({'id'              : int(id),
-                             'SS'              : int(SS),
-                             'MM'              : int(MM),
-                             'HH'              : int(HH),
-                             'dd'              : int(dd),
+                             'ss'              : int(ss),
                              'mm'              : int(mm),
+                             'hh'              : int(hh),
+                             'DD'              : int(DD),
+                             'MM'              : int(MM),
+                             'YYYY'            : int(YYYY),
                              'dayofweek'       : int(dayofweek),
-                             'jobid'           : int(jid),
+                             'list_job'      : list_job,
                              'action'          : action,
-                             'unix_timestamp'  : full_date
+                             'unix_timestamp'  : full_date,
+                             'state'           : int(state),
+                             'alarm'           : alarm
                             })
         return json.dumps(agrs)
 
@@ -116,14 +129,17 @@ class ReadCrontab:
     def serialization(self):
         cron_pattern=re.compile("[ ?\d{1,2}]*\ sleep \d{1,2}; /bin/python /script/crontabSMP/job.py -[Jj] [,?\d{3,10}]*\ -[Ss] (?:[Ss]tart|[Ss]top)")
         #cron_pattern=re.compile("\d{1,2}\ \d{1,2}\ \d{1,2}\ \d{1,2}\ \d{1,2}\ sleep \d{1,2}; /bin/python /script/crontabSMP/job.py -[Jj] \d{3,10}\ -[Ss] (?:[Ss]tart|[Ss]top)")
-        cron = re.findall(cron_pattern, self.task):
+        cron = re.findall(cron_pattern, self.task)
         if cron:
             return cron[0]
         else:
             return None
-    def get_unix_timestamp(self, SS, MM, HH, dd, mm, yyyy):
-        human_date = "%s-%s-%s %s:%s:%s"%(yyyy,mm,dd,HH,MM,SS)
+    def get_unix_timestamp(self, ss, mm, hh, DD, MM, YYYY):
+        human_date = "%s-%s-%s %s:%s:%s"%(YYYY,MM,DD,hh,mm,ss)
         return (int(time.mktime(time.strptime(human_date, '%Y-%m-%d %H:%M:%S'))) - time.timezone)
+
+#state = 0: schedule complete
+#state = 1: schedule waiting
 
     def get_pattern(self):
         cron = self.serialization()
@@ -131,28 +147,39 @@ class ReadCrontab:
             return None
         number_pattern=re.compile("\d{1,2}")
         list_time=re.findall(number_pattern, cron)
-        SS = list_time[5]
-        MM = list_time[0]
-        HH = list_time[1]
-        dd = list_time[2]
-        mm = list_time[3]
+        ss = list_time[5]
+        mm = list_time[0]
+        hh = list_time[1]
+        DD = list_time[2]
+        MM = list_time[3]
+        YYYY = '2017'
         dayofweek = list_time[4]
-        jid_pattern = re.compile("\d{3,10}")
+        full_date = 0
+        action = None
+        alarm = ''
+        state = 0
+        jid_pattern = re.compile("\d{3,10}")    
         list_jid = re.findall(jid_pattern, cron)
-        jid = list_jid[0]
         reaction_pattern = re.compile("(?:-[Ss] [Ss]tart|-[Ss] [Ss]top)")
         action_pattern = re.compile("([Ss]tart|[Ss]top)")
         reaction = re.findall(reaction_pattern, cron)
-        action = None
         if reaction:
             action = re.findall(action_pattern, reaction[0])
             action = action[0]
-        full_date = self.get_unix_timestamp(SS,MM,HH,dd,mm,'2017')
-        return SS,MM,HH,dd,mm,dayofweek,jid,action,full_date
+        full_date = self.get_unix_timestamp(ss,mm,hh,DD,MM,YYYY)
+        now = time.time() - time.timezone
+        minus_dt = full_date - now
+        if minus_dt > 0:
+            mm, ss = divmod(minus_dt, 60)
+            hh, mm = divmod(mm, 60)
+            alarm = "%d:%02d:%02d" % (hh, mm, ss)
+            state = 1
+        return ss,mm,hh,DD,MM,YYYY,dayofweek,list_jid,action,full_date,state,alarm
 #Crontab().append(content='11 11 * * * /bin/sh /home/thomson_crontab/add_aa.sh', override=False)
 #Crontab().pop(content='35 15 * * * /bin/sh /home/thomson_crontab/add_aa.sh')
 #Crontab().append(Crontab().create(1508144477, '111111', 'start'))
 #print Crontab().get_list()
-#print ReadCrontab('1 16 16 10 1 sleep 17; /bin/python /script/crontabSMP/job.py -J 111 -S Start999999999999999').get_pattern()
+#print ReadCrontab('7 14 18 10 3 sleep 5; /bin/python /script/crontabSMP/job.py -j 13429,13430,13431,13432 -s start').get_pattern()
 
 #print Crontab().get_all()
+print Crontab().create('2017-10-19 11:32:11', '1111', 'start')
