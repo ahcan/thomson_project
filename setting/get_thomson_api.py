@@ -563,7 +563,7 @@ class Job:
         return len(itemlist)
 
 
-    def get_job(self):
+    def get_job_xml(self):
         body = """<soapenv:Envelope
             xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
             xmlns:job="JobGetList" xmlns:job1="JobGlobal">
@@ -580,6 +580,10 @@ class Job:
             </soapenv:Envelope>"""
         #response_xml = Thomson().get_response(self.headers, body)
         response_xml = File().get_response('JobGetListRsp.xml')
+        return response_xml
+
+    def get_job(self):
+        response_xml = self.get_job_xml()
         return self.parse_xml(response_xml)
 
     def count_job(self):
@@ -756,8 +760,9 @@ class Job:
         return self.count_object(response_xml)
 
     def get_job_detail_by_job_id(self, arr_job_id):
-        running_job_xml = self.get_Running_xml()
-        xmldoc = minidom.parseString(running_job_xml)
+        #print arr_job_id
+        job_xml = self.get_job_xml()
+        xmldoc = minidom.parseString(job_xml)
         itemlist = xmldoc.getElementsByTagName('jGetList:JItem')
         args=[]
         for job in itemlist:
