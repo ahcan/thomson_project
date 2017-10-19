@@ -7,4 +7,5 @@ urlpatterns = [
     url(r'^system/', include('system.urls')),
     url(r'^workflow/', include('workflow.urls')),
     url(r'^job/', include('job.urls')),
+    url(r'^schedule/', include('schedule.urls')),
 ]
