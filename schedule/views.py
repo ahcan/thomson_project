@@ -22,6 +22,8 @@ def get_schedule_json(request):
     schedule_list = Crontab().get_all()
     print schedule_list
     return HttpResponse(schedule_list, content_type='application/json', status=200)
+def get_index(request):
+	return render_to_response("schedule/schedule.html")
 @csrf_exempt
 def get_add(request):
 	if request.method == 'POST':

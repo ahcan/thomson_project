@@ -1,38 +1,80 @@
 {% extends 'base.html' %}
 {% block content %}
-<script src="/static/ajax/libs/jquery/jquery-3.2.1.min.js"></script>
-<script type="text/javascript" src="https://code.jquery.com/ui/1.11.3/jquery-ui.min.js" ></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.1/moment.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
-<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css">
-<div class="content">
-	<form id="jobID">
-		<label>Jod ID:</label>&nbsp<input type="text" name="jID" id="jID">
-		<div class="body-right">
-		<div class="form-group">
-			 <div class="input-group date" id="daypicker">
-	            <input type="text" class="form-control" id="ipDay" name="day"> <span class="input-group-addon">
-	                <span class="glyphicon glyphicon-calendar"></span>
-				</span>
+<script src="/static/assets/js/jasny-bootstrap.min.js"></script>
+<script type="text/javascript" src="/static/assets/js/jquery.floatThead.min.js""></script>
+<div ng-app="schedule" ng-controller="scheCtrl">
+	<div class="content">
+		<h2 class="sub-header">Schedule</h2>
+	</div>
+	<div class="content">
+		<div class="table-responsive col-md-11">
+			<div class="panel-body">
+				<div>
+					<!-- <label class="checkbox-inline" ng-repeat="state in getStates()">
+						<input type="checkbox" ng-model="filters[state]">{{'{{state}'}}}
+					</label> -->
+					<a href="#addModal" role="button" data-toggle="modal" class="btn btn-success btn-xs">Add new process <span class="glyphicon glyphicon-plus"></span></a>
+				</div>
+			</div>
+			<div class="wrapper" style="overflow-y: auto;"">
+				<table class="table table-bordered table-hover table-striped scrollTable">
+					<thead>
+						<tr>
+							<th>STT</th>
+							<th>Action</th>
+							<th>Alarm</th>
+							<th>State</th>
+							<th>Date</th>
+						</tr>
+					</thead>
+					<tfoot>
+						<tr>
+							<td colspan="9" class="text-center">Total: {{'{{filterState.length}'}}}</td>
+						</tr>
+					</tfoot>
+					<tbody data-link="row" class="rowlink">
+						<tr ng-repeat="scrontab in (scrontab_list | filter:filterByState) as filterState" >
+							<td class="col-md-1"><a href="#rowlinkModal" data-toggle="modal" data-target="#modal{{'{{scrontab.jid}'}}}" ng-click="moreinfo(scrontab.jid)">{{'{{$index + 1}'}}}</a></td>
+							<td class="col-md-1"><sapn>{{'{{scrontab.action}'}}}</sapn></td>
+							<td class="col-md-1"><span>{{'{{scrontab.alarm}'}}}</span></td>
+							<td class="col-md-1" ng-class="{'completed': scrontab.state==1, 'watting': scrontab.state==0}"><span ng-if="scrontab.state == 1"> Completed</span>
+								<span ng-if="scrontab.state == 0"> Watting</span></td>
+					<!-- 		<td class="col-md-1" ng-class="{'running': job.state == 'Running', 'aborted': job.state == 'Aborted', 'watting': job.state == 'Watting', 'paused': job.state == 'Paused', 'completed': job.state == 'Completed'}"><span>{{'{{job.state}'}}}</span></td> -->
+							<!-- <td class="col-md-1" n><span>{{'{{scrontab.startdate}'}}}</span></td> -->
+							<td class="col-md-1"><span>{{'{{scrontab.unix_timestamp*1000 | date: "dd-M-yyyy HH:mm:ss"}'}}}</span></td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
 		</div>
-		<input type="button" name="submit" id="submit" value="Submit">
-	</form>
 	</div>
 </div>
+<script>
+	var app = angular.module('schedule',[]);
+	app.controller("scheCtrl", function ($scope,$http,$timeout){
+		$scope.reload = function () {
+			$scope.total = 0;
+			$http.get('/schedule/api/schedule').then(function (response) {
+				$scope.scrontab_list = response.data;
+				$scope.total = $scope.scrontab_list.length
+				console.log($scope.scrontab_list);
+			});
+			$timeout(function(){
+				// $scope.reload();
+			},10000)
+		};
+		$scope.reload();
+	});
+</script>
 <script type="text/javascript">
 	$(document).ready(function () {
-		// body...
-		$('#daypicker').datetimepicker({
-		    format: 'DD-MM-YYYY hh:mm:ss',
-		    allowInputToggle: true
-		});
-		$('#submit').click(function(){
-			var datestring = $('#ipDay').val().replace(/-/g,"/");
-			// var date = Date.parseExact(datestring, "dd/MM/yyyy");
-			// console.log(date.getFullYear());
-			console.log(datestring);
-		});
+		var $scroll = $('table.scrollTable');
+		$scroll.floatThead({
+		scrollContainer: function($table){
+	    return $table.closest('.wrapper');
+		}
 	});
+	});
+	
 </script>
 {% endblock %}
