@@ -20,7 +20,7 @@ class Crontab:
         DD = dt.day
         MM = dt.month
         hh = dt.hour
-        print hh
+        #print hh
         mm = dt.minute
         ss = dt.second
         dayofweek = dt.isocalendar()[2]
@@ -130,7 +130,7 @@ class Crontab:
             schedule = CrontabDetail(task).serialization()
             if schedule:
                 ss,mm,hh,DD,MM,YYYY,dayofweek,list_jid,action,full_date,state,alarm = CrontabDetail(schedule).get_pattern()
-                print list_jid
+                #print list_jid
                 array_jid = []
                 for jid in list_jid:
                     array_jid.append(int(jid))
