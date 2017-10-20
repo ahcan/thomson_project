@@ -173,7 +173,8 @@ class ReadCrontab:
         if minus_dt > 0:
             mm, ss = divmod(minus_dt, 60)
             hh, mm = divmod(mm, 60)
-            alarm = "%d:%02d:%02d" % (hh, mm, ss)
+            DD, hh = divmod(hh, 24)
+            alarm = "%d day(s) %02d:%02d:%02d" % (DD, hh, mm, ss)
             state = 0
         return ss,mm,hh,DD,MM,YYYY,dayofweek,list_jid,action,full_date,state,alarm
 #Crontab().append(content='11 11 * * * /bin/sh /home/thomson_crontab/add_aa.sh', override=False)
