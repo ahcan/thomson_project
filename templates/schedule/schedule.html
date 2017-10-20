@@ -87,10 +87,9 @@
 			$http.get('/schedule/api/schedule').then(function (response) {
 				$scope.scrontab_list = response.data;
 				$scope.total = $scope.scrontab_list.length
-				console.log($scope.scrontab_list);
 			});
 			$timeout(function(){
-				// $scope.reload();
+				$scope.reload();
 			},10000)
 		};
 		$scope.reload();

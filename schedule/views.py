@@ -34,7 +34,7 @@ def get_add(request):
 		##validate jobid input
 		job_pattern = re.compile("\d{3,10}")
 		list_job = re.findall(job_pattern,jobID)
-		print list_job
+		# print list_job
 		##end validate
 		list_jobid = ''
 		for job in list_job:
