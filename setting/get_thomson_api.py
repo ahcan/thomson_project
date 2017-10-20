@@ -15,14 +15,16 @@ import tzlocal # $ pip install tzlocal
 
 #data input string YYYY-MM-DDTHH:mm:ss.000Z, return a string
 def convert_UTC_2_local(utc_time):
+    print utc_time
     #return UTC fortmat
     ts = time.strptime(utc_time[:19], "%Y-%m-%dT%H:%M:%S")
-    dateTime = time.strftime("%Y-%m-%d %H:%M:%S", ts)
+    human_date = time.strftime("%Y-%m-%d %H:%M:%S", ts)
+    return (int(time.mktime(time.strptime(human_date, '%Y-%m-%d %H:%M:%S'))) - time.timezone)
     #Convert UTC date to local date
-    local_timezone = tzlocal.get_localzone()
-    utc_time = datetime.strptime(dateTime, "%Y-%m-%d %H:%M:%S")
-    local_time = utc_time.replace(tzinfo=pytz.utc).astimezone(local_timezone)
-    return str(local_time)[0:len(str(local_time))-6]
+    #local_timezone = tzlocal.get_localzone()
+    #utc_time = datetime.strptime(dateTime, "%Y-%m-%d %H:%M:%S")
+    #local_time = utc_time.replace(tzinfo=pytz.utc).astimezone(local_timezone)
+    #return str(local_time)[0:len(str(local_time))-6]
 
 ##############################################################################
 #                                                                            #
@@ -97,7 +99,7 @@ class Thomson:
         #Convert response data to Json
         args = []
         args.append({'dateAndTime'  : convert_UTC_2_local(DateAndTime) \
-            if DateAndTime else "",
+            if DateAndTime else 1,
                     'timeZone'      : OlsonTZ if OlsonTZ else "Asia/Ho_Chi_Minh"
             })
         return json.dumps(args)
