@@ -7,7 +7,7 @@
 		<h2 class="sub-header">Schedule</h2>
 	</div>
 	<div class="content">
-		<div class="table-responsive col-md-11">
+		<div class="table-responsive col-md-12">
 			<div class="panel-body">
 				<div>
 					<!-- <label class="checkbox-inline" ng-repeat="state in getStates()">
@@ -22,9 +22,12 @@
 						<tr>
 							<th>STT</th>
 							<th>Action</th>
-							<th>Alarm</th>
+							<th>Watting time</th>
 							<th>State</th>
 							<th>Date</th>
+							<th>Job</th>
+							<!-- <th>Job Name</th>
+							<th>Job State</th> -->
 						</tr>
 					</thead>
 					<tfoot>
@@ -41,7 +44,14 @@
 								<span ng-if="scrontab.state == 0"> Watting</span></td>
 					<!-- 		<td class="col-md-1" ng-class="{'running': job.state == 'Running', 'aborted': job.state == 'Aborted', 'watting': job.state == 'Watting', 'paused': job.state == 'Paused', 'completed': job.state == 'Completed'}"><span>{{'{{job.state}'}}}</span></td> -->
 							<!-- <td class="col-md-1" n><span>{{'{{scrontab.startdate}'}}}</span></td> -->
-							<td class="col-md-1"><span>{{'{{scrontab.unix_timestamp*1000 | date: "dd-M-yyyy HH:mm:ss"}'}}}</span></td>
+							<td class="col-md-2"><span>{{'{{scrontab.unix_timestamp*1000 | date: "dd-M-yyyy HH:mm:ss"}'}}}</span></td>
+							<td class="col-md-6"><span ng-repeat="job in scrontab.list_job">
+								<span>JobID:{{'{{job.jid}'}}}-Name:{{'{{job.jname}'}}}-State:{{'{{job.state}'}}}</span><br>
+							</span></td>
+							<!-- <td class="col-md-1"><span>{{'{{scrontab.alarm}'}}}</span></td>
+							<td class="col-md-1"><span>{{'{{scrontab.alarm}'}}}</span></td>
+							<td class="col-md-1"><span>{{'{{scrontab.alarm}'}}}</span></td>
+ -->
 						</tr>
 					</tbody>
 				</table>
@@ -69,7 +79,7 @@
 <script type="text/javascript">
 	$(document).ready(function () {
 		$('#createJob').on('click', function(e){
-			console.log("$$$$$$$");
+			// console.log("$$$$$$$");
 		});
 		var $scroll = $('table.scrollTable');
 		$scroll.floatThead({
