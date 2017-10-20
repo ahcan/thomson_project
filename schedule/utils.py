@@ -74,24 +74,52 @@ class Crontab:
         if retcode != 0: 
             raise ValueError('failed to install crontab, check if crontab is valid')
 
-    def pop(self, content=''):
-        if not content:
-            raise ValueError('neither filename or crontab must be specified')
+    def delete(self, id = None):
+        if not id:
+            raise ValueError('neither id must be specified')
         else:
-            content = content.strip()
+            id = int(id)
         installed_content =  self.get_list()
         if not installed_content:
-            return 'Crontab is not available'
-        new_crontab = ''
-        for old_crontab in installed_content.split('\n'):
-            if old_crontab != content:
-                new_crontab += '\n%s' % old_crontab
-        if new_crontab:
-            new_crontab += '\n'
-        # install back
-        retcode, err, out = self._runcmd('crontab', new_crontab)
-        if retcode != 0: 
-            raise ValueError('failed to install crontab, check if crontab is valid')
+            return 0
+        #remove schedule by line number
+        new_content = ''
+        count = 1
+        for schedule in installed_content.split('\n'):
+            if count != id:
+                #exeption crontab is none
+                if schedule:
+                    new_content += '%s\n' % schedule
+            count +=1
+        #end remove        
+        # install back and return status
+        if new_content:
+            retcode, err, out = self._runcmd('crontab', new_content)
+            if retcode != 0: 
+                raise ValueError('failed to install crontab, check if crontab is valid')
+            else:
+                return 1
+        else:
+            return 0
+
+    def get_cron_by_id(self, id = None):
+        if not id:
+            raise ValueError('neither id must be specified')
+        else:
+            id = int(id)
+        installed_content =  self.get_list()
+        if not installed_content:
+            return None
+        #find schedule by line number
+        task = ''
+        count = 1
+        for schedule in installed_content.split('\n'):
+            if count == id:
+                task = schedule
+            count +=1
+        #end remove        
+        # find back and return status
+        return task
 
     def get_all(self):
         list_task = self.get_list()
@@ -99,9 +127,9 @@ class Crontab:
         agrs = []
         for task in list_task.split('\n'):
             id+=1
-            schedule = ReadCrontab(task).serialization()
+            schedule = CrontabDetail(task).serialization()
             if schedule:
-                ss,mm,hh,DD,MM,YYYY,dayofweek,list_jid,action,full_date,state,alarm = ReadCrontab(schedule).get_pattern()
+                ss,mm,hh,DD,MM,YYYY,dayofweek,list_jid,action,full_date,state,alarm = CrontabDetail(schedule).get_pattern()
                 print list_jid
                 array_jid = []
                 for jid in list_jid:
@@ -124,7 +152,7 @@ class Crontab:
         return json.dumps(agrs)
 
     
-class ReadCrontab:
+class CrontabDetail:
     def __init__(self, task):
         self.task = task
     def serialization(self):
@@ -139,8 +167,8 @@ class ReadCrontab:
         human_date = "%s-%s-%s %s:%s:%s"%(YYYY,MM,DD,hh,mm,ss)
         return (int(time.mktime(time.strptime(human_date, '%Y-%m-%d %H:%M:%S'))) - time.timezone)
 
-#state = 0: schedule complete
-#state = 1: schedule waiting
+#state = 1: schedule complete
+#state = 0: schedule waiting
 
     def get_pattern(self):
         cron = self.serialization()
@@ -177,11 +205,32 @@ class ReadCrontab:
             alarm = "%d day(s) %02d:%02d:%02d" % (DD, hh, mm, ss)
             state = 0
         return ss,mm,hh,DD,MM,YYYY,dayofweek,list_jid,action,full_date,state,alarm
+    #parse crontab to human readable fortmat
+    def human_readable(self):
+        message = ''
+        ss,mm,hh,DD,MM,YYYY,dayofweek,list_jid,action,full_date,state,alarm = self.get_pattern()
+        human_date = "%s-%s-%s %s:%s:%s"%(YYYY,MM,DD,hh,mm,ss)
+        message = 'At %s %s job(s) ID: %s.'%(human_date, action, list_jid)
+        return message
+
+class Log:
+    def create_message(self, user='System', action = '', msg = '', host = ''):
+        message = ''
+        now = time.strftime("%a, %d-%m-%Y %H:%M:%S", time.localtime(time.time()))
+        message = 'User %s %s schedule content(%s) in host %s at %s.'%(user, action, msg, host, now)
+        return message
+    def write()
+
+
 #Crontab().append(content='11 11 * * * /bin/sh /home/thomson_crontab/add_aa.sh', override=False)
 #Crontab().pop(content='35 15 * * * /bin/sh /home/thomson_crontab/add_aa.sh')
 #Crontab().append(Crontab().create(1508144477, '111111', 'start'))
 #print Crontab().get_list()
-#print ReadCrontab('7 14 18 10 3 sleep 5; /bin/python /script/crontabSMP/job.py -j 13429,13430,13431,13432 -s start').get_pattern()
+#print CrontabDetail('7 14 18 10 3 sleep 5; /bin/python /script/crontabSMP/job.py -j 13429,13430,13431,13432 -s start').get_pattern()
 
 #print Crontab().get_all()
 #print Crontab().create('2017-10-19 11:32:11', '1111', 'start')
+#print Crontab().get_cron_by_id(5)
+
+#msg = CrontabDetail('7 14 18 10 3 sleep 5; /bin/python /script/crontabSMP/job.py -j 13429,13430,13431,13432 -s start').human_readable()
+#print Log().create_message('system', 'deleted', msg, '172.29.3.189')
