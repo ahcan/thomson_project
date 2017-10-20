@@ -51,8 +51,11 @@ def get_add(request):
 
 @require_http_methods(['POST'])
 @csrf_exempt
-def remove_schedule(request):
-	scheID = request.POST.get('id', '').strip()
-	if request.method == 'POST':
-		Crontab().delete(int(scheID))
-		return Response(status=status.HTTP_204_NO_CONTENT)
+def remove_schedule(request, id):
+	print id
+	print request
+	if request.method=='POST':
+		Crontab().delete(id)
+		return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+	else:
+		return HttpResponse(status=status.HTTP_502_BAD_GATEWAY)

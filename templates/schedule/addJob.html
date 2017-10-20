@@ -6,7 +6,7 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css">
 <div class="content col-md-3">
-	<form id="formAddJob" name="formAddJob" action="/schedule/add/" method="POST">
+	<form id="formAddJob" name="formAddJob" action="/schedule/add/" method="POST" onsubmit="return SubmitCheckTextField()">
 		<label>Jod ID:</label>&nbsp<input type="text" name="jobID" id="jobID">
 		<div class="form-group">
 			 <div class="input-group date" id="daypicker">
@@ -19,6 +19,83 @@
 		<input type="button" name="Cancel" id="btnCancel" value="Cancel">
 	</form>
 </div>
+
+<script type="text/javascript">
+	//call
+function check_unicode(str){
+	for (var i = 0; i < str.length; i++) {
+		if(str.charCodeAt(i) > 127) {
+			return false;
+		}
+	}
+	return true;
+};
+
+//call
+function check_empty(str){
+	if (str == "") {
+		return false;
+	}
+	return true;
+};
+
+function check_jobID(){
+	var name = document.getElementById( 'jobID' ).value.trim();
+	return	{
+		"result" : check_empty(name),
+		"error" : "jobID không được trống!"
+	};
+}
+function check_jobID_unicode(){
+	var name = document.getElementById( 'jobID' ).value.trim();
+	return	{
+		"result" : check_unicode(jobID),
+		"error" : "jobID không chứa kí tự đặc biệt, dấu tiếng Việt!"
+	};
+};
+
+function check_ipDay(){
+	var ip = document.getElementById( 'ipDay' ).value.trim();
+	return	{
+		"result" : check_empty(ip),
+		"error" : "Date không được trống!"
+	};
+};
+
+function check_ipDay_unicode(){
+	var ip = document.getElementById( 'ipDay' ).value.trim();
+	return	{
+		"result" : check_unicode(ip),
+		"error" : "Date không chứa kí tự đặc biệt, dấu tiếng Việt!"
+	};
+};
+	
+function SubmitCheckTextField(){
+	var arrs = [
+		check_jobID,
+		check_jobID_unicode,
+		check_ipDay,
+		check_ipDay_unicode
+	];
+
+	var errors = "";
+
+	arrs.forEach(function (fn) {
+		var item = fn();
+		if (item.result == false ) {
+			errors += "\n" + item.error;
+		}
+	});
+
+	if (errors.length > 1) {
+		alert(errors);
+		return false;
+	}
+	document.form.submit();
+};
+</script>
+
+
 <script type="text/javascript">
 	$(document).ready(function () {
 		// body...

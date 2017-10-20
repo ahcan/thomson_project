@@ -78,6 +78,7 @@
 		</div>
 	</div>
 </div>
+
 <script>
 	var app = angular.module('schedule',[]);
 	app.controller("scheCtrl", function ($scope,$http,$timeout){
@@ -96,12 +97,14 @@
 		$scope.deteleRow = function (field) {
 			// body...
 			var id = field.id;
-			$scope.scrontab_list.splice($scope.scrontab_list.indexOf(field), 1);
-			$http.post('/schedule/delete/?id='+id).then(function(response){
-				if(response.status == 200){
+			$http.post('/schedule/delete/'+id+'/').then(function(response){
+				if(response.status == 204){
+					$scope.scrontab_list.splice($scope.scrontab_list.indexOf(field), 1);
 					$scope.reload();
-					console.log("Delete"+ field);
+					console.log("Delete completed");
 				}
+				else
+					console.log("Error");
 			});
 		}
 	});

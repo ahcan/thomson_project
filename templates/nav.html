@@ -75,7 +75,7 @@
     $.getJSON(strUrl,function(data, status){
       if(status == 'success'){
         $("#lblZone").text(data[0].timeZone);
-        $('#lblTime').text(data[0].dateAndTime);
+        $('#lblTime').text(new Date(data[0].dateAndTime*1000).toLocaleString());
       }else{
         $('#lblZone').text("error");
         $('#lblTime').text("error");
