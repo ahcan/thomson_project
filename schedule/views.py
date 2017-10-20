@@ -48,3 +48,11 @@ def get_add(request):
 		return HttpResponseRedirect('/schedule/')
 	else:
 		return render_to_response("schedule/addJob.html")
+
+@require_http_methods(['POST'])
+@csrf_exempt
+def remove_schedule(request):
+	scheID = request.POST.get('id', '').strip()
+	if request.method == 'POST':
+		Crontab().delete(int(scheID))
+		return Response(status=status.HTTP_204_NO_CONTENT)

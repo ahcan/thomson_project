@@ -16,16 +16,18 @@
 					<a href="/schedule/add" role="button" data-parent="#createJob" data-toggle="modal" class="btn btn-success btn-xs">Add new process <span class="glyphicon glyphicon-plus"></span></a>
 				</div>
 			</div>
-			<div class="wrapper" style="overflow-y: auto;"">
-				<table class="table table-bordered table-hover table-striped scrollTable">
+			<div class="" style="overflow-y: auto;"">
+				<table class="table table-bordered table-hover table-striped">
 					<thead>
 						<tr>
-							<th>STT</th>
-							<th>Action</th>
-							<th>Watting time</th>
-							<th>State</th>
-							<th>Date</th>
-							<th>Job</th>
+							<th class="col-md-1">STT</th>
+							<th class="col-md-1">ID</th>
+							<th class="col-md-1">Action</th>
+							<th class="col-md-1">Watting time</th>
+							<th class="col-md-1">State</th>
+							<th class="col-md-1">Date</th>
+							<th class="col-md-5">Job</th>
+							<th class="col-md-1"></th>
 							<!-- <th>Job Name</th>
 							<th>Job State</th> -->
 						</tr>
@@ -36,18 +38,35 @@
 						</tr>
 					</tfoot>
 					<tbody data-link="row" class="rowlink">
-						<tr ng-repeat="scrontab in (scrontab_list | filter:filterByState) as filterState" >
-							<td class="col-md-1"><a href="#rowlinkModal" data-toggle="modal" data-target="#modal{{'{{scrontab.jid}'}}}" ng-click="moreinfo(scrontab.jid)">{{'{{$index + 1}'}}}</a></td>
+						<tr ng-repeat="scrontab in (scrontab_list | orderBy:'-unix_timestamp') as filterState" >
+							<td class="col-md-1">{{'{{$index + 1}'}}}</td>
+							<td class="col-md-1">{{'{{scrontab.id}'}}}</td>
 							<td class="col-md-1"><sapn>{{'{{scrontab.action}'}}}</sapn></td>
 							<td class="col-md-1"><span>{{'{{scrontab.alarm}'}}}</span></td>
 							<td class="col-md-1" ng-class="{'completed': scrontab.state==1, 'watting': scrontab.state==0}"><span ng-if="scrontab.state == 1"> Completed</span>
 								<span ng-if="scrontab.state == 0"> Watting</span></td>
 					<!-- 		<td class="col-md-1" ng-class="{'running': job.state == 'Running', 'aborted': job.state == 'Aborted', 'watting': job.state == 'Watting', 'paused': job.state == 'Paused', 'completed': job.state == 'Completed'}"><span>{{'{{job.state}'}}}</span></td> -->
 							<!-- <td class="col-md-1" n><span>{{'{{scrontab.startdate}'}}}</span></td> -->
-							<td class="col-md-2"><span>{{'{{scrontab.unix_timestamp*1000 | date: "dd-M-yyyy HH:mm:ss"}'}}}</span></td>
-							<td class="col-md-6"><span ng-repeat="job in scrontab.list_job">
-								<span>JobID:{{'{{job.jid}'}}}-Name:{{'{{job.jname}'}}}-State:{{'{{job.state}'}}}</span><br>
-							</span></td>
+							<td class="col-md-1"><span>{{'{{scrontab.unix_timestamp*1000 | date: "dd-M-yyyy HH:mm:ss"}'}}}</span></td>
+							<td class="col-md-5"><div>
+								<table class="table table-bordered">
+									<thead>
+										<tr style="background-color: #337ab7; color: #ffff;">
+											<th>JobID</th>
+											<th>Name</th>
+											<th>State</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr ng-repeat="job in scrontab.list_job">
+											<td><span>{{'{{job.jid}'}}}</span></td>
+											<td><span>{{'{{job.jname}'}}}</span></td>
+											<td  ng-class="{'running': job.state == 'Running', 'aborted': job.state == 'Aborted', 'watting': job.state == 'Watting', 'paused': job.state == 'Paused', 'completed': job.state == 'Completed'}"><span>{{'{{job.state}'}}}</span></td>
+										</tr>
+									</tbody>
+								</table>
+							</div></td>
+							<td class="col-md-1"><input id="btnDelete-{{'{{scrontab.id}'}}}" type="button" class="button" value="Delete" ng-click="deteleRow(scrontab)"></td>
 							<!-- <td class="col-md-1"><span>{{'{{scrontab.alarm}'}}}</span></td>
 							<td class="col-md-1"><span>{{'{{scrontab.alarm}'}}}</span></td>
 							<td class="col-md-1"><span>{{'{{scrontab.alarm}'}}}</span></td>
@@ -74,6 +93,17 @@
 			},10000)
 		};
 		$scope.reload();
+		$scope.deteleRow = function (field) {
+			// body...
+			var id = field.id;
+			$scope.scrontab_list.splice($scope.scrontab_list.indexOf(field), 1);
+			$http.post('/schedule/delete/?id='+id).then(function(response){
+				if(response.status == 200){
+					$scope.reload();
+					console.log("Delete"+ field);
+				}
+			});
+		}
 	});
 </script>
 <script type="text/javascript">
