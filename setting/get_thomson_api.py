@@ -18,7 +18,8 @@ def convert_UTC_2_local(utc_time):
     print utc_time
     #return UTC fortmat
     ts = time.strptime(utc_time[:19], "%Y-%m-%dT%H:%M:%S")
-    return time.strftime("%Y-%m-%d %H:%M:%S", ts) - time.timezone
+    human_date = time.strftime("%Y-%m-%d %H:%M:%S", ts)
+    return (int(time.mktime(time.strptime(human_date, '%Y-%m-%d %H:%M:%S'))) - time.timezone)
     #Convert UTC date to local date
     #local_timezone = tzlocal.get_localzone()
     #utc_time = datetime.strptime(dateTime, "%Y-%m-%d %H:%M:%S")
@@ -98,7 +99,7 @@ class Thomson:
         #Convert response data to Json
         args = []
         args.append({'dateAndTime'  : convert_UTC_2_local(DateAndTime) \
-            if DateAndTime else "",
+            if DateAndTime else 1,
                     'timeZone'      : OlsonTZ if OlsonTZ else "Asia/Ho_Chi_Minh"
             })
         return json.dumps(args)
