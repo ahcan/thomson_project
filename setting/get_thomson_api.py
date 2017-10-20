@@ -14,8 +14,8 @@ import tzlocal # $ pip install tzlocal
 ##############################################################################
 
 #data input string YYYY-MM-DDTHH:mm:ss.000Z, return a string
-def convert_UTC_2_local(utc_time):
-    print utc_time
+def conver_UTC_2_unix_timestamp(utc_time):
+    #print utc_time
     #return UTC fortmat
     ts = time.strptime(utc_time[:19], "%Y-%m-%dT%H:%M:%S")
     human_date = time.strftime("%Y-%m-%d %H:%M:%S", ts)
@@ -98,7 +98,7 @@ class Thomson:
         "'OlsonTZ'" in str(itemlist[0].attributes.items()) else ""
         #Convert response data to Json
         args = []
-        args.append({'dateAndTime'  : convert_UTC_2_local(DateAndTime) \
+        args.append({'dateAndTime'  : conver_UTC_2_unix_timestamp(DateAndTime) \
             if DateAndTime else 1,
                     'timeZone'      : OlsonTZ if OlsonTZ else "Asia/Ho_Chi_Minh"
             })
@@ -551,10 +551,10 @@ class Job:
                         'status'    : Status,
                         'jid'       : int(JId),
                         'prog'      : int(Prog),
-                        'startdate' : convert_UTC_2_local(StartDate) \
+                        'startdate' : conver_UTC_2_unix_timestamp(StartDate) \
                         if StartDate else '',
                         'ver'       : int(Ver),
-                        'enddate'   : convert_UTC_2_local(EndDate) \
+                        'enddate'   : conver_UTC_2_unix_timestamp(EndDate) \
                         if EndDate else ''
                 })
         return json.dumps(args)
@@ -778,10 +778,10 @@ class Job:
                             'status'    : Status,
                             'jid'       : JId,
                             'prog'      : Prog,
-                            'startdate' : convert_UTC_2_local(StartDate) \
+                            'startdate' : conver_UTC_2_unix_timestamp(StartDate) \
                             if StartDate else '',
                             'ver'       : Ver,
-                            'enddate'   : convert_UTC_2_local(EndDate) \
+                            'enddate'   : conver_UTC_2_unix_timestamp(EndDate) \
                             if EndDate else ''
                     })
         return args
