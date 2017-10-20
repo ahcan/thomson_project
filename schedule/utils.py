@@ -219,7 +219,8 @@ class Log:
         now = time.strftime("%a, %d-%m-%Y %H:%M:%S", time.localtime(time.time()))
         message = 'User %s %s schedule content(%s) in host %s at %s.'%(user, action, msg, host, now)
         return message
-    def write()
+    def write():
+        pass
 
 
 #Crontab().append(content='11 11 * * * /bin/sh /home/thomson_crontab/add_aa.sh', override=False)
