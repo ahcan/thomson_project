@@ -49,13 +49,16 @@ def get_add(request):
 	else:
 		return render_to_response("schedule/addJob.html")
 
-@require_http_methods(['POST'])
+### remove schedule ###
+@require_http_methods(['DELETE'])
 @csrf_exempt
 def remove_schedule(request, id):
-	print id
-	print request
-	if request.method=='POST':
+	if request.method=='DELETE':
 		Crontab().delete(id)
 		return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 	else:
 		return HttpResponse(status=status.HTTP_502_BAD_GATEWAY)
+### api time countdown and server ###
+@require_http_methods(['GET'])
+def get_timeServer(request, id):
+	CrontabDetail(id).get_schedule()

@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-<script src="/static/assets/js/jasny-bootstrap.min.js"></script>
+<!-- <script src="/static/assets/js/jasny-bootstrap.min.js"></script> -->
 <script type="text/javascript" src="/static/assets/js/jquery.floatThead.min.js""></script>
 <div ng-app="schedule" ng-controller="scheCtrl">
 	<div class="content">
@@ -10,9 +10,6 @@
 		<div class="table-responsive col-md-12">
 			<div class="panel-body">
 				<div>
-					<!-- <label class="checkbox-inline" ng-repeat="state in getStates()">
-						<input type="checkbox" ng-model="filters[state]">{{'{{state}'}}}
-					</label> -->
 					<a href="/schedule/add" role="button" data-parent="#createJob" data-toggle="modal" class="btn btn-success btn-xs">Add new process <span class="glyphicon glyphicon-plus"></span></a>
 				</div>
 			</div>
@@ -22,10 +19,10 @@
 						<tr>
 							<th class="col-md-1">STT</th>
 							<th class="col-md-1">ID</th>
-							<th class="col-md-1">Action</th>
+							<th class="col-md-1">Date</th>
 							<th class="col-md-1">Watting time</th>
 							<th class="col-md-1">State</th>
-							<th class="col-md-1">Date</th>
+							<th class="col-md-1">Action</th>
 							<th class="col-md-5">Job</th>
 							<th class="col-md-1"></th>
 							<!-- <th>Job Name</th>
@@ -39,15 +36,15 @@
 					</tfoot>
 					<tbody data-link="row" class="rowlink">
 						<tr ng-repeat="scrontab in (scrontab_list | orderBy:'-unix_timestamp') as filterState" >
-							<td class="col-md-1">{{'{{$index + 1}'}}}</td>
+							<td class="col-md-1"><a href="#rowlinkModal" data-toggle="modal" data-target="#modal{{'{{scrontab.id}'}}}" ng-click="moreinfo(scrontab.id)">{{'{{$index + 1}'}}}</a></td>
 							<td class="col-md-1">{{'{{scrontab.id}'}}}</td>
-							<td class="col-md-1"><sapn>{{'{{scrontab.action}'}}}</sapn></td>
+							<td class="col-md-1"><span>{{'{{scrontab.unix_timestamp*1000 | date: "dd-M-yyyy HH:mm:ss Z"}'}}}</span></td>
 							<td class="col-md-1"><span>{{'{{scrontab.alarm}'}}}</span></td>
 							<td class="col-md-1" ng-class="{'completed': scrontab.state==1, 'watting': scrontab.state==0}"><span ng-if="scrontab.state == 1"> Completed</span>
 								<span ng-if="scrontab.state == 0"> Watting</span></td>
 					<!-- 		<td class="col-md-1" ng-class="{'running': job.state == 'Running', 'aborted': job.state == 'Aborted', 'watting': job.state == 'Watting', 'paused': job.state == 'Paused', 'completed': job.state == 'Completed'}"><span>{{'{{job.state}'}}}</span></td> -->
 							<!-- <td class="col-md-1" n><span>{{'{{scrontab.startdate}'}}}</span></td> -->
-							<td class="col-md-1"><span>{{'{{scrontab.unix_timestamp*1000 | date: "dd-M-yyyy HH:mm:ss"}'}}}</span></td>
+							<td class="col-md-1"><sapn>{{'{{scrontab.action}'}}}</sapn></td>
 							<td class="col-md-5"><div>
 								<table class="table table-bordered">
 									<thead>
@@ -89,14 +86,14 @@
 				$scope.total = $scope.scrontab_list.length
 			});
 			$timeout(function(){
-				$scope.reload();
+				// $scope.reload();
 			},10000)
 		};
 		$scope.reload();
 		$scope.deteleRow = function (field) {
 			// body...
 			var id = field.id;
-			$http.post('/schedule/delete/'+id+'/').then(function(response){
+			$http.delete('/schedule/delete/'+id+'/').then(function(response){
 				if(response.status == 204){
 					$scope.scrontab_list.splice($scope.scrontab_list.indexOf(field), 1);
 					$scope.reload();
@@ -104,6 +101,13 @@
 				}
 				else
 					console.log("Error");
+			});
+		}
+		$scope.moreinfo = function(crontab_id){
+			$http.get('/schedule/detail/'+ crontab_id +'/').then(function(response){
+				if(response.status == 404){
+					console.log(Error);
+				}
 			});
 		}
 	});
