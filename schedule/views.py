@@ -21,7 +21,7 @@ import re
 # @csrf_exempt
 def get_schedule_list_json(request):
     schedule_list = Crontab().get_all()
-    print schedule_list
+    #print schedule_list
     return HttpResponse(schedule_list, content_type='application/json', status=200)
 def get_index(request):
 	return render_to_response("schedule/schedule.html")
@@ -34,7 +34,7 @@ def get_add(request):
 		##validate jobid input
 		job_pattern = re.compile("\d{3,10}")
 		list_job = re.findall(job_pattern,jobID)
-		# print list_job
+		print list_job
 		##end validate
 		list_jobid = ''
 		for job in list_job:
