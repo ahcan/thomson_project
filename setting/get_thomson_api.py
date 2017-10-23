@@ -4,8 +4,6 @@ from xml.dom import minidom
 from datetime import datetime
 import requests# $ pip install requests
 from requests.auth import HTTPDigestAuth
-import pytz    # $ pip install pytz
-import tzlocal # $ pip install tzlocal
 
 ##############################################################################
 #                                                                            #

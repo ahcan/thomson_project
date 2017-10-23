@@ -26,6 +26,8 @@ def get_log_list_json(request):
     return HttpResponse(log_list, content_type='application/json', status=200)
 
 def get_log(request):
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect('/accounts/login')
     """
     Template show list all Logs.
     /log/
