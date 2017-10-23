@@ -19,7 +19,7 @@ import re
 #Link get all job: /job/api/job
 @require_http_methods(['GET'])
 # @csrf_exempt
-def get_schedule_json(request):
+def get_schedule_list_json(request):
     schedule_list = Crontab().get_all()
     print schedule_list
     return HttpResponse(schedule_list, content_type='application/json', status=200)
@@ -60,5 +60,10 @@ def remove_schedule(request, id):
 		return HttpResponse(status=status.HTTP_502_BAD_GATEWAY)
 ### api time countdown and server ###
 @require_http_methods(['GET'])
-def get_timeServer(request, id):
-	CrontabDetail(id).get_schedule()
+def get_schedule_json(request, id):
+	schedule = CrontabDetail(id).get_schedule()
+	return HttpResponse(schedule, content_type='application/json', status=status.HTTP_200_OK)
+def redirect_schedule(request, id):
+	args={}
+	args['id'] = id
+	return render_to_response("schedule/schedule_detail.html",args)

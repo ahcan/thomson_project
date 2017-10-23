@@ -216,9 +216,9 @@ class CrontabDetail:
         message = 'At %s %s job(s) ID: %s.'%(human_date, action, list_jid)
         return message
 
-    def get_schedule(slef):
+    def get_schedule(self):
         agrs = []
-        schedule = CrontabDetail(task).serialization()
+        schedule = CrontabDetail(self.task).serialization()
         if schedule:
             ss,mm,hh,DD,MM,YYYY,dayofweek,list_jid,action,full_date,state,alarm = self.get_pattern()
             array_jid = []
