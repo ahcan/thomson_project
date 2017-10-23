@@ -154,7 +154,10 @@ class Crontab:
     
 class CrontabDetail:
     def __init__(self, task):
-        self.task = task
+        if not task.isdigit():
+            self.task = task
+        else:
+            self.task = Crontab().get_cron_by_id(task)
     def serialization(self):
         cron_pattern=re.compile("[ ?\d{1,2}]*\ sleep \d{1,2}; /bin/python /script/crontabSMP/job.py -[Jj] [,?\d{3,10}]*\ -[Ss] (?:[Ss]tart|[Ss]top)")
         #cron_pattern=re.compile("\d{1,2}\ \d{1,2}\ \d{1,2}\ \d{1,2}\ \d{1,2}\ sleep \d{1,2}; /bin/python /script/crontabSMP/job.py -[Jj] \d{3,10}\ -[Ss] (?:[Ss]tart|[Ss]top)")
@@ -212,6 +215,25 @@ class CrontabDetail:
         human_date = "%s-%s-%s %s:%s:%s"%(YYYY,MM,DD,hh,mm,ss)
         message = 'At %s %s job(s) ID: %s.'%(human_date, action, list_jid)
         return message
+
+    def get_schedule(slef):
+        agrs = []
+        schedule = CrontabDetail(task).serialization()
+        if schedule:
+            ss,mm,hh,DD,MM,YYYY,dayofweek,list_jid,action,full_date,state,alarm = self.get_pattern()
+            array_jid = []
+            for jid in list_jid:
+                array_jid.append(int(jid))
+            list_job = Job().get_job_detail_by_job_id(array_jid)
+            agrs.append({'list_job'        : list_job,
+                         'action'          : action,
+                         'schedule_date'   : full_date,
+                         'svr_date'        : time.time(),
+                         'state'           : int(state),
+                         'message'         : self.human_readable()
+                        })
+        return json.dumps(agrs)
+
 
 class Log:
     def create_message(self, user='System', action = '', msg = '', host = ''):
