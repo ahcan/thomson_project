@@ -15,7 +15,8 @@
 		 		<div class="panel-body">
 		 			<div class="tab-content">
 		 				<ul class="list-group">
-						  <li class="list-group-item"><label>Date: </label> <span style="margin-left: 50px;">{{'{{schedule.schedule_date*1000 | date:"dd-M-yyyy HH:mm:ss"}'}}}</span>
+						  <li class="list-group-item"><label>Schedule Date: </label> <span style="margin-left: 50px;">{{'{{schedule.schedule_date*1000 | date:"dd-M-yyyy HH:mm:ss"}'}}}</span>
+						  <br/><label>Server Date: </label> <span style="margin-left: 50px;">{{'{{schedule.svr_date*1000 | date:"dd-M-yyyy HH:mm:ss"}'}}}</span>
 						  </li>
 						  <li class="list-group-item"><label>State:</label> <span style="margin-left: 50px;" ng-class="{'completed': schedule.state==1, 'watting': schedule.state==0}" ng-if="schedule.state == 1"> Completed</span>
 										<span style="margin-left: 50px;" ng-if="schedule.state == 0"> Watting</span></li>
@@ -30,8 +31,8 @@
 		 			<h4>Watting Time</h4>
 		 		</div>
 		 		<div class="panel-body">
-		 			<p ng-show="timeShow" style="font-size: 20px;">{{'{{days}'}}}Day: &nbsp {{'{{hours}'}}} Hours: &nbsp {{'{{minutes}'}}} Minutes: &nbsp {{'{{seconds}'}}} Seconds <span class="glyphicon glyphicon-time"></span></p>
-		 			<p ng-hide="timeShow" style="font-size: 30px; color: green;">EXPIRED<span class="glyphicon glyphicon-ok"></span></p>
+		 			<p ng-show="timeShow" style="font-size: 21px;">{{'{{days}'}}} Day&nbsp-&nbsp{{'{{hours}'}}} Hours&nbsp-&nbsp{{'{{minutes}'}}} Minutes&nbsp-&nbsp{{'{{seconds}'}}} Seconds <span class="glyphicon glyphicon-time"></span></p>
+		 			<p ng-hide="timeShow" style="font-size: 30px; color: green; text-align:center;">EXPIRED<span class="glyphicon glyphicon-ok"></span></p>
 		 		</div>
 		 	</div>
 			<div class="list_job">
@@ -70,34 +71,37 @@
 
 <script>
 	var app = angular.module('schedule-detail',[]);
-	app.controller("scheCtrl", function ($scope,$http,$timeout,$window){
+	app.controller("scheCtrl", function ($scope,$http,$interval,$timeout){
 		$scope.timeShow = true;
 		$scope.onload = function () {
 			// $scope.idSchedule;
 			$http.get('/schedule/api/schedule/'+{{id}}+'/').then(function (response) {
 				$scope.schedule = response.data[0];
 				$scope.list_job = $scope.schedule['list_job'];
-				var x =  setInterval(function(){
+				var x =  $interval(function() {
 					var distance = $scope.schedule.schedule_date*1000 - $scope.schedule.svr_date*1000;
 					$scope.convertTime(distance);
 					$scope.schedule.svr_date += 1;
 					if (distance < 0 || distance == 0) {
-		        clearInterval(x);
+		        $interval.cancel(x);
 		        $scope.timeShow = false;
 		        $scope.onload();
+				  }else if(distance >=60 && distance <61){
+				  	$scope.onload();
 				  }
 				},1000);
 			});
+			$timeout(function(){$scope.onload();},1800000);
 		};
 		$scope.convertTime = function (argument) {
 			$scope.days = Math.floor(argument / (1000 * 60 * 60 * 24));
-			$scope.$apply();
+			// $scope.$apply();
 	    $scope.hours = Math.floor((argument % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-			$scope.$apply();
+			// $scope.$apply();
 	    $scope.minutes = Math.floor((argument % (1000 * 60 * 60)) / (1000 * 60));
-			$scope.$apply();
+			// $scope.$apply();
 	    $scope.seconds = Math.floor((argument % (1000 * 60)) / 1000);
-			$scope.$apply();
+			// $scope.$apply();
 		}
 		$scope.onload();
 	});
