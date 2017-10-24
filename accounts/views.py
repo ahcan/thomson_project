@@ -11,8 +11,6 @@ import json
 from accounts.user_info import *
 from django.shortcuts import render, redirect
 from accounts.models import *
-#hash password
-from django.contrib.auth.hashers import make_password
             
 # ------------auth
 @require_http_methods(['GET', 'POST'])
@@ -72,7 +70,9 @@ def password_change(request):
 
         user = User.objects.get(pk=int(request.user.id))
         user.set_password(newpassword)
-        users = user.save()
-        update_session_auth_hash(request, users)
-        return HttpResponse(status=status.HTTP_202_ACCEPTED)
+        user = user.save()
+        update_session_auth_hash(request, user)
+        agrs["detail"] = "Password change success!"
+        messages = json.dumps(agrs)
+        return HttpResponse(messages, content_type='application/json', status=202)
     return render_to_response('accounts/password_change.html')
