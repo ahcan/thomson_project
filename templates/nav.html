@@ -2,9 +2,6 @@
 <script src="/static/ajax/libs/jquery/jquery-3.2.1.min.js"></script>
 <nav class="navbar navbar-inverse navbar-fixed-top">
   <div class="container-fluid">
-    <div id="systemTime">
-      <p><span id="txtTime">Date Time: &nbsp</span> <label id="lblTime"></label> &nbsp &nbsp<span id="txtZone">Time Zone: &nbsp</span> <label id="lblZone"></label></p>
-    </div>
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
         <span class="sr-only">Toggle navigation</span>
@@ -15,7 +12,7 @@
       <a class="navbar-brand" href="#">Thomson</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav navbar-right">
+      <ul class="nav navbar-nav navbar-left">
         <li><a href="/system/">System</a></li>
 <!--         <li class="dropdown">
           <a href="/system/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">System <span class="caret"></span></a>
@@ -48,41 +45,4 @@
     </div>
   </div>
 </nav>
-<script type="text/javascript">
-  // var app = angular.module("systemTime", []);
-  // app.controller('systimemeCtrl', function($scope, $http, $timeout){
-  //   $scope.reloadTime=function(){
-  //     $http.get("/system/api/datetime/").then(function(reponse){
-  //       $scope.systime = reponse.data;
-  //     });
-  //     $timeout(function(){
-  //       $scope.reloadTime();
-  //     },1000)
-  //   };
-  //   $scope.reloadTime();
-  // });
-  $(document).ready(function(){
-    reloadTime();
-  });
-  function reloadTime(){
-    setTimeout(function(){
-      getTime('/system/api/datetime/');
-      // reloadTime();
-    }, 1000);
-  }
-  function getTime(strUrl) {
-    // body...
-    $.getJSON(strUrl,function(data, status){
-      if(status == 'success'){
-        $("#lblZone").text(data[0].timeZone);
-        $('#lblTime').text(new Date(data[0].dateAndTime*1000).toLocaleString());
-      }else{
-        $('#lblZone').text("error");
-        $('#lblTime').text("error");
-      }
-      // console.log(data);
-
-    });
-  }
-</script>
 {% endblock %}

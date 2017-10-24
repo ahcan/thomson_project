@@ -76,3 +76,26 @@ def password_change(request):
         messages = json.dumps(agrs)
         return HttpResponse(messages, content_type='application/json', status=202)
     return render_to_response('accounts/password_change.html')
+
+@require_http_methods(['GET', 'POST'])
+@csrf_exempt
+def profile(request):
+    return render_to_response('accounts/profile.html')
+
+
+
+@require_http_methods(['GET'])
+def profile_json(request):
+    user = User.objects.get(pk=int(request.user.id))
+    agrs = []
+    agrs.append({
+        'username'      : user.username,
+        'email'         : user.email,
+        'first_name'    : user.first_name,
+        'last_name'     : user.last_name,
+        'is_staff'      : user.is_staff,
+        'is_active'     : user.is_active,
+        'date_joined'   : str(user.date_joined),
+        'last_login'    : str(user.last_login)
+        })
+    return HttpResponse(json.dumps(agrs), content_type='application/json', status=200)
