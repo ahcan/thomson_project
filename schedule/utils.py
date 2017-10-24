@@ -11,7 +11,7 @@ class DateTime:
     def conver_human_creadeble_2_unix_timetamps(self, date_time):
         return int(time.mktime(time.strptime(date_time, '%Y-%m-%d %H:%M:%S')))
 
-    def get_now():
+    def get_now(self):
         now = time.time()
         now_pattern = re.compile("\d+") 
         now = re.findall(now_pattern, str(now))
