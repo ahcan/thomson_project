@@ -1,33 +1,16 @@
 # coding: utf-8
 import subprocess
 import os
-import time
-from datetime import datetime
 import re
 import json
 from setting.get_thomson_api import *
-
-class DateTime:
-    def conver_human_creadeble_2_unix_timetamps(self, date_time):
-        return int(time.mktime(time.strptime(date_time, '%Y-%m-%d %H:%M:%S')))
-
-    def get_now(self):
-        now = time.time()
-        now_pattern = re.compile("\d+") 
-        now = re.findall(now_pattern, str(now))
-        now = now[0]
-        return int(now)
-
-    def convert_date_pattern_2_unix_timestamp(self, ss, mm, hh, DD, MM, YYYY):
-        human_date = "%s-%s-%s %s:%s:%s"%(YYYY,MM,DD,hh,mm,ss)
-        return (int(time.mktime(time.strptime(human_date, '%Y-%m-%d %H:%M:%S')))) #- time.timezone)
-
+from setting.DateTime import *
 class Crontab:
 
     def create(self, date_time, jobid, action):
         if not date_time.isdigit():
             try:
-                date_time = DateTime().conver_human_creadeble_2_unix_timetamps(date_time)
+                date_time = DateTime().conver_human_creadeble_2_unix_timetamp(date_time)
             except Exception as e:
                 return None
         dt=datetime.fromtimestamp(date_time)

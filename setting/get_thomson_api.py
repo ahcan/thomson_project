@@ -1,28 +1,8 @@
 import json
-import time
 from xml.dom import minidom
-from datetime import datetime
 import requests# $ pip install requests
 from requests.auth import HTTPDigestAuth
-
-##############################################################################
-#                                                                            #
-#-----------------------------------LOCAL TIME-------------------------------#
-#                                                                            #
-##############################################################################
-
-#data input string YYYY-MM-DDTHH:mm:ss.000Z, return a string
-def conver_UTC_2_unix_timestamp(utc_time):
-    #print utc_time
-    #return UTC fortmat
-    ts = time.strptime(utc_time[:19], "%Y-%m-%dT%H:%M:%S")
-    human_date = time.strftime("%Y-%m-%d %H:%M:%S", ts)
-    return (int(time.mktime(time.strptime(human_date, '%Y-%m-%d %H:%M:%S'))) - time.timezone)
-    #Convert UTC date to local date
-    #local_timezone = tzlocal.get_localzone()
-    #utc_time = datetime.strptime(dateTime, "%Y-%m-%d %H:%M:%S")
-    #local_time = utc_time.replace(tzinfo=pytz.utc).astimezone(local_timezone)
-    #return str(local_time)[0:len(str(local_time))-6]
+from DateTime import *
 
 ##############################################################################
 #                                                                            #
@@ -96,7 +76,7 @@ class Thomson:
         "'OlsonTZ'" in str(itemlist[0].attributes.items()) else ""
         #Convert response data to Json
         args = []
-        args.append({'dateAndTime'  : conver_UTC_2_unix_timestamp(DateAndTime) \
+        args.append({'dateAndTime'  : DateTime().conver_UTC_2_unix_timestamp(DateAndTime) \
             if DateAndTime else 1,
                     'timeZone'      : OlsonTZ if OlsonTZ else "Asia/Ho_Chi_Minh"
             })
@@ -549,10 +529,10 @@ class Job:
                         'status'    : Status,
                         'jid'       : int(JId),
                         'prog'      : int(Prog),
-                        'startdate' : conver_UTC_2_unix_timestamp(StartDate) \
+                        'startdate' : DateTime().conver_UTC_2_unix_timestamp(StartDate) \
                         if StartDate else '',
                         'ver'       : int(Ver),
-                        'enddate'   : conver_UTC_2_unix_timestamp(EndDate) \
+                        'enddate'   : DateTime().conver_UTC_2_unix_timestamp(EndDate) \
                         if EndDate else ''
                 })
         return json.dumps(args)
@@ -776,10 +756,10 @@ class Job:
                             'status'    : Status,
                             'jid'       : JId,
                             'prog'      : Prog,
-                            'startdate' : conver_UTC_2_unix_timestamp(StartDate) \
+                            'startdate' : DateTime().conver_UTC_2_unix_timestamp(StartDate) \
                             if StartDate else '',
                             'ver'       : Ver,
-                            'enddate'   : conver_UTC_2_unix_timestamp(EndDate) \
+                            'enddate'   : DateTime().conver_UTC_2_unix_timestamp(EndDate) \
                             if EndDate else ''
                     })
         return args
