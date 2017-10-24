@@ -1,88 +1,63 @@
 {% block nav %}
-<script src="/static/ajax/libs/jquery/jquery-3.2.1.min.js"></script>
-<nav class="navbar navbar-inverse navbar-fixed-top">
-  <div class="container-fluid">
-    <div id="systemTime">
-      <p><span id="txtTime">Date Time: &nbsp</span> <label id="lblTime"></label> &nbsp &nbsp<span id="txtZone">Time Zone: &nbsp</span> <label id="lblZone"></label></p>
-    </div>
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+  <script src="/static/ajax/libs/jquery/jquery-3.2.1.min.js"></script>
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
         <span class="sr-only">Toggle navigation</span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="#">Thomson</a>
-    </div>
-    <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav navbar-right">
-        <li><a href="/system/">System</a></li>
-<!--         <li class="dropdown">
-          <a href="/system/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">System <span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li><a href="/system/datetime/">Datetime</a></li>
-            <li><a href="/system/mountpoint/">Mount Point</a></li>
-          </ul>
-        </li> -->
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Log <span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li><a href="/log/">All Log</a></li>
-            <li><a href="/log/open/">Open log</a></li>
-          </ul>
-        </li>
+        </button>
+        <a class="navbar-brand" href="#">Thomson</a>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav navbar-left">
+          <li><a href="/system/">System</a></li>
+          <!--         <li class="dropdown">
+            <a href="/system/" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">System <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li><a href="/system/datetime/">Datetime</a></li>
+              <li><a href="/system/mountpoint/">Mount Point</a></li>
+            </ul>
+          </li> -->
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Log <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li><a href="/log/">All Log</a></li>
+              <li><a href="/log/open/">Open log</a></li>
+            </ul>
+          </li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Job <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li><a href="/job/">All Job</a></li>
+              <li><a href="/job/waiting/">Waiting</a></li>
+              <li><a href="/job/running/">Running</a></li>
+              <li><a href="/job/paused/">Paused</a></li>
+              <li><a href="/job/completed/">Completed</a></li>
+              <li><a href="/job/aborted/">Aborted</a></li>
+            </ul>
+          </li>
+          <li><a href="/workflow/">Workflow</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          {% if email %}
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-cog"></span>{{ email }} <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li><a href="/accounts/profile/"><span class="glyphicon glyphicon-user"></span>&nbsp; Profile</a></li>
+              <li><a href="/accounts/password/"><span class="glyphicon glyphicon-retweet"></span>&nbsp; Change password</a></li>
+              <li><a href="/accounts/logout/"><span class="glyphicon glyphicon-log-out"></span> Logout</a>
+              </li>
+            </ul>
+          </li>
 
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Job <span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li><a href="/job/">All Job</a></li>
-            <li><a href="/job/waiting/">Waiting</a></li>
-            <li><a href="/job/running/">Running</a></li>
-            <li><a href="/job/paused/">Paused</a></li>
-            <li><a href="/job/completed/">Completed</a></li>
-            <li><a href="/job/aborted/">Aborted</a></li>
-          </ul>
-        </li>
-        <li><a href="/workflow/">Workflow</a></li>
-      </ul>
+          {% else %}
+            <li><a href="/accounts/login/"><span class="glyphicon glyphicon-log-in"></span>&nbsp; Login</a></li>
+          {% endif %}
+        </ul>
+      </div>
     </div>
-  </div>
-</nav>
-<script type="text/javascript">
-  // var app = angular.module("systemTime", []);
-  // app.controller('systimemeCtrl', function($scope, $http, $timeout){
-  //   $scope.reloadTime=function(){
-  //     $http.get("/system/api/datetime/").then(function(reponse){
-  //       $scope.systime = reponse.data;
-  //     });
-  //     $timeout(function(){
-  //       $scope.reloadTime();
-  //     },1000)
-  //   };
-  //   $scope.reloadTime();
-  // });
-  $(document).ready(function(){
-    reloadTime();
-  });
-  function reloadTime(){
-    setTimeout(function(){
-      getTime('/system/api/datetime/');
-      // reloadTime();
-    }, 1000);
-  }
-  function getTime(strUrl) {
-    // body...
-    $.getJSON(strUrl,function(data, status){
-      if(status == 'success'){
-        $("#lblZone").text(data[0].timeZone);
-        $('#lblTime').text(new Date(data[0].dateAndTime*1000).toLocaleString());
-      }else{
-        $('#lblZone').text("error");
-        $('#lblTime').text("error");
-      }
-      // console.log(data);
-
-    });
-  }
-</script>
+  </nav>
 {% endblock %}

@@ -7,6 +7,7 @@ from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect, Http404, HttpResponse 
 from rest_framework import status
 from setting.get_thomson_api import *
+from accounts.user_info import *
 
 # Create your views here.
 
@@ -23,7 +24,10 @@ def workflow_json(request):
     return HttpResponse(workflow_list, content_type='application/json', status=200)
 
 def get_workflow(request):
-	return render_to_response('workflow/workflow.html')
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect('/accounts/login')
+    user = user_info(request)
+    return render_to_response('workflow/workflow.html', user)
 
 #######################################################################
 #                                                                     #

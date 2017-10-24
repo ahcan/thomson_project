@@ -7,6 +7,7 @@ from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect, Http404, HttpResponse 
 from rest_framework import status
 from setting.get_thomson_api import *
+from accounts.user_info import *
 
 # Create your views here.
 
@@ -18,7 +19,10 @@ from setting.get_thomson_api import *
 
 #Main template dashboard /system
 def get_system(request):
-	return render_to_response('system/system.html')
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect('/accounts/login')
+    user = user_info(request)
+    return render_to_response('system/system.html', user)
 
 #Link get thomson datetime: /system/api/datetime
 @require_http_methods(['GET'])

@@ -7,6 +7,7 @@ from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect, Http404, HttpResponse 
 from rest_framework import status
 from setting.get_thomson_api import *
+from accounts.user_info import *
 
 # Create your views here.
 
@@ -28,11 +29,12 @@ def get_log_list_json(request):
 def get_log(request):
     if not request.user.is_authenticated():
         return HttpResponseRedirect('/accounts/login')
+    user = user_info(request)
     """
     Template show list all Logs.
     /log/
     """
-    return render_to_response('log/log.html')
+    return render_to_response('log/log.html',user)
 
 ##############################################################################
 #                                                                            #
@@ -54,7 +56,10 @@ def get_open_log(request):
     Template show list all open Logs.
     /log/open/
     """
-    return render_to_response('log/log_open.html')
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect('/accounts/login')
+    user = user_info(request)
+    return render_to_response('log/log_open.html',user)
 
 ##############################################################################
 #                                                                            #
@@ -91,4 +96,7 @@ def get_system_log(request):
     Template show list all system Logs.
     /log/api/system
     """
-    return render_to_response('log/log_system.html')
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect('/accounts/login')
+    user = user_info(request)
+    return render_to_response('log/log_system.html',user)
