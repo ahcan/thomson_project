@@ -15,9 +15,8 @@
 		 		<div class="panel-body">
 		 			<div class="tab-content">
 		 				<ul class="list-group">
-						  <li class="list-group-item"><label>Date: </label> <span style="margin-left: 50px;">{{'{{schedule.schedule_date*1000 | date:"dd-M-yyyy HH:mm:ss"}'}}}</span></li>
-						  <p id="time_schedule" style="display: none;">{{'{{schedule.schedule_date}'}}}</p>
-						  <p id="time_server" style="display: none;">{{'{{schedule.svr_date}'}}}</p>
+						  <li class="list-group-item"><label>Date: </label> <span style="margin-left: 50px;">{{'{{schedule.schedule_date*1000 | date:"dd-M-yyyy HH:mm:ss"}'}}}</span>
+						  </li>
 						  <li class="list-group-item"><label>State:</label> <span style="margin-left: 50px;" ng-class="{'completed': schedule.state==1, 'watting': schedule.state==0}" ng-if="schedule.state == 1"> Completed</span>
 										<span style="margin-left: 50px;" ng-if="schedule.state == 0"> Watting</span></li>
 						  <li class="list-group-item"><label>Action:</label> <span style="margin-left: 50px;">{{'{{schedule.action}'}}}</span></li>
@@ -31,7 +30,8 @@
 		 			<h4>Watting Time</h4>
 		 		</div>
 		 		<div class="panel-body">
-		 			<p id="watting_time">{{'{{distance | date:"dd-M-yyyy HH:mm:ss"}'}}}</p>
+		 			<p ng-show="timeShow" style="font-size: 20px;">{{'{{days}'}}}Day: &nbsp {{'{{hours}'}}} Hours: &nbsp {{'{{minutes}'}}} Minutes: &nbsp {{'{{seconds}'}}} Seconds <span class="glyphicon glyphicon-time"></span></p>
+		 			<p ng-hide="timeShow" style="font-size: 30px; color: green;">EXPIRED<span class="glyphicon glyphicon-ok"></span></p>
 		 		</div>
 		 	</div>
 			<div class="list_job">
@@ -71,66 +71,35 @@
 <script>
 	var app = angular.module('schedule-detail',[]);
 	app.controller("scheCtrl", function ($scope,$http,$timeout,$window){
+		$scope.timeShow = true;
 		$scope.onload = function () {
 			// $scope.idSchedule;
 			$http.get('/schedule/api/schedule/'+{{id}}+'/').then(function (response) {
 				$scope.schedule = response.data[0];
 				$scope.list_job = $scope.schedule['list_job'];
-				$scope.distance = $scope.schedule.schedule_date - $scope.schedule.svr_date;
-				console.log($scope.distance);
-				console.log($scope.list_job);
+				var x =  setInterval(function(){
+					var distance = $scope.schedule.schedule_date*1000 - $scope.schedule.svr_date*1000;
+					$scope.convertTime(distance);
+					$scope.schedule.svr_date += 1;
+					if (distance < 0 || distance == 0) {
+		        clearInterval(x);
+		        $scope.timeShow = false;
+		        $scope.onload();
+				  }
+				},1000);
 			});
 		};
+		$scope.convertTime = function (argument) {
+			$scope.days = Math.floor(argument / (1000 * 60 * 60 * 24));
+			$scope.$apply();
+	    $scope.hours = Math.floor((argument % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+			$scope.$apply();
+	    $scope.minutes = Math.floor((argument % (1000 * 60 * 60)) / (1000 * 60));
+			$scope.$apply();
+	    $scope.seconds = Math.floor((argument % (1000 * 60)) / 1000);
+			$scope.$apply();
+		}
 		$scope.onload();
 	});
 </script>
-<!-- <script type="text/javascript">
-	$(document).ready(function(){
-		var svr_date;
-		var schedule_date;
-		setTimeout(function(){
-			svr_date = $('#time_server').text()
-			// .split(new RegExp());
-			schedule_date = $('#time_schedule').text();
-		}, 1000);
-		// Update the count down every 1 second
-		var x = setInterval(function() {
-    
-		    // Find the distance between svr_date an the count down date
-		    var distance = schedule_date - svr_date;
-		    svr_date = svr_date + 1000;
-		    console.log(distance);
-		    
-		    // Time calculations for days, hours, minutes and seconds
-		    var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-		    var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-		    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-		    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-		    
-		    // Output the result in an element with id="demo"
-		    document.getElementById("watting_time").innerHTML = days + "d " + hours + "h "
-		    + minutes + "m " + seconds + "s ";
-		    
-		    // If the count down is over, write some text 
-		    if (distance < 0) {
-		        clearInterval(x);
-		        document.getElementById("watting_time").innerHTML = "EXPIRED";
-		    }
-		}, 1000);
-	});
-</script> -->
-<!-- <script type="text/javascript">
-	$(document).ready(function () {
-		$('#createJob').on('click', function(e){
-			// console.log("$$$$$$$");
-		});
-		var $scroll = $('table.scrollTable');
-		$scroll.floatThead({
-		scrollContainer: function($table){
-	    return $table.closest('.wrapper');
-		}
-	});
-	});
-	
-</script> -->
 {% endblock %}
