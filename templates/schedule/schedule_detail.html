@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+{% block content %}
+<!-- Sroll table -->
+<script type="text/javascript" src="/static/assets/js/jquery.floatThead.min.js""></script>
+<div ng-app="schedule-detail" ng-controller="scheCtrl">
+	<div class="content">
+		<h2 class="sub-header">Schedule Detail</h2>
+	</div>
+	<div class="content">
+		<div class="table-responsive col-md-12">
+			<div class="body-left panel panel-default col-md-6">
+				<div class="panel-heading">
+		 			<h4>Schedule Detail</h4>
+		 		</div>
+		 		<div class="panel-body">
+		 			<div class="tab-content">
+		 				<ul class="list-group">
+						  <li class="list-group-item"><label>Date: </label> <span style="margin-left: 50px;">{{'{{schedule.schedule_date*1000 | date:"dd-M-yyyy HH:mm:ss"}'}}}</span></li>
+						  <p id="time_schedule" style="display: none;">{{'{{schedule.schedule_date}'}}}</p>
+						  <p id="time_server" style="display: none;">{{'{{schedule.svr_date}'}}}</p>
+						  <li class="list-group-item"><label>State:</label> <span style="margin-left: 50px;" ng-class="{'completed': schedule.state==1, 'watting': schedule.state==0}" ng-if="schedule.state == 1"> Completed</span>
+										<span style="margin-left: 50px;" ng-if="schedule.state == 0"> Watting</span></li>
+						  <li class="list-group-item"><label>Action:</label> <span style="margin-left: 50px;">{{'{{schedule.action}'}}}</span></li>
+						  <li class="list-group-item"><label>Message:</label> <span style="margin-left: 50px;">{{'{{schedule.message}'}}}</span></li>
+						</ul> 
+		 			</div>
+		 		</div>
+		 	</div>
+		 	<div class="body-right panel panel-default col-md-5" style="margin-left: 30px;">
+		 		<div class="panel-heading">
+		 			<h4>Watting Time</h4>
+		 		</div>
+		 		<div class="panel-body">
+		 			<p id="watting_time">{{'{{distance | date:"dd-M-yyyy HH:mm:ss"}'}}}</p>
+		 		</div>
+		 	</div>
+			<div class="list_job">
+				<table class="table table-bordered table-hover table-striped">
+					<thead> 
+						<tr>
+							<th class="col-md-1"> Job ID</th>
+							<th class="col-md-2"> Job Name</th> 
+							<th class="col-md-1"> State</th> 
+							<th class="col-md-1"> Status</th> 
+							<th class="col-md-1"> Start Date</th>
+							<th class="col-md-1"> End Date</th>
+							<th class="col-md-1"> VER</th>  
+							<th class="col-md-3"> WID</th>			
+							<th class="col-md-1"> Prog</th>			
+						</tr>
+					</thead>
+					<tbody>
+					 <tr ng-repeat="job in list_job">
+						<td class="col-md-1">{{'{{job.jid}'}}}</td>
+						<td class="col-md-2">{{'{{job.jname}'}}}</td>
+						<td class="col-md-1" ng-class="{'running': job.state == 'Running', 'aborted': job.state == 'Aborted', 'watting': job.state == 'Watting', 'paused': job.state == 'Paused', 'completed': job.state == 'Completed'}">{{'{{job.state}'}}}</td>
+						<td class="col-md-1">{{'{{job.status}'}}}</td>
+						<td class="col-md-1">{{'{{job.startdate*1000 | date:"dd-M-yyyy HH:mm:ss"}'}}}</td>
+						<td class="col-md-1">{{'{{job.enddate*1000 | date:"dd-M-yyyy HH:mm:ss"}'}}}</td>
+						<td class="col-md-1">{{'{{job.ver}'}}}</td>
+						<td class="col-md-3">{{'{{job.wid}'}}}</td>
+						<td class="col-md-1">{{'{{job.prog}'}}}</td>
+					 </tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	var app = angular.module('schedule-detail',[]);
+	app.controller("scheCtrl", function ($scope,$http,$timeout,$window){
+		$scope.onload = function () {
+			// $scope.idSchedule;
+			$http.get('/schedule/api/schedule/'+{{id}}+'/').then(function (response) {
+				$scope.schedule = response.data[0];
+				$scope.list_job = $scope.schedule['list_job'];
+				$scope.distance = $scope.schedule.schedule_date - $scope.schedule.svr_date;
+				console.log($scope.distance);
+				console.log($scope.list_job);
+			});
+		};
+		$scope.onload();
+	});
+</script>
+<!-- <script type="text/javascript">
+	$(document).ready(function(){
+		var svr_date;
+		var schedule_date;
+		setTimeout(function(){
+			svr_date = $('#time_server').text()
+			// .split(new RegExp());
+			schedule_date = $('#time_schedule').text();
+		}, 1000);
+		// Update the count down every 1 second
+		var x = setInterval(function() {
+    
+		    // Find the distance between svr_date an the count down date
+		    var distance = schedule_date - svr_date;
+		    svr_date = svr_date + 1000;
+		    console.log(distance);
+		    
+		    // Time calculations for days, hours, minutes and seconds
+		    var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+		    var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+		    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+		    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+		    
+		    // Output the result in an element with id="demo"
+		    document.getElementById("watting_time").innerHTML = days + "d " + hours + "h "
+		    + minutes + "m " + seconds + "s ";
+		    
+		    // If the count down is over, write some text 
+		    if (distance < 0) {
+		        clearInterval(x);
+		        document.getElementById("watting_time").innerHTML = "EXPIRED";
+		    }
+		}, 1000);
+	});
+</script> -->
+<!-- <script type="text/javascript">
+	$(document).ready(function () {
+		$('#createJob').on('click', function(e){
+			// console.log("$$$$$$$");
+		});
+		var $scroll = $('table.scrollTable');
+		$scroll.floatThead({
+		scrollContainer: function($table){
+	    return $table.closest('.wrapper');
+		}
+	});
+	});
+	
+</script> -->
+{% endblock %}
