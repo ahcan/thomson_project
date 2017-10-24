@@ -7,12 +7,27 @@ import re
 import json
 from setting.get_thomson_api import *
 
+class DateTime:
+    def conver_human_creadeble_2_unix_timetamps(self, date_time):
+        return int(time.mktime(time.strptime(date_time, '%Y-%m-%d %H:%M:%S')))
+
+    def get_now():
+        now = time.time()
+        now_pattern = re.compile("\d+") 
+        now = re.findall(now_pattern, str(now))
+        now = now[0]
+        return int(now)
+
+    def convert_date_pattern_2_unix_timestamp(self, ss, mm, hh, DD, MM, YYYY):
+        human_date = "%s-%s-%s %s:%s:%s"%(YYYY,MM,DD,hh,mm,ss)
+        return (int(time.mktime(time.strptime(human_date, '%Y-%m-%d %H:%M:%S')))) #- time.timezone)
+
 class Crontab:
 
     def create(self, date_time, jobid, action):
         if not date_time.isdigit():
             try:
-                date_time = int(time.mktime(time.strptime(date_time, '%Y-%m-%d %H:%M:%S')))
+                date_time = DateTime().conver_human_creadeble_2_unix_timetamps(date_time)
             except Exception as e:
                 return None
         dt=datetime.fromtimestamp(date_time)
@@ -167,9 +182,6 @@ class CrontabDetail:
             return cron[0]
         else:
             return None
-    def get_unix_timestamp(self, ss, mm, hh, DD, MM, YYYY):
-        human_date = "%s-%s-%s %s:%s:%s"%(YYYY,MM,DD,hh,mm,ss)
-        return (int(time.mktime(time.strptime(human_date, '%Y-%m-%d %H:%M:%S'))) - time.timezone)
 
 #state = 1: schedule complete
 #state = 0: schedule waiting
@@ -199,8 +211,8 @@ class CrontabDetail:
         if reaction:
             action = re.findall(action_pattern, reaction[0])
             action = action[0]
-        full_date = self.get_unix_timestamp(ss,mm,hh,DD,MM,YYYY)
-        now = time.time() - time.timezone
+        full_date = DateTime().convert_date_pattern_2_unix_timestamp(ss,mm,hh,DD,MM,YYYY)
+        now = DateTime().get_now()
         minus_dt = full_date - now
         if minus_dt > 0:
             mm, ss = divmod(minus_dt, 60)
@@ -226,10 +238,7 @@ class CrontabDetail:
             for jid in list_jid:
                 array_jid.append(int(jid))
             list_job = Job().get_job_detail_by_job_id(array_jid)
-            now = time.time()
-            now_pattern = re.compile("\d+") 
-            now = re.findall(now_pattern, str(now))
-            now = now[0]
+            now = DateTime().get_now()
             agrs.append({'list_job'        : list_job,
                          'action'          : action,
                          'schedule_date'   : full_date,
