@@ -8,6 +8,7 @@ from django.http import HttpResponseRedirect, Http404, HttpResponse
 from rest_framework import status
 from utils import *
 import re
+from accounts.user_info import *
 
 # Create your views here.
 
@@ -24,9 +25,14 @@ def get_schedule_list_json(request):
     #print schedule_list
     return HttpResponse(schedule_list, content_type='application/json', status=200)
 def get_index(request):
-	return render_to_response("schedule/schedule.html")
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect('/accounts/login')
+    user = user_info(request)
+    return render_to_response("schedule/schedule.html", user)
 @csrf_exempt
 def get_add(request):
+	if not request.user.is_authenticated():
+		return HttpResponseRedirect('/accounts/login')
 	if request.method == 'POST':
 		# get value post
 		date_time = request.POST.get('ipDay', '').strip()
@@ -47,6 +53,7 @@ def get_add(request):
 			return HttpResponseRedirect('/schedule/')
 		return HttpResponseRedirect('/schedule/')
 	else:
+		user = user_info(request)
 		return render_to_response("schedule/addJob.html")
 
 ### remove schedule ###
@@ -66,4 +73,7 @@ def get_schedule_json(request, id):
 def redirect_schedule(request, id):
 	args={}
 	args['id'] = id
+	args['email'] = request.user.email if request.user.email else request.user.username
+	args['is_superuser'] = 'true' if request.user.is_superuser else 'false'
+	args['is_staff'] =  'true' if request.user.is_staff else 'false'
 	return render_to_response("schedule/schedule_detail.html",args)
