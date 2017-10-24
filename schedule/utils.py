@@ -20,7 +20,7 @@ class Crontab:
         DD = dt.day
         MM = dt.month
         hh = dt.hour
-        print hh
+        #print hh
         mm = dt.minute
         ss = dt.second
         dayofweek = dt.isocalendar()[2]
@@ -100,7 +100,8 @@ class Crontab:
             else:
                 return 1
         else:
-            return 0
+            os.system('crontab -r')
+            return 1
 
     def get_cron_by_id(self, id = None):
         if not id:
@@ -130,7 +131,7 @@ class Crontab:
             schedule = CrontabDetail(task).serialization()
             if schedule:
                 ss,mm,hh,DD,MM,YYYY,dayofweek,list_jid,action,full_date,state,alarm = CrontabDetail(schedule).get_pattern()
-                print list_jid
+                #print list_jid
                 array_jid = []
                 for jid in list_jid:
                     array_jid.append(int(jid))
@@ -168,7 +169,7 @@ class CrontabDetail:
             return None
     def get_unix_timestamp(self, ss, mm, hh, DD, MM, YYYY):
         human_date = "%s-%s-%s %s:%s:%s"%(YYYY,MM,DD,hh,mm,ss)
-        return (int(time.mktime(time.strptime(human_date, '%Y-%m-%d %H:%M:%S')))) #- time.timezone)
+        return (int(time.mktime(time.strptime(human_date, '%Y-%m-%d %H:%M:%S'))) - time.timezone)
 
 #state = 1: schedule complete
 #state = 0: schedule waiting
@@ -199,7 +200,7 @@ class CrontabDetail:
             action = re.findall(action_pattern, reaction[0])
             action = action[0]
         full_date = self.get_unix_timestamp(ss,mm,hh,DD,MM,YYYY)
-        now = time.time() #- time.timezone
+        now = time.time() - time.timezone
         minus_dt = full_date - now
         if minus_dt > 0:
             mm, ss = divmod(minus_dt, 60)
@@ -225,10 +226,14 @@ class CrontabDetail:
             for jid in list_jid:
                 array_jid.append(int(jid))
             list_job = Job().get_job_detail_by_job_id(array_jid)
+            now = time.time()
+            now_pattern = re.compile("\d+") 
+            now = re.findall(now_pattern, str(now))
+            now = now[0]
             agrs.append({'list_job'        : list_job,
                          'action'          : action,
                          'schedule_date'   : full_date,
-                         'svr_date'        : time.time(),
+                         'svr_date'        : int(now),
                          'state'           : int(state),
                          'message'         : self.human_readable()
                         })
