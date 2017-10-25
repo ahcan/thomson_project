@@ -232,14 +232,18 @@ class CrontabDetail:
         return json.dumps(agrs)
 
 
-class Log:
-    def create_message(self, user='System', action = '', msg = '', host = ''):
+class ScheduleLog:
+    def create_message(self, user='', action = '', crontab = '', host = ''):
         message = ''
+        msg = CrontabDetail(crontab).human_readable()
         now = time.strftime("%a, %d-%m-%Y %H:%M:%S", time.localtime(time.time()))
         message = 'User %s %s schedule content(%s) in host %s at %s.'%(user, action, msg, host, now)
         return message
-    def write():
-        pass
+    # def write_install(self, request, action = '', host = '', crontab, schedule_date='', description=''):
+    #     user_id = int(request.user.id)
+    #     user_name = request.user.username
+    #     message = self.create_message(user=user_id, action=action, crontab=crontab, host=host)
+    #     new_schedule = Schedule(user=user_id, cr)
 
 
 #Crontab().append(content='11 11 * * * /bin/sh /home/thomson_crontab/add_aa.sh', override=False)
