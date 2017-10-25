@@ -110,3 +110,6 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
+
+#Session timeout (minute)
+AUTO_LOGOUT_DELAY = 180

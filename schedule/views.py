@@ -29,32 +29,45 @@ def get_index(request):
         return HttpResponseRedirect('/accounts/login')
     user = user_info(request)
     return render_to_response("schedule/schedule.html", user)
+
+@require_http_methods(['GET', 'POST'])
 @csrf_exempt
-def get_add(request):
-	if not request.user.is_authenticated():
-		return HttpResponseRedirect('/accounts/login')
-	if request.method == 'POST':
-		# get value post
-		date_time = request.POST.get('ipDay', '').strip()
-		jobID = request.POST.get('jobID', '').strip()
-		##validate jobid input
-		job_pattern = re.compile("\d{3,10}")
-		list_job = re.findall(job_pattern,jobID)
-		print list_job
-		##end validate
-		list_jobid = ''
-		for job in list_job:
-			list_jobid = list_jobid + job + ','
-		if list_jobid:
-			list_jobid = list_jobid[:-1]
-		schedule = Crontab().create(date_time, list_jobid, 'start')
-		if schedule:
-			Crontab().append(schedule)
-			return HttpResponseRedirect('/schedule/')
-		return HttpResponseRedirect('/schedule/')
-	else:
-		user = user_info(request)
-		return render_to_response("schedule/addJob.html")
+def add_schedule(request):
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect('/accounts/login')
+    # get value post
+    agrs={}
+    error = ''
+    if request.method=='POST':
+        data = json.loads(request.body)
+        date_time = data['date_time']
+        jobid_list = data['jobid_list']
+        ##validate jobid input
+        job_pattern = re.compile("\d{3,10}")
+        list_job = re.findall(job_pattern,jobid_list)
+        ##end validate
+        ##Validate date time YYYY-MM-DD hh:mm:ss
+        date_time_pattern = re.compile("\d{4}[/.-]\d{2}[/.-]\d{2} \d{2}:\d{2}:\d{2}")
+        date_time = re.findall(date_time_pattern, date_time)
+        date_time = date_time[0]
+        ##End alidate date time
+        list_jobid = ''
+        for job in list_job:
+            list_jobid = list_jobid + job + ','
+            if list_jobid:
+                list_jobid = list_jobid[:-1]
+        schedule = Crontab().create(date_time, list_jobid, 'start')
+        if schedule:
+            Crontab().append(schedule)
+            agrs["detail"] = "Success"
+            messages = json.dumps(agrs)
+            return HttpResponse(messages, content_type='application/json', status=202)
+        agrs["detail"] = "Job ID or Date time not correct!"
+        messages = json.dumps(agrs)
+        return HttpResponse(messages, content_type='application/json', status=203)
+    else:
+        user = user_info(request)
+        return render_to_response("schedule/addJob.html", user)
 
 ### remove schedule ###
 @require_http_methods(['DELETE'])

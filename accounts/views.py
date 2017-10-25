@@ -11,6 +11,7 @@ import json
 from accounts.user_info import *
 from django.shortcuts import render, redirect
 from accounts.models import *
+from setting import settings
             
 # ------------auth
 @require_http_methods(['GET', 'POST'])
@@ -26,12 +27,14 @@ def log_in(request):
             if user.is_active:
                 auth.login(request, user)
                 request.session['has_commented'] = True 
+                #Set session timeout
+                request.session.set_expiry(settings.AUTO_LOGOUT_DELAY * 60)
                 return HttpResponse(status=status.HTTP_202_ACCEPTED)
         else:
-            agrs["detail"] = "Incorect username or password!"
+            agrs["detail"] = "Incorrect username or password!"
             messages = json.dumps(agrs)
             return HttpResponse(messages, content_type='application/json', status=203)
-    '''User is realy login, logout user session'''
+    '''User is really login, logout user session'''
     log_out(request)
     return render_to_response('accounts/login.html')
     
@@ -55,11 +58,11 @@ def password_change(request):
             agrs["detail"] = "Sorry, passwords do not match!"
             messages = json.dumps(agrs)
             return HttpResponse(messages, content_type='application/json', status=203)
-        #check new password whith current password
+        #check new password with current password
         username = request.user.username
         user = user = authenticate(username=username, password=oldpassword)
         if user is None:
-            agrs["detail"] = "Sorry, password not corect!"
+            agrs["detail"] = "Sorry, password not correct!"
             messages = json.dumps(agrs)
             return HttpResponse(messages, content_type='application/json', status=203)
         #Check new pass word  not same old password
