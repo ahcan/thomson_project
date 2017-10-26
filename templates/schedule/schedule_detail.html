@@ -85,7 +85,7 @@
 					if (distance < 0 || distance == 0) {
 		        $interval.cancel(x);
 		        $scope.timeShow = false;
-		        $scope.onload();
+		        $timeout(function(){$scope.onload(); console.log("####Reload####")},2000);
 				  }else if(distance >=60 && distance <61){
 				  	$scope.onload();
 				  }
