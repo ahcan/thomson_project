@@ -9,6 +9,7 @@ from rest_framework import status
 from utils import *
 import re
 from accounts.user_info import *
+from setting.DateTime import *
 
 # Create your views here.
 
@@ -37,37 +38,85 @@ def add_schedule(request):
         return HttpResponseRedirect('/accounts/login')
     # get value post
     agrs={}
-    error = ''
     if request.method=='POST':
-        data = json.loads(request.body)
-        date_time = data['date_time']
-        jobid_list = data['jobid_list']
-        ##validate jobid input
-        job_pattern = re.compile("\d{3,10}")
-        list_job = re.findall(job_pattern,jobid_list)
-        print list_job
-        ##end validate
-        ##Validate date time YYYY-MM-DD hh:mm:ss
-        date_time_pattern = re.compile("\d{4}[/.-]\d{2}[/.-]\d{2} \d{2}:\d{2}:\d{2}")
-        date_time = re.findall(date_time_pattern, date_time)
-        date_time = date_time[0]
-        ##End alidate date time
+        data = None
         list_jobid = ''
-        for job in list_job:
-            list_jobid = list_jobid + job + ','
-        ## trip the last ','
-        if list_jobid:
-            list_jobid = list_jobid[:-1]
-        ## end trip
-        schedule = Crontab().create(date_time, list_jobid, 'start')
-        if schedule:
-            Crontab().append(schedule)
-            agrs["detail"] = "Success"
+        date_time = None
+        action = 'start'
+        try:
+            data = json.loads(request.body)
+        except Exception as e:
+            agrs["detail"] = "No data input found!"
             messages = json.dumps(agrs)
-            return HttpResponse(messages, content_type='application/json', status=202)
-        agrs["detail"] = "Job ID or Date time not correct!"
-        messages = json.dumps(agrs)
-        return HttpResponse(messages, content_type='application/json', status=203)
+            return HttpResponse(messages, content_type='application/json', status=203)
+        '''Validate date time YYYY-MM-DD hh:mm:ss'''
+        try:
+            date_time = data['date_time']
+            date_time_pattern = re.compile("\d{4}[/.-]\d{2}[/.-]\d{2} \d{2}:\d{2}:\d{2}")
+            date_time = re.findall(date_time_pattern, date_time)
+            date_time = date_time[0]
+            schedule_datetime = DateTime().conver_human_creadeble_2_unix_timetamp(date_time)
+            now = DateTime().get_now() + 60
+            if schedule_datetime <= now:
+                agrs["detail"] = "Schedule must grater than now 1 minutes!"
+                messages = json.dumps(agrs)
+                return HttpResponse(messages, content_type='application/json', status=203)
+        except Exception as e:
+            agrs["detail"] = "Invalid data datetime!"
+            messages = json.dumps(agrs)
+            return HttpResponse(messages, content_type='application/json', status=203)
+        '''End alidate date time'''
+        '''validate jobid input'''
+        try:
+            jobid_list = data['jobid_list']
+            job_pattern = re.compile("\d{3,10}")
+            list_job = re.findall(job_pattern,jobid_list)
+            for job in list_job:
+                list_jobid = list_jobid + job + ','
+            ''' trip the last ','''
+            if list_jobid:
+                list_jobid = list_jobid[:-1]
+            else:
+                agrs["detail"] = "JobID: %s not found!"%(jobid_list)
+                messages = json.dumps(agrs)
+                return HttpResponse(messages, content_type='application/json', status=203)
+            ''' end trip'''
+        except Exception as e:
+            agrs["detail"] = "Invalid data JobID!"
+            messages = json.dumps(agrs)
+            return HttpResponse(messages, content_type='application/json', status=203)
+        '''end validate'''
+        '''Create crontab string'''
+        schedule = Crontab().create(date_time, list_jobid, action)
+        '''install crontab to server'''
+        if schedule:
+            '''
+            Mesages return None is success
+            Mesages return string is fail
+            '''
+            ##check crontab fortmat
+            validate_schedule = CrontabDetail(schedule).serialization()
+            if not validate_schedule:
+            	agrs["detail"] = "Invalid data input JobID or datetime!"
+                messages = json.dumps(agrs)
+                return HttpResponse(messages, content_type='application/json', status=203)
+            ##End check
+            '''Write log'''
+            
+            '''End write log'''
+            messages = Crontab().append(validate_schedule)
+            if not messages:
+                agrs["detail"] = "Successfully added to jobid: %s"%(list_jobid)
+                messages = json.dumps(agrs)
+                return HttpResponse(messages, content_type='application/json', status=202)
+            else:
+                agrs["detail"] = messages
+                messages = json.dumps(agrs)
+                return HttpResponse(messages, content_type='application/json', status=203)
+        else:
+            agrs["detail"] = schedule
+            messages = json.dumps(agrs)
+            return HttpResponse(messages, content_type='application/json', status=203)
     else:
         user = user_info(request)
         return render_to_response("schedule/addJob.html", user)
@@ -76,16 +125,26 @@ def add_schedule(request):
 @require_http_methods(['DELETE'])
 @csrf_exempt
 def remove_schedule(request, id):
-	if request.method=='DELETE':
-		Crontab().delete(id)
-		return HttpResponse(status=status.HTTP_204_NO_CONTENT)
-	else:
-		return HttpResponse(status=status.HTTP_502_BAD_GATEWAY)
+    agrs={}
+    if request.method=='DELETE':
+        mesages = Crontab().delete(id)
+        if not mesages:
+            agrs["detail"] = "Successfully remove to jobid: %s"%(id)
+            messages = json.dumps(agrs)
+            return HttpResponse(messages, content_type='application/json', status=202)
+        else:
+            agrs["detail"] = mesages
+            messages = json.dumps(agrs)
+            return HttpResponse(messages, content_type='application/json', status=203)
+    else:
+        return HttpResponse(status=status.HTTP_502_BAD_GATEWAY)
+
 ### api time countdown and server ###
 @require_http_methods(['GET'])
 def get_schedule_json(request, id):
 	schedule = CrontabDetail(id).get_schedule()
 	return HttpResponse(schedule, content_type='application/json', status=status.HTTP_200_OK)
+
 def redirect_schedule(request, id):
 	args={}
 	args['id'] = id

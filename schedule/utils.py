@@ -67,7 +67,7 @@ class Crontab:
                 else:
                     installed_content += '\n%s' % crontab
             else:
-                return 'New crontab was available'
+                return 'New crontab is available'
         if installed_content:
             installed_content += '\n'
         # install back
@@ -88,7 +88,7 @@ class Crontab:
             id = int(id)
         installed_content =  self.get_list()
         if not installed_content:
-            return 'Schedule was empty!'
+            return 'Schedule is empty!'
         #remove schedule by line number
         new_content = ''
         count = 1
@@ -103,7 +103,7 @@ class Crontab:
         if new_content:
             retcode, err, out = self._runcmd('crontab', new_content)
             if retcode != 0: 
-                return 'failed to remove crontab, check if crontab is valid'
+                return 'Failed to remove crontab, check if crontab is valid'
             else:
                 return None
         else:
@@ -248,6 +248,10 @@ class ScheduleLog:
         now = time.strftime("%a, %d-%m-%Y %H:%M:%S", time.localtime(time.time()))
         message = 'User %s %s schedule content(%s) in host %s at %s.'%(user, action, msg, host, now)
         return message
+    def write_log(self, request):
+        user_id = request.user.id
+        print user_id
+        user_name = request.user.username
     # def write_install(self, request, action = '', host = '', crontab, schedule_date='', description=''):
     #     user_id = int(request.user.id)
     #     user_name = request.user.username

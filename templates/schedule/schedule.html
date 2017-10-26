@@ -1,5 +1,10 @@
-	{% extends 'base.html' %}
-	{% block content %}
+{% extends 'base.html' %}
+{% block content %}
+	<script src="/static/ajax/libs/jquery/jquery-3.2.1.min.js"></script>
+	<script type="text/javascript" src="https://code.jquery.com/ui/1.11.3/jquery-ui.min.js" ></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.1/moment.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css">
 	<!-- Sroll table -->
 	<script type="text/javascript" src="/static/assets/js/jquery.floatThead.min.js""></script>
 	<div ng-app="schedule" ng-controller="scheCtrl">
@@ -12,24 +17,6 @@
 					<div>
 						<a href="#myModal" role="button" data-parent="#createJob" data-toggle="modal" class="btn btn-success btn-xs">Add new process <span class="glyphicon glyphicon-plus"></span></a>
 					</div>
-					<div class="modal fade" id="myModal" role="dialog">
-	    		<div class="modal-dialog">
-	      <!-- Modal content-->
-	      <div class="modal-content">
-	        <div class="modal-header">
-	          <button type="button" class="close" data-dismiss="modal">&times;</button>
-	          <h4 class="modal-title">Modal Header</h4>
-	        </div>
-	        <div class="modal-body">
-	          <p>Some text in the modal.</p>
-	        </div>
-	        <div class="modal-footer">
-	          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-	        </div>
-	      </div>
-	      
-	    </div>
-	  </div>
 				</div>
 				<div class="" style="overflow-y: auto;"">
 					<table class="table table-bordered table-hover table-striped">
@@ -48,9 +35,9 @@
 							</tr>
 						</thead>
 						<tfoot>
-							<tr>
-								<td colspan="9" class="text-center">Total: {{'{{filterState.length}'}}}</td>
-							</tr>
+						<tr>
+							<td colspan="9" class="text-center">Total: {{'{{filterState.length}'}}}</td>
+						</tr>
 						</tfoot>
 						<tbody data-link="row" class="rowlink">
 							<tr ng-repeat="scrontab in (scrontab_list | orderBy:'-unix_timestamp') as filterState" >
@@ -59,7 +46,7 @@
 								<td class="col-md-1" ng-click="moreinfo(scrontab.id)"><span>{{'{{scrontab.unix_timestamp*1000 | date: "dd-M-yyyy HH:mm:ss Z"}'}}}</span></td>
 								<td class="col-md-1" ng-click="moreinfo(scrontab.id)"><span>{{'{{scrontab.alarm}'}}}</span></td>
 								<td class="col-md-1" ng-click="moreinfo(scrontab.id)" ng-class="{'completed': scrontab.state==1, 'watting': scrontab.state==0}"><span ng-if="scrontab.state == 1"> Completed</span>
-									<span ng-if="scrontab.state == 0"> Watting</span></td>
+								<span ng-if="scrontab.state == 0"> Watting</span></td>
 								<td class="col-md-1" ng-click="moreinfo(scrontab.id)"><sapn>{{'{{scrontab.action}'}}}</sapn></td>
 								<td class="col-md-5" ng-click="moreinfo(scrontab.id)"><div>
 									<table class="table table-bordered">
@@ -85,41 +72,97 @@
 					</table>
 				</div>
 			</div>
+			<!-- Modal -->
+			<div class="modal fade" id="myModal" role="dialog">
+				<div class="modal-dialog">
+					<!-- Modal content-->
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+							<h4 class="modal-title">Add Schedule</h4>
+						</div>
+						<div class="modal-body">
+							<form id="formAddJob" name="formAddJob" action="/schedule/add/" method="POST" onsubmit="return SubmitCheckTextField()">
+								<label>Jod ID:</label>&nbsp<input type="text" ng-model="schedule.jobid_list">
+								<div class="form-group">
+									<div class="input-group date" id="daypicker">
+										<input type="text" class="form-control" ng-model="schedule.date_time"><span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+									</div>
+								</div>
+							</form>
+						</div>
+						<div class="modal-footer">
+							<input type="button" name="create" id="submit" value="Create" ng-click="create_schedule()">
+							<input type="button" data-dismiss="modal" value="Cancel">
+						</div>
+					</div>
+					
+				</div>
+			</div>
+			<!-- End Modal -->
 		</div>
-	</div>
 
-	<script>
-		var app = angular.module('schedule',[]);
-		app.controller("scheCtrl", function ($scope,$http,$timeout,$window){
-			$scope.onload = function () {
-				$scope.total = 0;
-				$http.get('/schedule/api/schedule').then(function (response) {
-					$scope.scrontab_list = response.data;
-					$scope.total = $scope.scrontab_list.length
-				});
-				$timeout(function(){
-					// $scope.reload();
-				},10000)
-			};
-			$scope.onload();
-			$scope.deteleRow = function (field) {
-				// body...
-				var id = field.id;
-				$http.delete('/schedule/delete/'+id+'/').then(function(response){
-					if(response.status == 204){
-						$scope.scrontab_list.splice($scope.scrontab_list.indexOf(field), 1);
-						$scope.onload();
-						console.log("Delete completed");
-					}
-					else
-						console.log("Error");
-				});
+
+<script>
+var app = angular.module('schedule',[]);
+	app.controller("scheCtrl", function ($scope,$http,$timeout,$window){
+		$scope.onload = function () {
+			$scope.total = 0;
+			$http.get('/schedule/api/schedule').then(function (response) {
+				$scope.scrontab_list = response.data;
+				$scope.total = $scope.scrontab_list.length
+			});
+		$timeout(function(){
+			// $scope.reload();
+			},10000)
+		};
+	$scope.onload();
+	$scope.deteleRow = function (field) {
+
+    if ($window.confirm("Please confirm?")) {
+			// body...
+			var id = field.id;
+			$http({
+					method : 'DELETE',
+					url : '/schedule/delete/'+id+'/',
+			}).then(function(response){
+				if(response.status == 203){
+				$window.alert(response.data.detail);
 			}
-			$scope.moreinfo = function(crontab_id){
-				$window.location.href='/schedule/detail/'+crontab_id+'/';
-			}
-		});
-	</script>
+			else
+				if (response.status == 202){
+					$window.alert(response.data.detail);
+					$scope.onload();
+				}
+			});
+    } else {
+        //$scope.Message = "You clicked NO.";
+    }
+	}
+	$scope.moreinfo = function(crontab_id){
+		$window.location.href='/schedule/detail/'+crontab_id+'/';
+	}
+
+  $scope.create_schedule = function () {
+    // console.log($scope.schedule);
+    $http({
+      method : 'POST',
+      url : '/schedule/add/',
+      data : $scope.schedule
+    }).then(function(response){
+      if(response.status == 203){
+        $window.alert(response.data.detail);
+      }
+      else
+        if (response.status == 202){
+        	$window.alert(response.data.detail);
+          $window.location.href='/schedule/';
+        }
+    });
+  }; 
+
+});
+</script>
 	<script type="text/javascript">
 		$(document).ready(function () {
 			$('#createJob').on('click', function(e){
@@ -130,8 +173,24 @@
 			scrollContainer: function($table){
 		    return $table.closest('.wrapper');
 			}
-		});
+			});
 		});
 		
 	</script>
+
+<script type="text/javascript">
+	$(document).ready(function () {
+		// body...
+		$('#daypicker').datetimepicker({
+		    format: 'YYYY-MM-DD HH:mm:ss',
+		    allowInputToggle: true
+		});
+		// $('#submit').click(function(){
+		// 	var datestring = $('#ipDay').val().replace(/-/g,"/");
+		// 	// var date = Date.parseExact(datestring, "dd/MM/yyyy");
+		// 	// console.log(date.getFullYear());
+		// 	console.log(datestring);
+		// });
+	});
+</script>
 	{% endblock %}
