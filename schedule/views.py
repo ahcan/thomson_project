@@ -45,6 +45,7 @@ def add_schedule(request):
         ##validate jobid input
         job_pattern = re.compile("\d{3,10}")
         list_job = re.findall(job_pattern,jobid_list)
+        print list_job
         ##end validate
         ##Validate date time YYYY-MM-DD hh:mm:ss
         date_time_pattern = re.compile("\d{4}[/.-]\d{2}[/.-]\d{2} \d{2}:\d{2}:\d{2}")
@@ -54,8 +55,10 @@ def add_schedule(request):
         list_jobid = ''
         for job in list_job:
             list_jobid = list_jobid + job + ','
-            if list_jobid:
-                list_jobid = list_jobid[:-1]
+        ## trip the last ','
+        if list_jobid:
+            list_jobid = list_jobid[:-1]
+        ## end trip
         schedule = Crontab().create(date_time, list_jobid, 'start')
         if schedule:
             Crontab().append(schedule)
