@@ -41,14 +41,14 @@
 						</tfoot>
 						<tbody data-link="row" class="rowlink">
 							<tr ng-repeat="scrontab in (scrontab_list | orderBy:'-unix_timestamp') as filterState" >
-								<td class="col-md-1" ng-click="moreinfo(scrontab.id)">{{'{{$index + 1}'}}}</td>
-								<td class="col-md-1" ng-click="moreinfo(scrontab.id)">{{'{{scrontab.id}'}}}</td>
-								<td class="col-md-1" ng-click="moreinfo(scrontab.id)"><span>{{'{{scrontab.unix_timestamp*1000 | date: "dd-M-yyyy HH:mm:ss Z"}'}}}</span></td>
-								<td class="col-md-1" ng-click="moreinfo(scrontab.id)"><span>{{'{{scrontab.alarm}'}}}</span></td>
-								<td class="col-md-1" ng-click="moreinfo(scrontab.id)" ng-class="{'completed': scrontab.state==1, 'watting': scrontab.state==0}"><span ng-if="scrontab.state == 1"> Completed</span>
+								<td class="col-md-1" ng-click="moreInfor(scrontab.id)">{{'{{$index + 1}'}}}</td>
+								<td class="col-md-1" ng-click="moreInfor(scrontab.id)">{{'{{scrontab.id}'}}}</td>
+								<td class="col-md-1" ng-click="moreInfor(scrontab.id)"><span>{{'{{scrontab.unix_timestamp*1000 | date: "dd-M-yyyy HH:mm:ss Z"}'}}}</span></td>
+								<td class="col-md-1" ng-click="moreInfor(scrontab.id)"><span>{{'{{scrontab.alarm}'}}}</span></td>
+								<td class="col-md-1" ng-click="moreInfor(scrontab.id)" ng-class="{'completed': scrontab.state==1, 'watting': scrontab.state==0}"><span ng-if="scrontab.state == 1"> Completed</span>
 								<span ng-if="scrontab.state == 0"> Watting</span></td>
-								<td class="col-md-1" ng-click="moreinfo(scrontab.id)"><sapn>{{'{{scrontab.action}'}}}</sapn></td>
-								<td class="col-md-5" ng-click="moreinfo(scrontab.id)"><div>
+								<td class="col-md-1" ng-click="moreInfor(scrontab.id)"><sapn>{{'{{scrontab.action}'}}}</sapn></td>
+								<td class="col-md-5" ng-click="moreInfor(scrontab.id)"><div>
 									<table class="table table-bordered">
 										<thead>
 											<tr style="background-color: #337ab7; color: #ffff;">
@@ -85,8 +85,8 @@
 							<form id="formAddJob" name="formAddJob" action="/schedule/add/" method="POST" onsubmit="return SubmitCheckTextField()">
 								<label>Jod ID:</label>&nbsp<input type="text" ng-model="schedule.jobid_list">
 								<div class="form-group">
-									<div class="input-group date" id="daypicker">
-										<input type="text" class="form-control" ng-model="schedule.date_time"><span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+									<div class="input-group date" id="daypicker" ng-click="updateTime()">
+										<input type="text" class="form-control" ng-model="schedule.date_time" ><span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
 									</div>
 								</div>
 							</form>
@@ -116,6 +116,7 @@ var app = angular.module('schedule',[]);
 			// $scope.reload();
 			},10000)
 		};
+	$scope.schedule={'jobid_list':'', 'date_time':''};
 	$scope.onload();
 	$scope.deteleRow = function (field) {
 
@@ -139,12 +140,13 @@ var app = angular.module('schedule',[]);
         //$scope.Message = "You clicked NO.";
     }
 	}
-	$scope.moreinfo = function(crontab_id){
+	$scope.moreInfor = function(crontab_id){
 		$window.location.href='/schedule/detail/'+crontab_id+'/';
 	}
 
   $scope.create_schedule = function () {
     // console.log($scope.schedule);
+    $scope.updateTime();
     $http({
       method : 'POST',
       url : '/schedule/add/',
@@ -159,8 +161,14 @@ var app = angular.module('schedule',[]);
           $window.location.href='/schedule/';
         }
     });
-  }; 
+  }
 
+  $scope.updateTime  = function(){
+  	//getElement via DOM in angular
+  	var da = angular.element( document.getElementById('daypicker').firstElementChild);
+     $scope.schedule.date_time = da.val();
+     console.log($scope.schedule);
+  }
 });
 </script>
 	<script type="text/javascript">
@@ -183,14 +191,9 @@ var app = angular.module('schedule',[]);
 		// body...
 		$('#daypicker').datetimepicker({
 		    format: 'YYYY-MM-DD HH:mm:ss',
-		    allowInputToggle: true
+		    allowInputToggle: true,
+		    useCurrent: true
 		});
-		// $('#submit').click(function(){
-		// 	var datestring = $('#ipDay').val().replace(/-/g,"/");
-		// 	// var date = Date.parseExact(datestring, "dd/MM/yyyy");
-		// 	// console.log(date.getFullYear());
-		// 	console.log(datestring);
-		// });
 	});
 </script>
 	{% endblock %}

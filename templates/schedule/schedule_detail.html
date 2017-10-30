@@ -56,8 +56,8 @@
 						<td class="col-md-2">{{'{{job.jname}'}}}</td>
 						<td class="col-md-1" ng-class="{'running': job.state == 'Running', 'aborted': job.state == 'Aborted', 'watting': job.state == 'Watting', 'paused': job.state == 'Paused', 'completed': job.state == 'Completed'}">{{'{{job.state}'}}}</td>
 						<td class="col-md-1">{{'{{job.status}'}}}</td>
-						<td class="col-md-1">{{'{{job.startdate*1000 | date:"dd-M-yyyy HH:mm:ss"}'}}}</td>
-						<td class="col-md-1">{{'{{job.enddate*1000 | date:"dd-M-yyyy HH:mm:ss"}'}}}</td>
+						<td class="col-md-1">{{'{{job.startdate*1000 | date:"dd-MM-yyyy HH:mm:ss"}'}}}</td>
+						<td class="col-md-1" >{{'{{job.enddate*1000 | date:"dd-MM-yyyy HH:mm:ss"}'}}}</td>
 						<td class="col-md-1">{{'{{job.ver}'}}}</td>
 						<td class="col-md-3">{{'{{job.wid}'}}}</td>
 						<td class="col-md-1">{{'{{job.prog}'}}}</td>
@@ -85,7 +85,7 @@
 					if (distance < 0 || distance == 0) {
 		        $interval.cancel(x);
 		        $scope.timeShow = false;
-		        $timeout(function(){$scope.onload(); console.log("####Reload####")},2000);
+		        // $timeout(function(){$scope.onload(); console.log("####Reload####")},2000);
 				  }else if(distance >=60 && distance <61){
 				  	$scope.onload();
 				  }
