@@ -3,6 +3,7 @@ from xml.dom import minidom
 import requests# $ pip install requests
 from requests.auth import HTTPDigestAuth
 from DateTime import *
+from setting import settings
 
 ##############################################################################
 #                                                                            #
@@ -41,9 +42,9 @@ class File:
 
 class Thomson:
     def __init__(self):
-        self.user = 'nguyennt9'
-        self.passwd = '123456'
-        self.url = 'http://172.29.3.189/services/Maltese'
+        self.user = settings.user
+        self.passwd = settings.passwd
+        self.url = settings.url
 
     def get_response(self, headers, body):
         response = requests.post(self.url, data=body, headers=headers, \
@@ -561,6 +562,16 @@ class Job:
         #response_xml = Thomson().get_response(self.headers, body)
         response_xml = File().get_response('JobGetListRsp.xml')
         return response_xml
+    def get_jobid_list(self):
+        response_xml = self.get_job_xml()
+        xmldoc = minidom.parseString(response_xml)
+        itemlist = xmldoc.getElementsByTagName('jGetList:JItem')
+        args=[]
+        for s in itemlist:
+            str_tmp = str(s.attributes.items())
+            JId = s.attributes['JId'].value if "'JId'" in str_tmp else ''
+            args.append(int(JId))
+        return args
 
     def get_job(self):
         response_xml = self.get_job_xml()
