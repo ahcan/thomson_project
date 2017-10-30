@@ -10,6 +10,7 @@ from utils import *
 import re
 from accounts.user_info import *
 from setting.DateTime import *
+from schedule.models import *
 
 # Create your views here.
 
@@ -39,9 +40,9 @@ def add_schedule(request):
     # get value post
     agrs={}
     if request.method=='POST':
-        data = None
+        data = ''
         list_jobid = ''
-        date_time = None
+        date_time = ''
         action = 'start'
         try:
             data = json.loads(request.body)
@@ -49,45 +50,25 @@ def add_schedule(request):
             agrs["detail"] = "No data input found!"
             messages = json.dumps(agrs)
             return HttpResponse(messages, content_type='application/json', status=203)
+        action = RequestGetParam(request).get_action()
         '''Validate date time YYYY-MM-DD hh:mm:ss'''
-        try:
-            date_time = data['date_time']
-            date_time_pattern = re.compile("\d{4}[/.-]\d{2}[/.-]\d{2} \d{2}:\d{2}:\d{2}")
-            date_time = re.findall(date_time_pattern, date_time)
-            date_time = date_time[0]
-            schedule_datetime = DateTime().conver_human_creadeble_2_unix_timetamp(date_time)
-            now = DateTime().get_now() + 60
-            if schedule_datetime <= now:
-                agrs["detail"] = "Schedule must grater than now 1 minutes!"
-                messages = json.dumps(agrs)
-                return HttpResponse(messages, content_type='application/json', status=203)
-        except Exception as e:
-            agrs["detail"] = "Invalid data datetime!"
+        date_time, error = RequestGetParam(request).get_date_time()
+        if error:
+            agrs["detail"] = error
             messages = json.dumps(agrs)
-            return HttpResponse(messages, content_type='application/json', status=203)
+            return HttpResponse(messages, content_type='application/json', status=203)     	
         '''End alidate date time'''
         '''validate jobid input'''
-        try:
-            jobid_list = data['jobid_list']
-            job_pattern = re.compile("\d{3,10}")
-            list_job = re.findall(job_pattern,jobid_list)
-            for job in list_job:
-                list_jobid = list_jobid + job + ','
-            ''' trip the last ','''
-            if list_jobid:
-                list_jobid = list_jobid[:-1]
-            else:
-                agrs["detail"] = "JobID: %s not found!"%(jobid_list)
-                messages = json.dumps(agrs)
-                return HttpResponse(messages, content_type='application/json', status=203)
-            ''' end trip'''
-        except Exception as e:
-            agrs["detail"] = "Invalid data JobID!"
+        jobid_list, error = RequestGetParam(request).get_job_id()
+        if error:
+            agrs["detail"] = error
             messages = json.dumps(agrs)
             return HttpResponse(messages, content_type='application/json', status=203)
         '''end validate'''
         '''Create crontab string'''
-        schedule = Crontab().create(date_time, list_jobid, action)
+
+        new_id = ScheduleLog().get_new_id(request)
+        schedule = Crontab().create(date_time, jobid_list, action, new_id)
         '''install crontab to server'''
         if schedule:
             '''
@@ -102,11 +83,11 @@ def add_schedule(request):
                 return HttpResponse(messages, content_type='application/json', status=203)
             ##End check
             '''Write log'''
-            
+
             '''End write log'''
             messages = Crontab().append(validate_schedule)
             if not messages:
-                agrs["detail"] = "Successfully added to jobid: %s"%(list_jobid)
+                agrs["detail"] = "Successfully added to jobid: %s"%(jobid_list)
                 messages = json.dumps(agrs)
                 return HttpResponse(messages, content_type='application/json', status=202)
             else:

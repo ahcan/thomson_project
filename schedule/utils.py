@@ -5,9 +5,65 @@ import re
 import json
 from setting.get_thomson_api import *
 from setting.DateTime import *
+from schedule.models import *
+from django.contrib.auth.models import User
+
+class RequestGetParam:
+    def __init__(self, Request):
+        self.data = json.loads(Request.body)
+    def get_action(self):
+        return 'start'
+    def get_job_id(self):
+        jobid_list = ''
+        error = ''
+        try:
+            jobid_list_data = self.data['jobid_list']
+            job_pattern = re.compile("\d{3,10}")
+            jobid_list_data = re.findall(job_pattern,jobid_list_data)
+            jobid_not_found = ''
+            jobid_list_all = Job().get_jobid_list()
+            for job in jobid_list_data:
+                if int(job) in jobid_list_all:
+                    jobid_list = jobid_list + job + ','
+                else:
+                    jobid_not_found = jobid_not_found + job + ' '
+            if jobid_not_found:
+                error = "JobID: %s not found!"%(jobid_not_found)
+                return jobid_list, error
+            ''' trip the last ','''
+            if jobid_list:
+                jobid_list = jobid_list[:-1]
+            else:
+                error = "JobID: %s not found!"%(jobid_list_data)
+                return jobid_list, error
+            return jobid_list, error
+            ''' end trip'''
+        except Exception as e:
+            error = "Invalid data JobID!"
+            return jobid_list, error
+    def get_date_time(self):
+        date_time = ''
+        error = ''
+        try:
+            date_time_data = self.data['date_time']
+            date_time_pattern = re.compile("\d{4}[/.-]\d{2}[/.-]\d{2} \d{2}:\d{2}:\d{2}")
+            date_time_data = re.findall(date_time_pattern, date_time_data)
+            date_time = date_time_data[0]
+            schedule_datetime = DateTime().conver_human_creadeble_2_unix_timetamp(date_time)
+            now = DateTime().get_now() + 60
+            if schedule_datetime <= now:
+                error = "Schedule must grater than now 1 minutes!"
+                return date_time, error
+            return date_time, error 
+        except Exception as e:
+            error = "Invalid data datetime!"
+            return date_time, error
+    def get_description(self):
+        return 'kakaka'
+
 class Crontab:
 
-    def create(self, date_time, jobid, action):
+    def create(self, date_time, jobid, action, schedule_id):
         if not date_time.isdigit():
             try:
                 date_time = DateTime().conver_human_creadeble_2_unix_timetamp(date_time)
@@ -22,7 +78,7 @@ class Crontab:
         mm = dt.minute
         ss = dt.second
         dayofweek = dt.isocalendar()[2]
-        task = """%s %s %s %s %s sleep %s; /bin/python /script/crontabSMP/job.py -j %s -s %s"""%(mm,hh,DD,MM,dayofweek,ss,jobid,action )
+        task = """%s %s %s %s %s sleep %s; /bin/python /script/crontabSMP/job.py -j %s -s %s #id=%s"""%(mm,hh,DD,MM,dayofweek,ss,jobid,action,str(schedule_id))
         return task
 
     def _runcmd(self, cmd, input=None):
@@ -167,7 +223,7 @@ class CrontabDetail:
         else:
             self.task = Crontab().get_cron_by_id(task)
     def serialization(self):
-        cron_pattern=re.compile("[ ?\d{1,2}]*\ sleep \d{1,2}; /bin/python /script/crontabSMP/job.py -[Jj] [,?\d{3,10}]*\ -[Ss] (?:[Ss]tart|[Ss]top)")
+        cron_pattern=re.compile("[ ?\d{1,2}]*\ sleep \d{1,2}; /bin/python /script/crontabSMP/job.py -[Jj] [,?\d{3,10}]*\ -[Ss] (?:[Ss]tart|[Ss]top) #id=\d+")
         #cron_pattern=re.compile("\d{1,2}\ \d{1,2}\ \d{1,2}\ \d{1,2}\ \d{1,2}\ sleep \d{1,2}; /bin/python /script/crontabSMP/job.py -[Jj] \d{3,10}\ -[Ss] (?:[Ss]tart|[Ss]top)")
         cron = re.findall(cron_pattern, self.task)
         if cron:
@@ -248,10 +304,21 @@ class ScheduleLog:
         now = time.strftime("%a, %d-%m-%Y %H:%M:%S", time.localtime(time.time()))
         message = 'User %s %s schedule content(%s) in host %s at %s.'%(user, action, msg, host, now)
         return message
-    def write_log(self, request):
+    def get_new_id(self, request):
+        host = '172.29.3.189'
         user_id = request.user.id
-        print user_id
-        user_name = request.user.username
+        user = User.objects.get(id=user_id)
+        action = RequestGetParam(request).get_action()
+        jobid_list, error = RequestGetParam(request).get_job_id()
+        schedule_time, error = RequestGetParam(request).get_date_time()
+        description = RequestGetParam(request).get_description()
+        schedule_time = DateTime().conver_human_creadeble_2_unix_timetamp(schedule_time)
+        now = DateTime().get_now()
+        new_schedule = Schedule(user=user, create_time=now, schedule_time=schedule_time, action=action, host=host, description=description)
+        new_schedule.save()
+        n = Schedule.objects.get(create_time=now)
+        return n.id
+
     # def write_install(self, request, action = '', host = '', crontab, schedule_date='', description=''):
     #     user_id = int(request.user.id)
     #     user_name = request.user.username

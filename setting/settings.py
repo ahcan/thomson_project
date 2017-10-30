@@ -113,3 +113,8 @@ STATICFILES_DIRS = [
 
 #Session timeout (minute)
 AUTO_LOGOUT_DELAY = 180
+
+#Thomson config
+user = 'nguyennt9'
+passwd = '123456'
+url = 'http://172.29.3.189/services/Maltese'
