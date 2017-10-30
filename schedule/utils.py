@@ -47,10 +47,13 @@ class Crontab:
             # merge the new crontab with the old one
             installed_content = installed_content.rstrip("\n")
             return installed_content
-
+    '''
+    return None is success
+    return string is fail
+    '''
     def append(self, content='', override=False):
         if not content:
-            raise ValueError('neither filename or crontab must be specified')
+            return 'Crontab must be specified'
         if override:
             installed_content = ''
         else:
@@ -64,22 +67,28 @@ class Crontab:
                 else:
                     installed_content += '\n%s' % crontab
             else:
-                print 'New crontab was available'
+                return 'New crontab is available'
         if installed_content:
             installed_content += '\n'
         # install back
         retcode, err, out = self._runcmd('crontab', installed_content)
         if retcode != 0: 
-            raise ValueError('failed to install crontab, check if crontab is valid')
+            return 'failed to install crontab, check if crontab is valid'
+        else:
+            return None
 
+    '''
+    return None is success
+    return string is fail
+    '''
     def delete(self, id = None):
         if not id:
-            raise ValueError('neither id must be specified')
+            return 'ID must be specified'
         else:
             id = int(id)
         installed_content =  self.get_list()
         if not installed_content:
-            return 0
+            return 'Schedule is empty!'
         #remove schedule by line number
         new_content = ''
         count = 1
@@ -94,12 +103,12 @@ class Crontab:
         if new_content:
             retcode, err, out = self._runcmd('crontab', new_content)
             if retcode != 0: 
-                raise ValueError('failed to install crontab, check if crontab is valid')
+                return 'Failed to remove crontab, check if crontab is valid'
             else:
-                return 1
+                return None
         else:
             os.system('crontab -r')
-            return 1
+            return None
 
     def get_cron_by_id(self, id = None):
         if not id:
@@ -239,6 +248,10 @@ class ScheduleLog:
         now = time.strftime("%a, %d-%m-%Y %H:%M:%S", time.localtime(time.time()))
         message = 'User %s %s schedule content(%s) in host %s at %s.'%(user, action, msg, host, now)
         return message
+    def write_log(self, request):
+        user_id = request.user.id
+        print user_id
+        user_name = request.user.username
     # def write_install(self, request, action = '', host = '', crontab, schedule_date='', description=''):
     #     user_id = int(request.user.id)
     #     user_name = request.user.username

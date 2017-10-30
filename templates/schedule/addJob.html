@@ -55,6 +55,7 @@
         }
         else
           if (response.status == 202){
+          	$window.alert(response.data.detail);
             $window.location.href='/schedule/';
           }
       });
