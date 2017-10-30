@@ -1,48 +1,29 @@
 {% extends 'base.html' %}
 {% block content %}
-<script src="/static/ajax/libs/jquery/jquery-3.2.1.min.js"></script>
-<script type="text/javascript" src="https://code.jquery.com/ui/1.11.3/jquery-ui.min.js" ></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.1/moment.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css">
+
 <div ng-app="AddScheduleApp" ng-controller="AddScheduleCtrl">
 	<form id="formAddJob" name="formAddJob" action="/schedule/add/" method="POST" onsubmit="return SubmitCheckTextField()">
 		<label>Jod ID:</label>&nbsp<input type="text" ng-model="schedule.jobid_list">
 		<div class="form-group">
-			 <div class="input-group date" id="daypicker">
-	            <input type="text" class="form-control" jqdatepicker ng-model="schedule.date_time"><span class="input-group-addon">
-	                <span class="glyphicon glyphicon-calendar"></span>
+			 <div class="input-group date"  id="daypicker">
+	            <input type="text" class="form-control" id="#date" ng-model="schedule.date_time" ng-click="updateTime()"><span class="input-group-addon">
+	                <span class="glyphicon glyphicon-calendar" ng-click="updateTime()"></span>
 				</span>
 			</div>
 		</div>
 		<input type="button" name="create" id="submit" value="Create" ng-click="create_schedule()">
-		<input type="button" name="Cancel" id="btnCancel" value="Cancel">
+		<input type="button" name="Cancel" id="btnCancel" value="Cancel" ng-click="updateTime()">
 	</form>
 	{{'{{schedule}'}}}
 </div>
 
 <script type="text/javascript">
   var app = angular.module('AddScheduleApp', []);
-  app.directive('jqdatepicker', function () {
-    return {
-        restrict: 'A',
-        require: 'ngModel',
-         link: function (scope, element, attrs, ngModelCtrl) {
-            $(element).datetimepicker({
-                dateFormat: 'dd/mm/yy',
-                onSelect: function (date) {   
-                    var ar=date.split("/");
-                    date=new Date(ar[2]+"-"+ar[1]+"-"+ar[0]);
-                    ngModelCtrl.$setViewValue(date.getTime());
-                //    scope.course.launchDate = date;
-                    scope.$apply();
-                }
-            });
-
-        }
-    };
-});
   app.controller('AddScheduleCtrl', function($scope,$http,$window) {
+    $scope.schedule={'jobid_list':'', 'date_time':''};
     $scope.create_schedule = function () {
       // console.log($scope.schedule);
       $http({
@@ -59,23 +40,27 @@
             $window.location.href='/schedule/';
           }
       });
-    }; 
+    };
+    $scope.updateTime = function(){
+      // var da = angular.document.getElementById("date").text();
+      var da = angular.element( document.getElementById('daypicker').firstElementChild);
+      $scope.schedule.date_time = da.val();
+      // $scope.da = 1;
+      console.log($scope.schedule);
+      // console.log($scope.da);
+      // console.log(da.val());
+    };
   });
 </script>
 
 <script type="text/javascript">
 	$(document).ready(function () {
 		// body...
-		// $('#daypicker').datetimepicker({
-		//     format: 'YYYY-MM-DD HH:mm:ss',
-		//     allowInputToggle: true
-		// });
-		// $('#submit').click(function(){
-		// 	var datestring = $('#ipDay').val().replace(/-/g,"/");
-		// 	// var date = Date.parseExact(datestring, "dd/MM/yyyy");
-		// 	// console.log(date.getFullYear());
-		// 	console.log(datestring);
-		// });
+		$('#daypicker').datetimepicker({
+		    format: 'YYYY-MM-DD HH:mm:ss',
+		    allowInputToggle: true,
+        useCurrent: true
+		});
 	});
 </script>
 {% endblock %}
