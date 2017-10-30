@@ -87,7 +87,7 @@ def add_schedule(request):
             '''End write log'''
             messages = Crontab().append(validate_schedule)
             if not messages:
-                agrs["detail"] = "Successfully added to jobid: %s"%(list_jobid)
+                agrs["detail"] = "Successfully added to jobid: %s"%(jobid_list)
                 messages = json.dumps(agrs)
                 return HttpResponse(messages, content_type='application/json', status=202)
             else:
