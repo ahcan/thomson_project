@@ -10,7 +10,7 @@
 		<label>Jod ID:</label>&nbsp<input type="text" ng-model="schedule.jobid_list">
 		<div class="form-group">
 			 <div class="input-group date" id="daypicker">
-	            <input type="text" class="form-control" ng-model="schedule.date_time"><span class="input-group-addon">
+	            <input type="text" class="form-control" jqdatepicker ng-model="schedule.date_time"><span class="input-group-addon">
 	                <span class="glyphicon glyphicon-calendar"></span>
 				</span>
 			</div>
@@ -23,6 +23,25 @@
 
 <script type="text/javascript">
   var app = angular.module('AddScheduleApp', []);
+  app.directive('jqdatepicker', function () {
+    return {
+        restrict: 'A',
+        require: 'ngModel',
+         link: function (scope, element, attrs, ngModelCtrl) {
+            $(element).datetimepicker({
+                dateFormat: 'dd/mm/yy',
+                onSelect: function (date) {   
+                    var ar=date.split("/");
+                    date=new Date(ar[2]+"-"+ar[1]+"-"+ar[0]);
+                    ngModelCtrl.$setViewValue(date.getTime());
+                //    scope.course.launchDate = date;
+                    scope.$apply();
+                }
+            });
+
+        }
+    };
+});
   app.controller('AddScheduleCtrl', function($scope,$http,$window) {
     $scope.create_schedule = function () {
       // console.log($scope.schedule);
@@ -46,10 +65,10 @@
 <script type="text/javascript">
 	$(document).ready(function () {
 		// body...
-		$('#daypicker').datetimepicker({
-		    format: 'YYYY-MM-DD HH:mm:ss',
-		    allowInputToggle: true
-		});
+		// $('#daypicker').datetimepicker({
+		//     format: 'YYYY-MM-DD HH:mm:ss',
+		//     allowInputToggle: true
+		// });
 		// $('#submit').click(function(){
 		// 	var datestring = $('#ipDay').val().replace(/-/g,"/");
 		// 	// var date = Date.parseExact(datestring, "dd/MM/yyyy");
