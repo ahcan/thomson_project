@@ -3,24 +3,13 @@
 <!-- <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-app="Log" ng-controller="logCtrl"> -->
 <script type="text/javascript" src="/static/assets/js/jquery.floatThead.min.js"></script>
 <div ng-app="Log" ng-controller="logCtrl">
+	<!-- ####Header#### -->
 	<div>
 		<div max-width="40%">
 			<h2 class="sub-header">Logs</h2>
 		</div>
 
 		<div max-width="60%" style="margin-bottom:10px;">
-			<!-- <div  max-width="30%" class="form-group">
-			  <div class="input-group">
-			    <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
-			    <select select ng-model="sev" class="form-control selectpicker" name="sev">
-			      <option value="">Serverily</option>
-			      <option value="Critical">Critical</option>
-			      <option value="Info">Info</option>
-			      <option value="Major">Major</option>
-			    </select>
-
-			  </div>
-			</div> -->
 			<div max-width="30%" class="form-group">
 			  <div class="input-group">
 			    <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
@@ -34,6 +23,7 @@
 			</div>
 		</div>
 	</div>
+	<!-- ####Body#### -->
 	<div class="wrapper" style="overflow-y: auto;">
 		<table class="table table-bordered table-hover table-striped scrollTable">
 			<thead class="width-col-default">
@@ -109,6 +99,4 @@
 		}
 	});
 </script>
-<style type="text/css">
-</style>
 {% endblock %}
