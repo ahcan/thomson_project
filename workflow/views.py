@@ -8,6 +8,7 @@ from django.http import HttpResponseRedirect, Http404, HttpResponse
 from rest_framework import status
 from setting.get_thomson_api import *
 from accounts.user_info import *
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -19,6 +20,7 @@ from accounts.user_info import *
 
 @require_http_methods(['GET'])
 @csrf_exempt
+@login_required() # login required
 def workflow_json(request):
     workflow_list = Workflow().get_workflow()
     return HttpResponse(workflow_list, content_type='application/json', status=200)
@@ -37,6 +39,7 @@ def get_workflow(request):
 
 @require_http_methods(['GET'])
 @csrf_exempt
+@login_required()
 def get_workflow_params(request, wfid):
 	param_list = WorkflowDetail(wfid).get_param()
 	return HttpResponse(param_list, content_type='application/json', status=200)

@@ -11,6 +11,7 @@ import re
 from accounts.user_info import *
 from setting.DateTime import *
 from schedule.models import *
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -23,6 +24,8 @@ from schedule.models import *
 @require_http_methods(['GET'])
 # @csrf_exempt
 def get_schedule_list_json(request):
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect('/accounts/login')
     schedule_list = Crontab().get_all()
     #print schedule_list
     return HttpResponse(schedule_list, content_type='application/json', status=200)
@@ -105,6 +108,7 @@ def add_schedule(request):
 ### remove schedule ###
 @require_http_methods(['DELETE'])
 @csrf_exempt
+@login_required()
 def remove_schedule(request, id):
     agrs={}
     if request.method=='DELETE':
@@ -123,9 +127,11 @@ def remove_schedule(request, id):
 ### api time countdown and server ###
 @require_http_methods(['GET'])
 def get_schedule_json(request, id):
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect('/accounts/login')
 	schedule = CrontabDetail(id).get_schedule()
 	return HttpResponse(schedule, content_type='application/json', status=status.HTTP_200_OK)
-
+@login_required()
 def redirect_schedule(request, id):
 	args={}
 	args['id'] = id

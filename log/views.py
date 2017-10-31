@@ -8,6 +8,7 @@ from django.http import HttpResponseRedirect, Http404, HttpResponse
 from rest_framework import status
 from setting.get_thomson_api import *
 from accounts.user_info import *
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -18,6 +19,7 @@ from accounts.user_info import *
 ##############################################################################
 @require_http_methods(['GET'])
 @csrf_exempt
+@login_required()
 def get_log_list_json(request):
     """
     List all Logs.
@@ -43,6 +45,8 @@ def get_log(request):
 ##############################################################################
 @require_http_methods(['GET'])
 @csrf_exempt
+@login_required()
+
 def get_open_log_list_json(request):
     """
     List all open Logs.
@@ -68,6 +72,8 @@ def get_open_log(request):
 ##############################################################################
 @require_http_methods(['GET'])
 @csrf_exempt
+@login_required()
+
 def get_log_by_jobID_list_json(request, job_id):
     """
     List all Logs by Job_ID.
@@ -83,6 +89,8 @@ def get_log_by_jobID_list_json(request, job_id):
 ##############################################################################
 @require_http_methods(['GET'])
 @csrf_exempt
+@login_required()
+
 def get_system_log_list_json(request):
     """
     Template show list all system Logs.
