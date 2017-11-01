@@ -70,7 +70,7 @@ def add_schedule(request):
         '''end validate'''
         '''Create crontab string'''
 
-        new_id = ScheduleLog().get_new_id(request)
+        new_id = ScheduleHistory().get_new_id(request)
         schedule = Crontab().create(date_time, jobid_list, action, new_id)
         '''install crontab to server'''
         if schedule:
@@ -129,8 +129,8 @@ def remove_schedule(request, id):
 def get_schedule_json(request, id):
     if not request.user.is_authenticated():
         return HttpResponseRedirect('/accounts/login')
-	schedule = CrontabDetail(id).get_schedule()
-	return HttpResponse(schedule, content_type='application/json', status=status.HTTP_200_OK)
+    schedule = CrontabDetail(id).get_schedule()
+    return HttpResponse(schedule, content_type='application/json', status=status.HTTP_200_OK)
 @login_required()
 def redirect_schedule(request, id):
 	args={}

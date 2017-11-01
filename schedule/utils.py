@@ -79,7 +79,7 @@ class Crontab:
         mm = dt.minute
         ss = dt.second
         dayofweek = dt.isocalendar()[2]
-        task = """%s %s %s %s %s sleep %s; /bin/python /script/crontabSMP/job.py -j %s -s %s #id=%s"""%(mm,hh,DD,MM,dayofweek,ss,jobid,action,str(schedule_id))
+        task = """%s %s %s %s %s sleep %s; /bin/python /script/crontabSMP/job.py -j %s -s %s #id:%s"""%(mm,hh,DD,MM,dayofweek,ss,jobid,action,str(schedule_id))
         return task
 
     def _runcmd(self, cmd, input=None):
@@ -148,13 +148,12 @@ class Crontab:
             return 'Schedule is empty!'
         #remove schedule by line number
         new_content = ''
-        count = 1
         for schedule in installed_content.split('\n'):
-            if count != id:
+            schedule_id = int(re.search('(?<=id:)\d+',schedule).group(0))
+            if id != schedule_id:
                 #exeption crontab is none
                 if schedule:
                     new_content += '%s\n' % schedule
-            count +=1
         #end remove        
         # install back and return status
         if new_content:
@@ -177,38 +176,28 @@ class Crontab:
             return None
         #find schedule by line number
         task = ''
-        count = 1
         for schedule in installed_content.split('\n'):
-            if count == id:
+            schedule_id = int(re.search('(?<=id:)\d+',schedule).group(0))
+            if schedule_id == id:
                 task = schedule
-            count +=1
         #end remove        
         # find back and return status
         return task
 
     def get_all(self):
         list_task = self.get_list()
-        id = 0
         agrs = []
         for task in list_task.split('\n'):
-            id+=1
             schedule = CrontabDetail(task).serialization()
             if schedule:
-                ss,mm,hh,DD,MM,YYYY,dayofweek,list_jid,action,full_date,state,alarm = CrontabDetail(schedule).get_pattern()
+                schedule_id,ss,mm,hh,DD,MM,YYYY,dayofweek,list_jid,action,full_date,state,alarm = CrontabDetail(schedule).get_pattern()
                 #print list_jid
                 array_jid = []
                 for jid in list_jid:
                     array_jid.append(int(jid))
                 list_job = Job().get_job_detail_by_job_id(array_jid)
-                agrs.append({'id'              : int(id),
-                             'ss'              : int(ss),
-                             'mm'              : int(mm),
-                             'hh'              : int(hh),
-                             'DD'              : int(DD),
-                             'MM'              : int(MM),
-                             'YYYY'            : int(YYYY),
-                             'dayofweek'       : int(dayofweek),
-                             'list_job'      : list_job,
+                agrs.append({'id'              : int(schedule_id),
+                             'list_job'        : list_job,
                              'action'          : action,
                              'unix_timestamp'  : full_date,
                              'state'           : int(state),
@@ -224,7 +213,7 @@ class CrontabDetail:
         else:
             self.task = Crontab().get_cron_by_id(task)
     def serialization(self):
-        cron_pattern=re.compile("[ ?\d{1,2}]*\ sleep \d{1,2}; /bin/python /script/crontabSMP/job.py -[Jj] [,?\d{3,10}]*\ -[Ss] (?:[Ss]tart|[Ss]top) #id=\d+")
+        cron_pattern=re.compile("[ ?\d{1,2}]*\ sleep \d{1,2}; /bin/python /script/crontabSMP/job.py -[Jj] [,?\d{3,10}]*\ -[Ss] (?:[Ss]tart|[Ss]top) #id:\d+")
         #cron_pattern=re.compile("\d{1,2}\ \d{1,2}\ \d{1,2}\ \d{1,2}\ \d{1,2}\ sleep \d{1,2}; /bin/python /script/crontabSMP/job.py -[Jj] \d{3,10}\ -[Ss] (?:[Ss]tart|[Ss]top)")
         cron = re.findall(cron_pattern, self.task)
         if cron:
@@ -239,6 +228,7 @@ class CrontabDetail:
         cron = self.serialization()
         if not cron:
             return None
+        schedule_id = int(re.search('(?<=id:)\d+',cron).group(0))
         number_pattern=re.compile("\d{1,2}")
         list_time=re.findall(number_pattern, cron)
         ss = list_time[5]
@@ -269,11 +259,11 @@ class CrontabDetail:
             DD, hh = divmod(hh, 24)
             alarm = "%d day(s) %02d:%02d:%02d" % (DD, hh, mm, ss)
             state = 0
-        return ss,mm,hh,DD,MM,YYYY,dayofweek,list_jid,action,full_date,state,alarm
+        return schedule_id,ss,mm,hh,DD,MM,YYYY,dayofweek,list_jid,action,full_date,state,alarm
     #parse crontab to human readable fortmat
     def human_readable(self):
         message = ''
-        ss,mm,hh,DD,MM,YYYY,dayofweek,list_jid,action,full_date,state,alarm = self.get_pattern()
+        schedule_id,ss,mm,hh,DD,MM,YYYY,dayofweek,list_jid,action,full_date,state,alarm = self.get_pattern()
         human_date = "%s-%s-%s %s:%s:%s"%(YYYY,MM,DD,hh,mm,ss)
         message = 'At %s %s job(s) ID: %s.'%(human_date, action, list_jid)
         return message
@@ -282,7 +272,7 @@ class CrontabDetail:
         agrs = []
         schedule = CrontabDetail(self.task).serialization()
         if schedule:
-            ss,mm,hh,DD,MM,YYYY,dayofweek,list_jid,action,full_date,state,alarm = self.get_pattern()
+            schedule_id,ss,mm,hh,DD,MM,YYYY,dayofweek,list_jid,action,full_date,state,alarm = self.get_pattern()
             array_jid = []
             for jid in list_jid:
                 array_jid.append(int(jid))
@@ -298,13 +288,14 @@ class CrontabDetail:
         return json.dumps(agrs)
 
 
-class ScheduleLog:
+class ScheduleHistory:
     def create_message(self, user='', action = '', crontab = '', host = ''):
         message = ''
         msg = CrontabDetail(crontab).human_readable()
         now = time.strftime("%a, %d-%m-%Y %H:%M:%S", time.localtime(time.time()))
         message = 'User %s %s schedule content(%s) in host %s at %s.'%(user, action, msg, host, now)
-        return message
+    def write_history(self, schedule_id):
+        pass
     def get_new_id(self, request):
         host = settings.host
         user_id = request.user.id
