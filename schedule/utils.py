@@ -7,6 +7,7 @@ from setting.get_thomson_api import *
 from setting.DateTime import *
 from schedule.models import *
 from django.contrib.auth.models import User
+from setting import settings
 
 class RequestGetParam:
     def __init__(self, Request):
@@ -305,7 +306,7 @@ class ScheduleLog:
         message = 'User %s %s schedule content(%s) in host %s at %s.'%(user, action, msg, host, now)
         return message
     def get_new_id(self, request):
-        host = '172.29.3.189'
+        host = settings.host
         user_id = request.user.id
         user = User.objects.get(id=user_id)
         action = RequestGetParam(request).get_action()
