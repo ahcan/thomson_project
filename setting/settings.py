@@ -118,7 +118,8 @@ AUTO_LOGOUT_DELAY = 1440
 #Thomson config
 user = 'nguyennt9'
 passwd = '123456'
-url = 'http://172.29.3.189/services/Maltese'
+host = '172.29.3.189'
+url = 'http://%s/services/Maltese'%(host)
 
 #login redirect
 LOGIN_URL = '/accounts/login/'
