@@ -1,8 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-<!-- <script type="text/javascript" src="/static/assets/js/jasny-bootstrap.min.js"></script> -->
-<!-- <link rel="stylesheet" type="text/css" href="/static/assets/css/jasny-bootstrap.css"> -->
-<!-- <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-app="Workflow" ng-controller="workflowCtrl"> -->
+<script type="text/javascript" src="/static/assets/js/jquery.floatThead.min.js"></script>
 <div ng-app="Workflow" ng-controller="workflowCtrl">
 	<h2 class="sub-header">Workflows <span style="font-size: 15px;">(Total: {{'{{total}'}}})</span></h2>
 	<div class="col-md-6 col-sm-6 table-responsive" >
@@ -10,26 +8,28 @@
 			    <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
 			    <input type="text" class="form-control" placeholder="Search..." ng-model="search">
 		</div>
-		<table class="table table-bordered table-hover table-striped">
-			<thead>
-				<tr>
-					<th>STT</th>
-					<th>Name</th>
-					<th>Workflow ID</th>
-					<th>Pubver</th>
-					<th>Priver</th>
-				</tr>
-			</thead>
-			<tbody class="rowlink" data-link="row">
-				<tr ng-repeat="workflow in workflow_list | filter: search" ng-click="showinfo(workflow.wid)"  tooltip-is-open="isOpen">
-					<td>{{'{{$index + 1}'}}} <a href="" ></a></td>
-					<td>{{'{{workflow.name}'}}}</td>
-					<td><p>{{'{{workflow.wid}'}}}</p></td>
-					<td>{{'{{workflow.pubver}'}}}</td>
-					<td>{{'{{workflow.priver}'}}}</td>
-				</tr>
-			</tbody>
-		</table>
+		<div class="wrapper" style="overflow-y: auto;">
+			<table class="table table-bordered table-hover table-striped scrollTable">
+				<thead>
+					<tr>
+						<th>STT</th>
+						<th>Name</th>
+						<th>Workflow ID</th>
+						<th>Pubver</th>
+						<th>Priver</th>
+					</tr>
+				</thead>
+				<tbody class="rowlink" data-link="row">
+					<tr ng-repeat="workflow in workflow_list | filter: search" ng-click="showinfo(workflow.wid)"  tooltip-is-open="isOpen">
+						<td>{{'{{$index + 1}'}}} <a href="" ></a></td>
+						<td>{{'{{workflow.name}'}}}</td>
+						<td><p>{{'{{workflow.wid}'}}}</p></td>
+						<td>{{'{{workflow.pubver}'}}}</td>
+						<td>{{'{{workflow.priver}'}}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 	</div>
 	<div class="col-md-6 col-sm-6 table-responsive" ng-click="isOpen">
 		<div class="panel panel-default" ng-show="isOpen">
@@ -106,5 +106,12 @@
 		}
 	});
 </script>
+<script type="text/javascript">
+	var $scroll = $('table.scrollTable');
+	$scroll.floatThead({
+		scrollContainer: function($table){
+	    return $table.closest('.wrapper');
+		}
+	});
+</script>
 {% endblock %}
-

@@ -8,6 +8,7 @@ from django.http import HttpResponseRedirect, Http404, HttpResponse
 from rest_framework import status
 from setting.get_thomson_api import *
 from accounts.user_info import *
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -27,6 +28,8 @@ def get_system(request):
 #Link get thomson datetime: /system/api/datetime
 @require_http_methods(['GET'])
 @csrf_exempt
+@login_required()
+
 def datetime_json(request):
     date_time = Thomson().get_datetime()
     return HttpResponse(date_time, content_type='application/json', status=200)
@@ -34,6 +37,8 @@ def datetime_json(request):
 #Link get thomson datetime: /system/api/mountpoint
 @require_http_methods(['GET'])
 @csrf_exempt
+@login_required()
+
 def mountpoint_list_json(request):
     mountpoint_list = Thomson().get_mountpoint()
     return HttpResponse(mountpoint_list, content_type='application/json', status=200)
@@ -41,6 +46,8 @@ def mountpoint_list_json(request):
 #Link get thomson info CPU, RAAM: /system/api/status
 @require_http_methods(['GET'])
 @csrf_exempt
+@login_required()
+
 def get_system_status_json(request):
     system_status = Thomson().get_system_status()
     return HttpResponse(system_status, content_type='application/json', status=200)
@@ -55,6 +62,8 @@ def get_job_status_json(request):
 #Link get info CPU, RAM... each node: /system/api/status
 @require_http_methods(['GET'])
 @csrf_exempt
+@login_required()
+
 def get_nodes_status_json(request):
     nodes_status = Node().get_info()
     return HttpResponse(nodes_status, content_type='application/json', status=200)
@@ -62,6 +71,8 @@ def get_nodes_status_json(request):
 #Link get list job on node: /system/api/<nid>/
 @require_http_methods(['GET'])
 @csrf_exempt
+@login_required()
+
 def get_node_job_json(request, node_id):
     nodes_status = NodeDetail(node_id).get_list_job()
     return HttpResponse(nodes_status, content_type='application/json', status=200)
