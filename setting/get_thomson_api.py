@@ -537,6 +537,17 @@ class Job:
                         if EndDate else ''
                 })
         return json.dumps(args)
+    # return json theo name id job
+    def parse_xml_name(self, xml):
+        xmldoc = minidom.parseString(xml)
+        itemlist = xmldoc.getElementsByTagName('jGetList:JItem')
+        args=[]
+        for s in itemlist:
+            State,Status,JId,Prog,StartDate,EndDate,Ver,jobname,workflowIdRef = self.parse_dom_object(s)
+            args.append({'jname'    : jobname,
+                        'jid'       : int(JId),
+                })
+        return json.dumps(args)
 
     def count_object(self, xml):
         xmldoc = minidom.parseString(xml)
@@ -576,6 +587,10 @@ class Job:
     def get_job(self):
         response_xml = self.get_job_xml()
         return self.parse_xml(response_xml)
+
+    def get_job_name(self): # get name id job
+        response_xml = self.get_job_xml()
+        return self.parse_xml_name(response_xml)
 
     def count_job(self):
         body = """<soapenv:Envelope

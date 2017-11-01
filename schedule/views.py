@@ -126,9 +126,10 @@ def remove_schedule(request, id):
 
 ### api time countdown and server ###
 @require_http_methods(['GET'])
+@login_required()
 def get_schedule_json(request, id):
-    if not request.user.is_authenticated():
-        return HttpResponseRedirect('/accounts/login')
+    # if not request.user.is_authenticated():
+    #     return HttpResponseRedirect('/accounts/login')
 	schedule = CrontabDetail(id).get_schedule()
 	return HttpResponse(schedule, content_type='application/json', status=status.HTTP_200_OK)
 @login_required()
@@ -139,3 +140,7 @@ def redirect_schedule(request, id):
 	args['is_superuser'] = 'true' if request.user.is_superuser else 'false'
 	args['is_staff'] =  'true' if request.user.is_staff else 'false'
 	return render_to_response("schedule/schedule_detail.html",args)
+
+# test html
+def multi(request):
+    return render_to_response("schedule/multiselect.html")

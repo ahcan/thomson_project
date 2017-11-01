@@ -35,4 +35,6 @@ urlpatterns = [
     url(r'^completed/$', views.get_completed, name='completed'),
     #link response template show all job aborted data: /job/aborted
     url(r'^aborted/$', views.get_aborted, name='aborted'),
+    #link api get name and id job
+    url(r'^api/job-name/$', views.get_job_name, name='job_name'),
 ]

@@ -112,8 +112,8 @@ STATICFILES_DIRS = [
 ]
 
 #Session timeout (minute)
-AUTO_LOGOUT_DELAY = 180
-# AUTO_LOGOUT_DELAY = 1440
+# AUTO_LOGOUT_DELAY = 180
+AUTO_LOGOUT_DELAY = 1440
 
 #Thomson config
 user = 'nguyennt9'

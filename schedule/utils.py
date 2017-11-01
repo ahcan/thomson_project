@@ -18,13 +18,16 @@ class RequestGetParam:
         error = ''
         try:
             jobid_list_data = self.data['jobid_list']
-            job_pattern = re.compile("\d{3,10}")
-            jobid_list_data = re.findall(job_pattern,jobid_list_data)
+            print jobid_list_data
+            # job_pattern = re.compile("\d{3,10}")
+            # jobid_list_data = re.findall(job_pattern,jobid_list_data)
             jobid_not_found = ''
             jobid_list_all = Job().get_jobid_list()
             for job in jobid_list_data:
+                job = job['jid']
+                print job
                 if int(job) in jobid_list_all:
-                    jobid_list = jobid_list + job + ','
+                    jobid_list = jobid_list + str(job) + ','
                 else:
                     jobid_not_found = jobid_not_found + job + ' '
             if jobid_not_found:

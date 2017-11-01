@@ -73,6 +73,16 @@
 	var app = angular.module('schedule-detail',[]);
 	app.controller("scheCtrl", function ($scope,$http,$interval,$timeout){
 		$scope.timeShow = true;
+		$scope.reload = function(){
+			$http({
+				method: 'GET',
+				url: '/schedule/api/schedule/'+{{id}}+'/',
+			}).then(function(response){
+				$scope.schedule = response.data[0];
+				$scope.list_job = $scope.schedule['list_job'];
+			});
+			$timeout(function(){$scope.reload()},2000);
+		};
 		$scope.onload = function () {
 			// $scope.idSchedule;
 			$http.get('/schedule/api/schedule/'+{{id}}+'/').then(function (response) {
@@ -81,18 +91,21 @@
 				var x =  $interval(function() {
 					var distance = $scope.schedule.schedule_date*1000 - $scope.schedule.svr_date*1000;
 					$scope.convertTime(distance);
-					$scope.schedule.svr_date += 1;
-					if (distance < 0 || distance == 0) {
+					if (distance <= 0) {
 		        $interval.cancel(x);
 		        $scope.timeShow = false;
-		        // $timeout(function(){$scope.onload(); console.log("####Reload####")},2000);
+		        // $timeout(function(){$scope.reload();},2000);
+		        $scope.reload();
 				  }else if(distance >=60 && distance <61){
 				  	$scope.onload();
 				  }
+					$scope.schedule.svr_date += 1;
 				},1000);
+				console.log($scope.schedule);
 			});
 			$timeout(function(){$scope.onload();},1800000);
 		};
+
 		$scope.convertTime = function (argument) {
 			$scope.days = Math.floor(argument / (1000 * 60 * 60 * 24));
 			// $scope.$apply();

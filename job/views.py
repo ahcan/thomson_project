@@ -25,6 +25,12 @@ def get_job_json(request):
     job_list = Job().get_job()
     return HttpResponse(job_list, content_type='application/json', status=200)
 
+#link get all job name and id /job/api/job-name
+@login_required()
+def get_job_name(request):
+    job_list = Job().get_job_name()
+    return HttpResponse(job_list, content_type='application/json', status=200)
+
 #Link template show all job: /job/
 @login_required()
 def get_job(request):
