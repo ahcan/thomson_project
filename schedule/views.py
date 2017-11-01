@@ -70,7 +70,7 @@ def add_schedule(request):
         '''end validate'''
         '''Create crontab string'''
 
-        new_id = ScheduleLog().get_new_id(request)
+        new_id = ScheduleHistory().get_new_id(request)
         schedule = Crontab().create(date_time, jobid_list, action, new_id)
         '''install crontab to server'''
         if schedule:
