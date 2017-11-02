@@ -12,6 +12,8 @@ from accounts.user_info import *
 from setting.DateTime import *
 from schedule.models import *
 from django.contrib.auth.decorators import login_required
+import logging
+
 
 # Create your views here.
 
@@ -71,6 +73,7 @@ def add_schedule(request):
         '''Create crontab string'''
 
         new_id = ScheduleHistory().get_new_id(request)
+        print new_id
         schedule = Crontab().create(date_time, jobid_list, action, new_id)
         '''install crontab to server'''
         if schedule:
