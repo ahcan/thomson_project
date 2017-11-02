@@ -40,26 +40,26 @@
 					<thead> 
 						<tr>
 							<th class="col-md-1"> Job ID</th>
-							<th class="col-md-2"> Job Name</th> 
+							<th class="col-md-3"> Job Name</th> 
 							<th class="col-md-1"> State</th> 
 							<th class="col-md-1"> Status</th> 
-							<th class="col-md-1"> Start Date</th>
-							<th class="col-md-1"> End Date</th>
+<!-- 							<th class="col-md-1"> Start Date</th>
+							<th class="col-md-1"> End Date</th> -->
 							<th class="col-md-1"> VER</th>  
-							<th class="col-md-3"> WID</th>			
+							<th class="col-md-4"> WID</th>			
 							<th class="col-md-1"> Prog</th>			
 						</tr>
 					</thead>
 					<tbody>
 					 <tr ng-repeat="job in list_job">
 						<td class="col-md-1">{{'{{job.jid}'}}}</td>
-						<td class="col-md-2">{{'{{job.jname}'}}}</td>
+						<td class="col-md-3">{{'{{job.jname}'}}}</td>
 						<td class="col-md-1" ng-class="{'running': job.state == 'Running', 'aborted': job.state == 'Aborted', 'watting': job.state == 'Watting', 'paused': job.state == 'Paused', 'completed': job.state == 'Completed'}">{{'{{job.state}'}}}</td>
 						<td class="col-md-1">{{'{{job.status}'}}}</td>
-						<td class="col-md-1">{{'{{job.startdate*1000 | date:"dd-MM-yyyy HH:mm:ss"}'}}}</td>
-						<td class="col-md-1" >{{'{{job.enddate*1000 | date:"dd-MM-yyyy HH:mm:ss"}'}}}</td>
+						<!-- <td class="col-md-1">{{'{{job.startdate*1000 | date:"dd-MM-yyyy HH:mm:ss"}'}}}</td>
+						<td class="col-md-1" >{{'{{job.enddate*1000 | date:"dd-MM-yyyy HH:mm:ss"}'}}}</td> -->
 						<td class="col-md-1">{{'{{job.ver}'}}}</td>
-						<td class="col-md-3">{{'{{job.wid}'}}}</td>
+						<td class="col-md-4">{{'{{job.wid}'}}}</td>
 						<td class="col-md-1">{{'{{job.prog}'}}}</td>
 					 </tr>
 					</tbody>
