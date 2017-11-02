@@ -4,20 +4,21 @@
 <div ng-app="System" ng-controller="systemCtrl">
 	<div class="content">
 		<h2 class="sub-header">System</h2>
-		<div style="display: inline; font-size: 13px; padding-right: 10px; float: right;">
-			<table style="width: 200px;">
+		<!-- table total -->
+		<div style="display: inline; font-size: 13px; padding-right: 10px; float: right; margin-top:-7px;">
+			<table style="width: 200px; background-color: #edeff2; font-size: 11px;">
 				<tr>
-					<td style="width: 30px;">dsfhsdkfhd</td>
+					<td style="width: 40px; font-size: 14px;"><p>Total:</p></td>
 					<td style="width: 170px;">
-						<table>
+						<table class="table" style="margin-bottom: 0px; background-color: #edeff2;">
 						<tr>
-							<td>
-								jafhkjsdfh
+							<td style="padding: 1px;">
+								<div class="progress" style="height: 20px;"><div role="progressbar" aria-valuenow="{{'{{PCStatus.cpu}'}}}" aria-valuemin="0" aria-valuemax="100" style="width:{{'{{PCStatus.cpu}'}}}%;" ng-class="{'progress-bar-success': PCStatus.cpu <= 50, 'progress-bar-warning': PCStatus.cpu <= 70 && PCStatus.cpu > 50, 'progress-bar-danger': PCStatus.cpu > 70}"><span>{{'{{PCStatus.cpu}'}}}% CPU</span></div>
 							</td>
 						</tr>
 						<tr>
-							<td>
-								dskjfhksjdfh
+							<td style="padding: 1px;">
+								<div class="progress" style="height: 20px;"><div role="progressbar" aria-valuenow="{{'{{PCStatus.mem}'}}}" aria-valuemin="0" aria-valuemax="100" style="width:{{'{{PCStatus.mem}'}}}%;" ng-class="{'progress-bar-success': PCStatus.mem <= 50, 'progress-bar-warning': PCStatus.mem <= 70 && PCStatus.mem > 50, 'progress-bar-danger': PCStatus.mem > 70}"><span>{{'{{PCStatus.mem}'}}}% MEM</span></div>
 							</td>
 						</tr>
 						</table>
@@ -25,30 +26,41 @@
 				</tr>
 			</table>
 		</div>
+		<!-- end table total -->
 	</div>
+
 	<div class="content">
+		<!-- table main -->
 		<div class="colpadding col-md-7 table-responsive">
 			<table class="table table-bordered table-hover table-striped">
 				<thead>
-					<th class="col-md-1" >Device</th>
+					<th class="col-md-1 sortting" ><a role="button" ng-click="orderByField = 'nid'; reverseSort = !reverseSort">Device<i class="glyphicon" ng-show="orderByField=='nid'" ng-class="{'glyphicon-chevron-up': !reverseSort, 'glyphicon-chevron-down': reverseSort}"></i></a></th>
 					<th class="col-md-1">Status</th>
-					<th class="col-md-5 sortting"><a style="color:#fff;" role="button" ng-click="orderByField = 'cpu'; reverseSort = !reverseSort">Cpu <i class="glyphicon" ng-show="orderByField=='cpu'" ng-class="{'glyphicon-chevron-up': !reverseSort, 'glyphicon-chevron-down': reverseSort}"></i></a></th>
-					<th class="col-md-5 sortting"><a style="color: #fff;" role="button" ng-click="orderByField = 'mem'; reverseSort = !reverseSort">Mem <i class="glyphicon" ng-show="orderByField=='mem'" ng-class="{'glyphicon-chevron-up': !reverseSort, 'glyphicon-chevron-down': reverseSort}"></i></a></th>
+					<th class="col-md-1">State</th>
+					<th class="col-md-1">Creahable</th>
+					<th class="col-md-1">Error</th>
+					<!-- <th class="col-md-1">Counter</th> -->
+					<th class="col-md-3 sortting"><a role="button" ng-click="orderByField = 'cpu'; reverseSort = !reverseSort">Cpu <i class="glyphicon" ng-show="orderByField=='cpu'" ng-class="{'glyphicon-chevron-up': !reverseSort, 'glyphicon-chevron-down': reverseSort}"></i></a></th>
+					<th class="col-md-3 sortting"><a role="button" ng-click="orderByField = 'mem'; reverseSort = !reverseSort">Mem <i class="glyphicon" ng-show="orderByField=='mem'" ng-class="{'glyphicon-chevron-up': !reverseSort, 'glyphicon-chevron-down': reverseSort}"></i></a></th>
 				</thead>
 				<tbody>
-					<tr ng-repeat="status in lstStatus | orderBy: '-cpu' | orderBy: orderByField: reverseSort">
-						<td class="col-md-1 ">{{'{{status.device}'}}}</td>
-						<td class="col-md-1" ng-class="{'oke': status.status == 'OK', 'error': status.status == 'ER', 'watting': status.status == 'WAT'}"><span>{{'{{status.status}'}}}</span></td>
-						<td class="col-md-5">
-							<div class="progress"><div class="progress-bar-success" role="progressbar" aria-valuenow="{{'{{status.cpu}'}}}" aria-valuemin="0" aria-valuemax="100" style="width:{{'{{status.cpu}'}}}%;" ng-class="{'progress-bar-success': status.cpu <= 50, 'progress-bar-success': status.cpu <= 70 && status.cpu > 50, 'progress-bar-danger': status.cpu > 70}"><span>{{'{{status.cpu}'}}}%</span></div>
+					<tr ng-repeat="node in lstNodes | orderBy: '-cpu' | orderBy: orderByField: reverseSort">
+						<td class="col-md-1 ">{{'{{node.nid}'}}}</td>
+						<td class="col-md-1" ng-class="{'oke': node.status == 'OK', 'error': node.status == 'ER', 'watting': node.status == 'WAT'}"><span>{{'{{node.status}'}}}</span></td>
+						<td class="col-md-1">{{'{{node.state}'}}}</td>
+						<td class="col-md-1">{{'{{node.uncreahble}'}}}<i class="glyphicon" ng-bind="creahable = node.uncreahble" ng-class="{'glyphicon-ok': !creahable, 'glyphicon-remove': creahable}"></i></td>
+						<td class="col-md-1">{{'{{node.jerror}'}}}/{{'{{node.jcounter}'}}}</td>
+						<td class="col-md-3">
+							<div class="progress"><div class="progress-bar-success" role="progressbar" aria-valuenow="{{'{{node.cpu}'}}}" aria-valuemin="0" aria-valuemax="100" style="width:{{'{{node.cpu}'}}}%;" ng-class="{'progress-bar-success': node.cpu <= 50, 'progress-bar-success': node.cpu <= 70 && node.cpu > 50, 'progress-bar-danger': node.cpu > 70}"><span>{{'{{node.cpu}'}}}%</span></div>
 						</td>
-						<td class="col-md-5">
-							<div class="progress"><div class="" role="progressbar" aria-valuenow="{{'{{status.mem}'}}}" aria-valuemin="0" aria-valuemax="100" style="width:{{'{{status.mem}'}}}%;" ng-class="{'progress-bar-success': status.mem <= 50, 'progress-bar-warning': status.mem <= 70 && status.mem > 50, 'progress-bar-danger': status.mem > 70}"><span>{{'{{status.mem}'}}}%</span></div>
+						<td class="col-md-3">
+							<div class="progress"><div class="progress-bar-success" role="progressbar" aria-valuenow="{{'{{node.mem}'}}}" aria-valuemin="0" aria-valuemax="100" style="width:{{'{{node.mem}'}}}%;" ng-class="{'progress-bar-success': node.mem <= 50, 'progress-bar-warning': node.mem <= 70 && node.mem > 50, 'progress-bar-danger': node.mem > 70}"><span>{{'{{node.mem}'}}}%</span></div>
 						</td>
 					</tr>
 				</tbody>
 			</table>
 		</div>
+		<!-- table main -->
 		<div class="body-right">
 			<!-- Second column -->
 			<div class="colpadding col-md-3">
@@ -108,6 +120,7 @@
 			</div><!-- Third column -->
 		</div>
 	</div>
+
 </div>
 <script type="text/javascript">
 	var app =angular.module('System', []);
@@ -116,7 +129,7 @@
 		$scope.reloadJobStatus=function(){
 			$http.get("/system/api/jobstatus/").then(function(reponse){
 				$scope.jobStatus = reponse.data;
-				console.log($scope.jobStatus);
+				// console.log($scope.jobStatus);
 			});
 			$timeout(function(){
 				$scope.reloadJobStatus();
@@ -125,16 +138,25 @@
 		$scope.reloadMountPoint=function(){
 			$http.get("/system/api/mountpoint/").then(function(reponse){
 				$scope.mountPoints = reponse.data;
-				console.log($scope.mountPoints);
+				// console.log($scope.mountPoints);
 			});
 			$timeout(function() {
 				// $scope.reloadMountPoint();
 			}, 20000);
 		}
+		$scope.reloadNodes = function(){
+			$http.get("/system/api/nstatus/").then(function(reponse){
+				$scope.lstNodes = reponse.data;
+				// console.log($scope.lstStatus[0].cpu);
+			});
+			$timeout(function() {
+				// $scope.reloadDevice();
+			}, 5000)
+		}
 		$scope.reloadDevice = function(){
 			$http.get("/system/api/status/").then(function(reponse){
-				$scope.lstStatus = reponse.data;
-				console.log($scope.lstStatus[0].cpu);
+				$scope.PCStatus = reponse.data[0];
+				console.log($scope.PCStatus);
 			});
 			$timeout(function() {
 				// $scope.reloadDevice();
@@ -143,6 +165,7 @@
 		// $scope.orderByField = 'cpu'
 		$scope.reverseSort = false;
 		$scope.reloadDevice();
+		$scope.reloadNodes();
 		$scope.reloadJobStatus();
 		$scope.reloadMountPoint();
 		// $scope.lstStatus = [{device:'Thomson',

@@ -180,8 +180,11 @@ body {
     color: #333; }
 
 /*Sort table*/
-.sortting a:hover {
-  text-decoration: none; }
+.sortting a {
+  color: #fff; }
+  .sortting a:hover {
+    text-decoration: none;
+    color: #25C829; }
 
 .watting span {
   color: #ffc107; }
