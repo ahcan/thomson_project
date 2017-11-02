@@ -85,11 +85,11 @@ def add_schedule(request):
                 messages = json.dumps(agrs)
                 return HttpResponse(messages, content_type='application/json', status=203)
             ##End check
-            '''Write log'''
-
-            '''End write log'''
             messages = Crontab().append(validate_schedule)
             if not messages:
+                '''Write log'''
+                ScheduleHistory().write_history(request.user.username, 'add', new_id)
+                '''End write log'''
                 agrs["detail"] = "Successfully added to jobid: %s"%(jobid_list)
                 messages = json.dumps(agrs)
                 return HttpResponse(messages, content_type='application/json', status=202)
@@ -112,6 +112,9 @@ def add_schedule(request):
 def remove_schedule(request, id):
     agrs={}
     if request.method=='DELETE':
+        '''Write log'''
+        ScheduleHistory().write_history(request.user.username, 'remove', id)
+        '''End write log'''
         mesages = Crontab().delete(id)
         if not mesages:
             agrs["detail"] = "Successfully remove to jobid: %s"%(id)

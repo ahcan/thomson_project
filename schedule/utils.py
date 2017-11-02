@@ -18,14 +18,12 @@ class RequestGetParam:
         error = ''
         try:
             jobid_list_data = self.data['jobid_list']
-            print jobid_list_data
             # job_pattern = re.compile("\d{3,10}")
             # jobid_list_data = re.findall(job_pattern,jobid_list_data)
             jobid_not_found = ''
             jobid_list_all = Job().get_jobid_list()
             for job in jobid_list_data:
                 job = job['jid']
-                print job
                 if int(job) in jobid_list_all:
                     jobid_list = jobid_list + str(job) + ','
                 else:
@@ -182,6 +180,7 @@ class Crontab:
             schedule_id = int(re.search('(?<=id:)\d+',schedule).group(0))
             if schedule_id == id:
                 task = schedule
+
         #end remove        
         # find back and return status
         return task
@@ -291,13 +290,23 @@ class CrontabDetail:
 
 
 class ScheduleHistory:
-    def create_message(self, user='', action = '', crontab = '', host = ''):
+    def create_message(self, user_name='', action = '', crontab = ''):
+        host = settings.host
         message = ''
         msg = CrontabDetail(crontab).human_readable()
         now = time.strftime("%a, %d-%m-%Y %H:%M:%S", time.localtime(time.time()))
-        message = 'User %s %s schedule content(%s) in host %s at %s.'%(user, action, msg, host, now)
-    def write_history(self, schedule_id,):
-        pass
+        message = 'User %s %s schedule content(%s) in host %s at %s.'%(user_name, action, msg, host, now)
+        return message
+
+    def write_history(self, user_name, action, schedule_id):
+        schedule = Crontab().get_cron_by_id(schedule_id)
+        schedule_obj = Schedule.objects.get(id=int(schedule_id))
+        msg = self.create_message(user_name, action, schedule)
+        now = DateTime().get_now()
+        new_history = History(schedule=schedule_obj, date_time=now, host=settings.host, messages=msg)
+        new_history.save()
+        return 1
+
     def get_new_id(self, request):
         host = settings.host
         user_id = request.user.id
