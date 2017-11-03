@@ -18,7 +18,7 @@ class File:
         #self.file_path = '/home/huy/django_env/thomson_huynt/setting/responseXml/'
 
     def read(self, filename):
-        print self.file_path + filename
+        #print self.file_path + filename
         f = open(self.file_path + filename , 'r')
         lines=f.read()
         f.close()
@@ -303,7 +303,7 @@ class Log:
                 Res = log.attributes['Res'].value if "'Res'" in text else ''
             except Exception as e:
                 Res = ''
-                print text
+                #print text
             #Res = log.attributes['Res'].value if 'Res' in text else ''
             JName = log.attributes['JName'].value if "'JName'" in text else ''
             NId =  log.attributes['NId'].value if "'NId'" in text else ''
@@ -354,7 +354,7 @@ class Log:
         </soapenv:Envelope>"""
         #response_xml = Thomson().get_response(self.headers, body)
         response_xml = File().get_response('LogsOpenGetRsp.xml')
-        print response_xml
+        #print response_xml
         return self.parse_xml(response_xml)
 
     #Getting All open log of Specific Jobs
@@ -766,7 +766,7 @@ class Job:
         return self.count_object(response_xml)
 
     def get_job_detail_by_job_id(self, arr_job_id):
-        print arr_job_id
+        #print arr_job_id
         job_xml = self.get_job_xml()
         xmldoc = minidom.parseString(job_xml)
         itemlist = xmldoc.getElementsByTagName('jGetList:JItem')

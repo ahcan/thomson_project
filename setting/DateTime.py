@@ -23,3 +23,6 @@ class DateTime:
         ts = time.strptime(utc_time[:19], "%Y-%m-%dT%H:%M:%S")
         human_date = time.strftime("%Y-%m-%d %H:%M:%S", ts)
         return (int(time.mktime(time.strptime(human_date, '%Y-%m-%d %H:%M:%S'))) - time.timezone)
+
+    def get_now_as_human_creadeble(self):
+        return (time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))

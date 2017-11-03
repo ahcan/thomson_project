@@ -79,7 +79,7 @@ class Crontab:
         mm = dt.minute
         ss = dt.second
         dayofweek = dt.isocalendar()[2]
-        task = """%s %s %s %s %s sleep %s; /bin/python /script/crontabSMP/job.py -j %s -s %s #id:%s"""%(mm,hh,DD,MM,dayofweek,ss,jobid,action,str(schedule_id))
+        task = """%s %s %s %s %s sleep %s; /bin/python /script/crontabSMP/job.py -j %s -s %s -n %s"""%(mm,hh,DD,MM,dayofweek,ss,jobid,action,str(schedule_id))
         return task
 
     def _runcmd(self, cmd, input=None):
@@ -149,11 +149,13 @@ class Crontab:
         #remove schedule by line number
         new_content = ''
         for schedule in installed_content.split('\n'):
-            schedule_id = int(re.search('(?<=id:)\d+',schedule).group(0))
-            if id != schedule_id:
-                #exeption crontab is none
-                if schedule:
-                    new_content += '%s\n' % schedule
+            schedule = CrontabDetail(schedule).serialization()
+            if schedule:
+                schedule_id = int(re.search('(?<=-n )\d+',schedule).group(0))
+                if id != schedule_id:
+                    #exeption crontab is none
+                    if schedule:
+                        new_content += '%s\n' % schedule
         #end remove        
         # install back and return status
         if new_content:
@@ -177,9 +179,11 @@ class Crontab:
         #find schedule by line number
         task = ''
         for schedule in installed_content.split('\n'):
-            schedule_id = int(re.search('(?<=id:)\d+',schedule).group(0))
-            if schedule_id == id:
-                task = schedule
+            schedule = CrontabDetail(schedule).serialization()
+            if schedule:
+                schedule_id = int(re.search('(?<=-n )\d+',schedule).group(0))
+                if schedule_id == id:
+                    task = schedule
 
         #end remove        
         # find back and return status
@@ -214,22 +218,31 @@ class CrontabDetail:
         else:
             self.task = Crontab().get_cron_by_id(task)
     def serialization(self):
-        cron_pattern=re.compile("[ ?\d{1,2}]*\ sleep \d{1,2}; /bin/python /script/crontabSMP/job.py -[Jj] [,?\d{3,10}]*\ -[Ss] (?:[Ss]tart|[Ss]top) #id:\d+")
+        cron_pattern=re.compile("[ ?\d{1,2}]*\ sleep \d{1,2}; /bin/python /script/crontabSMP/job.py -[Jj] [,?\d{3,10}]*\ -[Ss] (?:[Ss]tart|[Ss]top) -n \d+")
         #cron_pattern=re.compile("\d{1,2}\ \d{1,2}\ \d{1,2}\ \d{1,2}\ \d{1,2}\ sleep \d{1,2}; /bin/python /script/crontabSMP/job.py -[Jj] \d{3,10}\ -[Ss] (?:[Ss]tart|[Ss]top)")
         cron = re.findall(cron_pattern, self.task)
         if cron:
             return cron[0]
         else:
             return None
+    def get_waiting_time(self, schedule_time):
+        now = DateTime().get_now()
+        minus_dt = schedule_time - now
+        if minus_dt > 0:
+            mm, ss = divmod(minus_dt, 60)
+            hh, mm = divmod(mm, 60)
+            DD, hh = divmod(hh, 24)
+            waiting_time = "%d day(s) %02d:%02d:%02d" % (DD, hh, mm, ss)
+            return waiting_time
+        return None
 
 #state = 1: schedule complete
 #state = 0: schedule waiting
-
     def get_pattern(self):
         cron = self.serialization()
         if not cron:
             return None
-        schedule_id = int(re.search('(?<=id:)\d+',cron).group(0))
+        schedule_id = int(re.search('(?<=-n )\d+',cron).group(0))
         number_pattern=re.compile("\d{1,2}")
         list_time=re.findall(number_pattern, cron)
         ss = list_time[5]
@@ -245,20 +258,10 @@ class CrontabDetail:
         state = 1
         jid_pattern = re.compile("\d{3,10}")    
         list_jid = re.findall(jid_pattern, cron)
-        reaction_pattern = re.compile("(?:-[Ss] [Ss]tart|-[Ss] [Ss]top)")
-        action_pattern = re.compile("([Ss]tart|[Ss]top)")
-        reaction = re.findall(reaction_pattern, cron)
-        if reaction:
-            action = re.findall(action_pattern, reaction[0])
-            action = action[0]
+        action = re.search('(?<=-s )\w+',cron).group(0)
         full_date = DateTime().convert_date_pattern_2_unix_timestamp(ss,mm,hh,DD,MM,YYYY)
-        now = DateTime().get_now()
-        minus_dt = full_date - now
-        if minus_dt > 0:
-            mm, ss = divmod(minus_dt, 60)
-            hh, mm = divmod(mm, 60)
-            DD, hh = divmod(hh, 24)
-            alarm = "%d day(s) %02d:%02d:%02d" % (DD, hh, mm, ss)
+        alarm = self.get_waiting_time(full_date)
+        if alarm:
             state = 0
         return schedule_id,ss,mm,hh,DD,MM,YYYY,dayofweek,list_jid,action,full_date,state,alarm
     #parse crontab to human readable fortmat
@@ -294,7 +297,7 @@ class ScheduleHistory:
         host = settings.host
         message = ''
         msg = CrontabDetail(crontab).human_readable()
-        now = time.strftime("%a, %d-%m-%Y %H:%M:%S", time.localtime(time.time()))
+        now = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
         message = 'User %s %s schedule content(%s) in host %s at %s.'%(user_name, action, msg, host, now)
         return message
 
@@ -321,22 +324,3 @@ class ScheduleHistory:
         new_schedule.save()
         n = Schedule.objects.get(create_time=now)
         return n.id
-    # def write_install(self, request, action = '', host = '', crontab, schedule_date='', description=''):
-    #     user_id = int(request.user.id)
-    #     user_name = request.user.username
-    #     message = self.create_message(user=user_id, action=action, crontab=crontab, host=host)
-    #     new_schedule = Schedule(user=user_id, cr)
-
-
-#Crontab().append(content='11 11 * * * /bin/sh /home/thomson_crontab/add_aa.sh', override=False)
-#Crontab().pop(content='35 15 * * * /bin/sh /home/thomson_crontab/add_aa.sh')
-#Crontab().append(Crontab().create(1508144477, '111111', 'start'))
-#print Crontab().get_list()
-#print CrontabDetail('7 14 18 10 3 sleep 5; /bin/python /script/crontabSMP/job.py -j 13429,13430,13431,13432 -s start').get_pattern()
-
-#print Crontab().get_all()
-#print Crontab().create('2017-10-19 11:32:11', '1111', 'start')
-#print Crontab().get_cron_by_id(5)
-
-#msg = CrontabDetail('7 14 18 10 3 sleep 5; /bin/python /script/crontabSMP/job.py -j 13429,13430,13431,13432 -s start').human_readable()
-#print Log().create_message('system', 'deleted', msg, '172.29.3.189')
