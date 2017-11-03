@@ -71,9 +71,10 @@ def add_schedule(request):
             return HttpResponse(messages, content_type='application/json', status=203)
         '''end validate'''
         '''Create crontab string'''
-
-        new_id = ScheduleHistory().get_new_id(request)
-        print new_id
+        try:
+            new_id = ScheduleHistory().get_new_id(request)
+        except Exception as e:
+            new_id = 1
         schedule = Crontab().create(date_time, jobid_list, action, new_id)
         '''install crontab to server'''
         if schedule:
@@ -91,7 +92,10 @@ def add_schedule(request):
             messages = Crontab().append(validate_schedule)
             if not messages:
                 '''Write log'''
-                ScheduleHistory().write_history(request.user.username, 'add', new_id)
+                try:
+                    ScheduleHistory().write_history(request.user.username, 'add', new_id)
+                except Exception as e:
+                    pass
                 '''End write log'''
                 agrs["detail"] = "Successfully added to jobid: %s"%(jobid_list)
                 messages = json.dumps(agrs)
@@ -116,7 +120,10 @@ def remove_schedule(request, id):
     agrs={}
     if request.method=='DELETE':
         '''Write log'''
-        ScheduleHistory().write_history(request.user.username, 'remove', id)
+        try:
+            ScheduleHistory().write_history(request.user.username, 'remove', id)
+        except Exception as e:
+            pass
         '''End write log'''
         mesages = Crontab().delete(id)
         if not mesages:
