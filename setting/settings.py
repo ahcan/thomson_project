@@ -117,15 +117,15 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
 
-#Session timeout (minute)
+# Session timeout (minute)
 # AUTO_LOGOUT_DELAY = 180
 AUTO_LOGOUT_DELAY = 1440
 
-#Thomson config
+# Thomson config
 user = 'nguyennt9'
 passwd = '123456'
 host = '172.29.3.189'
-url = 'http://%s/services/Maltese'%(host)
+url = 'http://%s/services/Maltese' % (host)
 
-#login redirect
+# login redirect
 LOGIN_URL = '/accounts/login/'
