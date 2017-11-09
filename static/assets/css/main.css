@@ -211,7 +211,8 @@ body {
   color: #dd2c00; }
 
 .alarm {
-  background-color: #DB1104; }
+  background-color: #DB1104;
+  color: #fff; }
 
 .glyphicon-ok {
   color: #25C829; }
