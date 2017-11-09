@@ -211,10 +211,7 @@ body {
   color: #dd2c00; }
 
 .alarm {
-  background-color: #DB1104;
-  color: #FFF; }
-  .alarm:hover {
-    color: #3A579A; }
+  background-color: #DB1104; }
 
 .glyphicon-ok {
   color: #25C829; }
