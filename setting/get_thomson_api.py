@@ -496,7 +496,6 @@ class Job:
 
     def count_job(self):
         response_xml = self.get_job_xml()
-        response_xml = File().get_response('JobGetListRsp.xml')
         return self.count_object(response_xml)
 
     def get_Waiting_xml(self):
@@ -508,12 +507,10 @@ class Job:
 
     def get_Waiting(self):
         response_xml = self.get_Waiting_xml()
-        response_xml = File().get_response('JobGetListRsp.xml')
         return self.parse_xml(response_xml)
 
     def count_Waiting(self):
         response_xml = self.get_Waiting_xml()
-        response_xml = File().get_response('JobGetListRsp.xml')
         return self.count_object(response_xml)
 
     def get_Running_xml(self):
@@ -529,7 +526,6 @@ class Job:
 
     def count_Running(self):
         response_xml = self.get_Running_xml()
-        response_xml = File().get_response('JobGetListRsp.xml')
         return self.count_object(response_xml)
 
     def get_Paused_xml(self):
@@ -541,12 +537,10 @@ class Job:
 
     def get_Paused(self):
         response_xml = self.get_Paused_xml()
-        response_xml = File().get_response('JobGetListRsp.xml')
         return self.parse_xml(response_xml)
 
     def count_Paused(self):
         response_xml = self.parse_xml(response_xml)
-        response_xml = File().get_response('JobGetListRsp.xml')
         return self.count_object(response_xml)
 
     def get_Completed_xml(self):
@@ -558,12 +552,10 @@ class Job:
 
     def get_Completed(self):
         response_xml = self.get_Completed_xml()
-        response_xml = File().get_response('JobGetListRsp.xml')
         return self.parse_xml(response_xml)
 
     def count_Completed(self):
         response_xml = self.get_Completed_xml()
-        response_xml = File().get_response('JobGetListRsp.xml')
         return self.count_object(response_xml)
 
     def get_Aborted_xml(self):
@@ -575,12 +567,10 @@ class Job:
 
     def get_Aborted(self):
         response_xml = self.get_Aborted_xml()
-        response_xml = File().get_response('JobGetListRsp.xml')
         return self.parse_xml(response_xml)
 
     def count_Aborted(self):
         response_xml = self.get_Aborted_xml()
-        response_xml = File().get_response('JobGetListRsp.xml')
         return self.count_object(response_xml)
 
     def get_job_detail_by_job_id(self, arr_job_id):
