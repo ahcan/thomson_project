@@ -76,3 +76,9 @@ def get_nodes_status_json(request):
 def get_node_job_json(request, node_id):
     nodes_status = NodeDetail(node_id).get_list_job()
     return HttpResponse(nodes_status, content_type='application/json', status=200)
+
+@login_required()
+def redirect_node(request, node_id):
+    arg={}
+    arg['node_id'] = node_id
+    return render_to_response('system/system_detail.html',arg)

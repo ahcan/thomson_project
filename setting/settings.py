@@ -64,10 +64,10 @@ WSGI_APPLICATION = 'setting.wsgi.application'
 
 DATABASES = {
     'default': {
-        #'ENGINE': 'django.db.backends.sqlite3',
-        #'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'thomson',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        # 'ENGINE': 'django.db.backends.mysql',
+        # 'NAME': 'thomson',
         'USER': 'root',
         'PASSWORD': 'root',
         'HOST': 'localhost',
@@ -117,15 +117,15 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
 
-#Session timeout (minute)
+# Session timeout (minute)
 # AUTO_LOGOUT_DELAY = 180
 AUTO_LOGOUT_DELAY = 1440
 
-#Thomson config
+# Thomson config
 user = 'nguyennt9'
 passwd = '123456'
 host = '172.29.3.189'
-url = 'http://%s/services/Maltese'%(host)
+url = 'http://%s/services/Maltese' % (host)
 
-#login redirect
+# login redirect
 LOGIN_URL = '/accounts/login/'

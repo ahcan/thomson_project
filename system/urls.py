@@ -17,6 +17,9 @@ urlpatterns = [
     #Link get thomson info CPU, RAAM: /system/api/<node_id>/
     url(r'^api/(?P<node_id>\d+)/$', views.get_node_job_json, name='node_json'),
 
+    #Link redirect node detail
+    url(r'^detail-node/(?P<node_id>\d+)/$',views.redirect_node, name='node_detail'),
+
     #Main template dashboard
     url(r'^$', views.get_system, name="system"),
 ]
