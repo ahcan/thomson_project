@@ -132,6 +132,42 @@ class Thomson:
         return json.dumps(agrs)
 
 
+    def get_license_xml(self):
+        from setting.SystemReq import LICENSE_HEADERS, LICENSE_BODY
+        headers = LICENSE_HEADERS
+        body = LICENSE_BODY
+        #response_xml = self.get_response(headers, body)
+        response_xml = File().get_response('SystemGetVersionsRsp.xml')
+        return response_xml
+
+    def parse_license_xml_object(self, license_obj):
+        str_license_obj = str(license_obj.attributes.items())
+        Nb = license_obj.attributes['Nb'].value if "'Nb'" in str_license_obj else ''
+        Name = license_obj.attributes['Name'].value if "'Name'" in str_license_obj else ''
+        NbOfUsedLicenceDec = license_obj.attributes['NbOfUsedLicenceDec'].value if "'NbOfUsedLicenceDec'" in str_license_obj else ''
+        NbOfUsedLicence = license_obj.attributes['NbOfUsedLicence'].value if "'NbOfUsedLicence'" in str_license_obj else ''
+        Desc = license_obj.attributes['Desc'].value if "'Desc'" in str_license_obj else ''
+        return Nb,Name,NbOfUsedLicenceDec,NbOfUsedLicence,Desc
+
+    def parse_license(self, license_xml):
+        xmldoc = minidom.parseString(license_xml)
+        itemlist = xmldoc.getElementsByTagName('sGetVersions:LicItem')
+        args=[]
+        for license_obj in itemlist:
+            Nb,Name,NbOfUsedLicenceDec,NbOfUsedLicence,Desc = self.parse_license_xml_object(license_obj)
+            args.append({'license'         : Desc,
+                        'partnumber'       : Name,
+                        'used'             : NbOfUsedLicenceDec,
+                        'max'              : Nb
+                })
+        return args
+
+    def get_license(self):
+        license_xml = self.get_license_xml()
+        arr_license = self.parse_license(license_xml)
+        return json.dumps(arr_license)
+
+
 ##############################################################################
 #                                                                            #
 #------------------------------------NODES-----------------------------------#
@@ -614,10 +650,6 @@ class Job:
 
 class JobDetail:
     def __init__(self, jid):
-        from setting.JobDetailReq import HEADERS, BODY
-        self.headers = HEADERS
-        self.body = BODY
-        self.body = self.body.replace('JobID', str(jid))
         self.jid = jid
 
     def parse_xml(self, xml):
@@ -646,7 +678,11 @@ class JobDetail:
         return json.dumps(args)
 
     def get_param_xml(self):
-        #response_xml = Thomson().get_response(self.headers, self.body)
+        from setting.JobDetailReq import HEADERS, BODY
+        headers = HEADERS
+        body = BODY
+        body = body.replace('JobID', str(jid))
+        #response_xml = Thomson().get_response(headers, body)
         response_xml = File().get_response('JobGetParamsRsp.xml')
         return response_xml
 
@@ -667,6 +703,29 @@ class JobDetail:
         "'workflowIdRef'" in str(job.attributes.items()) else ''
         return jobname, workflowIdRef
 
+    def start(self):
+        from setting.JobDetailReq import START_HEADERS, START_BODY
+        headers = START_HEADERS
+        body = START_BODY
+        body = body.replace('JobID', str(jid))
+        response_xml = Thomson().get_response(headers, body)
+        return self.parse_status(response_xml)
+
+    def abort(self):
+        from setting.JobDetailReq import ABORT_HEADERS, ABORT_BODY
+        headers = ABORT_HEADERS
+        body = ABORT_BODY
+        body = body.replace('JobID', str(jid))
+        response_xml = Thomson().get_response(headers, body)
+        return self.parse_status(response_xml)
+
+    def delete(self):
+        from setting.JobDetailReq import DELETE_HEADERS, DELETE_BODY
+        headers = DELETE_HEADERS
+        body = DELETE_BODY
+        body = body.replace('JobID', str(jid))
+        response_xml = Thomson().get_response(headers, body)
+        return self.parse_status(response_xml)
 
 ##############################################################################
 #                                                                            #
