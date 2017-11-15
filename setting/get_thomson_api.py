@@ -104,12 +104,18 @@ class Thomson:
          str(itemlist[0].attributes.items()) else ""
         CPU = itemlist[0].attributes['CPU'].value if "'CPU'" in\
          str(itemlist[0].attributes.items()) else '-1'
+        AllocCpu = itemlist[0].attributes['AllocCpu'].value if "'AllocCpu'" in\
+         str(itemlist[0].attributes.items()) else '-1'
         Mem = itemlist[0].attributes['Mem'].value if "'Mem'" in\
          str(itemlist[0].attributes.items()) else '-1'
+        AllocMem = itemlist[0].attributes['AllocMem'].value if "'AllocMem'" in\
+         str(itemlist[0].attributes.items()) else '-1'
         agrs = []
-        agrs.append({'status': Status,
-                     'cpu'   : int(CPU),
-                     'mem'   : int(Mem)
+        agrs.append({'status'   : Status,
+                     'cpu'      : int(CPU),
+                     'alloccpu' : int(AllocCpu),
+                     'mem'      : int(Mem),
+                     'allocmem' : int(AllocMem)
                     })
         return json.dumps(agrs)
 
@@ -546,7 +552,7 @@ class Job:
         return self.parse_xml(response_xml)
 
     def count_Paused(self):
-        response_xml = self.parse_xml(response_xml)
+        response_xml = self.get_Paused_xml()
         return self.count_object(response_xml)
 
     def get_Completed_xml(self):
