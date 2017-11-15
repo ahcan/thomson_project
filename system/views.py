@@ -55,6 +55,8 @@ def get_system_status_json(request):
 #Link get job status: /system/api/jobstatus
 @require_http_methods(['GET'])
 @csrf_exempt
+@login_required()
+
 def get_job_status_json(request):
     job_status = Thomson().get_job_status()
     return HttpResponse(job_status, content_type='application/json', status=200)
@@ -82,3 +84,8 @@ def redirect_node(request, node_id):
     arg={}
     arg['node_id'] = node_id
     return render_to_response('system/system_detail.html',arg)
+
+# link to page monitor
+@login_required()
+def monitor(request):
+    return render_to_response('system/monitor.html')

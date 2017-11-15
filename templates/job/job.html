@@ -1,167 +1,165 @@
 {% extends 'base.html' %}
 {% block content %}
-<!-- <script src="/static/assets/js/jasny-bootstrap.min.js"></script> -->
-<!-- <link rel="stylesheet" href="/static/assets/css/jasny-bootstrap.css"> -->
-<!-- <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> --><!-- 
-<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-app="Job" ng-controller="jobCtrl" > -->
 <script type="text/javascript" src="/static/assets/js/jquery.floatThead.min.js"></script>
 <div ng-app="Job" ng-controller="jobCtrl">
-	<div class="content">
-		<h2 class="sub-header">Jobs</h2>
-	</div>
-	<div class="content">
-		<div class="table-responsive col-md-5">
-			<div class="panel-body">
-				<div>
-					<label class="checkbox-inline" ng-repeat="state in getStates()">
-						<input type="checkbox" ng-model="filters[state]">{{'{{state}'}}}</input>
-					</label>
-				</div>
-			</div>
-			<div class="wrapper" style="overflow-y: auto;">
-				<table class="table table-bordered table-hover table-striped scrollTable">
-					<thead>
-						<tr>
-							<th>#</th>
-							<th>Name</th>
-							<th>Status</th>
-							<th>State</th>
-							<!-- <th>Process</th> -->
-							<th>Start Date</th>
-							<th>End Date</th>
-						</tr>
-					</thead>
-					<tfoot>
-						<tr>
-							<td colspan="9" class="text-center">Total: {{'{{filterState.length}'}}}</td>
-						</tr>
-					</tfoot>
-					<tbody data-link="row" class="rowlink">
-						<tr ng-repeat="job in (job_list | filter:filterByState) as filterState" ng-click="moreinfo(job.jid)">
-							<td class="col-md-1"><a href="#rowlinkModal" data-toggle="modal" data-target="#modal{{'{{job.jid}'}}}">{{'{{$index + 1}'}}}</a></td>
-							<td class="col-md-3"><sapn>{{'{{job.jname}'}}}</sapn></td>
-							<td class="col-md-1"><span>{{'{{job.status}'}}}</span></td>
-							<td class="col-md-1" ng-class="{'running': job.state == 'Running', 'aborted': job.state == 'Aborted', 'watting': job.state == 'Watting', 'paused': job.state == 'Paused', 'completed': job.state == 'Completed'}"><span>{{'{{job.state}'}}}</span></td>
-							<!-- <td>{{'{{job.prog}'}}}</td> -->
-							<td class="col-md-3" n><span>{{'{{job.startdate*1000 | date:"dd-M-yyyy HH:mm:ss" }'}}}</span></td>
-							<td class="col-md-3"><span>{{'{{job.enddate*1000 | date:"dd-M-yyyy HH:mm:ss" }'}}}</span></td>
-							<!-- Modal -->
-						</tr>
-					</tbody>
-				</table>
-			</div>
-		</div>
-		<div class="colpadding col-md-7 body-right table-responsive">
-			<!-- tab content -->
-			<div class="panel panel-default">
-				<div class="panel-heading">
-		 			<h4>{{'{{workflow[0].jobname}'}}}</h4>
-		 		</div>
-		 		<div class="panel-body table-responsive">
-					<ul class="nav nav-tabs">
-						<li class="active"><a href="#tab_log" data-toggle="tab">Logs</a></li>
-						<li><a href="#tab_param" data-toggle="tab">Params</a></li>
-						<!-- <li><a href="#tab_addJob" data-toggle="tab">Add Job</a></li> -->
-					</ul>
-					<div class="tab-content">
-						<div class="tab-pane active" id="tab_log">
-					 		<div class="wrapper" style="overflow-y: auto;">
-					 			<table class="table table-panel table-bordered table-hover table-striped scrollTable">
-					 				<thead>
-				 						<th style="width: 5%;"><label><span>Severity</span></label></th>
-				 						<th><label><span>Catogory</span></label></th>
-				 						<th><label><span>Node ID</span></label></th>
-				 						<th style="width: 20%;"><label><span>Resource</span></label></th>
-				 						<th style="width: 20%;"><label><span>Descriptipn</span></label></th>
-				 						<th><label><span>Raising Date</span></label></th>
-				 						<th><label><span>Cealrning Date</span></label></th>
-					 				</thead>
-					 				<tbody>
-					 					<tr ng-repeat="log in lstLogJob">
-						 					<td><span>{{'{{log.sev}'}}}</span></td>
-						 					<td><span>{{'{{log.cat}'}}}</span></td>
-						 					<td><span>{{'{{log.nid}'}}}</span></td>
-						 					<td><span>{{'{{log.res}'}}}</span></td>
-						 					<td><span>{{'{{log.desc}'}}}</span></td>
-						 					<td><span>{{'{{log.opdate | date:"dd-M-yyyy H:mm:ss" }'}}}</span></td>
-						 					<td><span>{{'{{log.cldate | date:"dd-M-yyyy H:mm:ss" }'}}}</span></td>
-					 					</tr>
-					 				</tbody>
-					 			</table>
-					 		</div>
-						</div>
-						<div class="tab-pane" id="tab_param">
-					 		<div class="content">
-					 			<table class="table table-panel table-bordered table-hover table-striped " ng-show="clickrow">
-					 				<tbody>
-					 					<tr>
-					 						<td class="td-left"><label>Workflow</label></td>
-					 						<td class="td-right"><span>{{'{{workflow[0].workflowIdRef}'}}}</span></td>
-					 					</tr>
-					 					<tr ng-repeat="param in workflow[0].params">
-					 						<td class="td-left"><label>{{'{{param.name}'}}}</label></td>
-					 						<td class="td-right"><i ng-class="{'glyphicon glyphicon-ok': param.value ==  'true', 'glyphicon glyphicon-remove': param.value =='false'}"></i><span ng-hide="param.value ==  'true' || param.value == 'false'">{{'{{param.value}'}}}</span></td>
-					 					</tr>
-					 				</tbody>
-					 			</table>
-					 		</div>
-						</div>
-					</div>
-				</div><!-- tab content -->
-			</div>
-		</div>
-	</div>
+    <div class="content">
+        <h2 class="sub-header">Jobs</h2>
+    </div>
+    <div class="content">
+        <div class="table-responsive col-md-4">
+            <div class="panel-body">
+                <div>
+                    <label class="checkbox-inline" ng-repeat="state in getStates()">
+                        <input type="checkbox" ng-model="filters[state]">{{'{{state}'}}}</input>
+                    </label>
+                </div>
+            </div>
+            <div class="wrapper" style="overflow-y: auto;">
+                <table class="table table-bordered table-hover table-striped scrollTable">
+                    <thead>
+                        <tr>
+                            <th class="col-md-1">Job id</th>
+                            <th class="col-md-3">Name</th>
+                            <th class="col-md-1">Status</th>
+                            <th class="col-md-1">State</th>
+                            <th class="col-md-2">Workflow</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <td colspan="9" class="text-center">Total: {{'{{filterState.length}'}}}</td>
+                        </tr>
+                    </tfoot>
+                    <tbody data-link="row" class="rowlink">
+                        <tr ng-repeat="job in (job_list | filter:filterByState | orderBy: jid) as filterState" ng-click="moreinfo(job.jid)">
+                            <td class="col-md-1"><a href="#rowlinkModal" data-toggle="modal" data-target="#modal{{'{{job.jid}'}}}">{{'{{job.jid}'}}}</a></td>
+                            <td class="col-md-3"><sapn>{{'{{job.jname}'}}}</sapn></td>
+                            <td class="col-md-1"><span>{{'{{job.status}'}}}</span></td>
+                            <td class="col-md-1" ng-class="{'running': job.state == 'Running', 'aborted': job.state == 'Aborted', 'watting': job.state == 'Watting', 'paused': job.state == 'Paused', 'completed': job.state == 'Completed'}"><span>{{'{{job.state}'}}}</span></td>
+                            <td class="col-md-2"><span>{{'{{job.wname}'}}}</span></td>
+                            
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="colpadding col-md-8 body-right table-responsive">
+            <!-- tab content -->
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4>{{'{{workflow[0].jobname}'}}}</h4>
+                </div>
+                <div class="panel-body table-responsive">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#tab_log" data-toggle="tab">Logs</a></li>
+                        <li><a href="#tab_param" data-toggle="tab">Params</a></li>
+                        <!-- <li><a href="#tab_addJob" data-toggle="tab">Add Job</a></li> -->
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="tab_log">
+                            <div class="wrapper" style="overflow-y: auto;">
+                                <table class="table table-panel table-bordered table-hover table-striped scrollTable">
+                                    <thead>
+                                        <th style="width: 5%;"><label><span>Severity</span></label></th>
+                                        <th><label><span>Catogory</span></label></th>
+                                        <th><label><span>Node ID</span></label></th>
+                                        <th style="width: 20%;"><label><span>Resource</span></label></th>
+                                        <th style="width: 20%;"><label><span>Descriptipn</span></label></th>
+                                        <th><label><span>Raising Date</span></label></th>
+                                        <th><label><span>Cealrning Date</span></label></th>
+                                    </thead>
+                                    <tbody>
+                                        <tr ng-repeat="log in lstLogJob">
+                                            <td><span>{{'{{log.sev}'}}}</span></td>
+                                            <td><span>{{'{{log.cat}'}}}</span></td>
+                                            <td><span>{{'{{log.nid}'}}}</span></td>
+                                            <td><span>{{'{{log.res}'}}}</span></td>
+                                            <td><span>{{'{{log.desc}'}}}</span></td>
+                                            <td><span>{{'{{log.opdate | date:"dd-M-yyyy H:mm:ss" }'}}}</span></td>
+                                            <td><span>{{'{{log.cldate | date:"dd-M-yyyy H:mm:ss" }'}}}</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="tab_param">
+                            <div class="content">
+                                <table class="table table-panel table-bordered table-hover table-striped " ng-show="clickrow">
+                                    <tbody>
+                                        <tr>
+                                            <td class="td-left"><label>Workflow</label></td>
+                                            <td class="td-right"><span>{{'{{workflow[0].workflowIdRef}'}}}</span></td>
+                                        </tr>
+                                        <tr ng-repeat="param in workflow[0].params">
+                                            <td class="td-left"><label>{{'{{param.name}'}}}</label></td>
+                                            <td class="td-right"><i ng-class="{'glyphicon glyphicon-ok': param.value ==  'true', 'glyphicon glyphicon-remove': param.value =='false'}"></i><span ng-hide="param.value ==  'true' || param.value == 'false'">{{'{{param.value}'}}}</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- tab content -->
+            </div>
+        </div>
+    </div>
 </div>
 <script>
-	var app = angular.module('Job',[]);
-	app.controller("jobCtrl", function ($scope,$http,$timeout){
-		$scope.reload = function () {
-			$scope.total = 0;
-			$http.get('/job/api/job').
-			then(function (response) {
-				$scope.job_list = response.data;
-				$scope.total = $scope.job_list.length
-				console.log($scope.job_list);
-			});
-			$timeout(function(){
-				// $scope.reload();
-			},10000)
-		};
-		// Fiter By State checkbox
-		$scope.filters = {};
-		//function
-		$scope.filterByState = function(job){
-			return $scope.filters[job.state] || noFilter($scope.filters);
-		};
-		$scope.getStates = function(){
-			return ($scope.job_list || []).map(function(job){return job.state;}).filter(function (cat, idx, arr) { return arr.indexOf(cat) === idx;});
-		};
-		function noFilter(filterObj){
-			return Object.keys(filterObj).every(function(key){return !filterObj[key];});
-		}
-		//end filter
-		$scope.reload();
-		$scope.moreinfo = function(jobID){
-			// console.log(jobID);
-			$http.get('/job/api/job/'+jobID+'/').then(function(response){
-				$scope.workflow = response.data;
-				console.log($scope.workflow);
-			});
-			$http.get('/log/api/'+jobID+'/').then(function(response){
-				$scope.lstLogJob = response.data;
-				console.log($scope.lstLogJob);
-			});
-			$scope.clickrow = true;
-			$scope.showpara = true;
-		}
-	});
+    var app = angular.module('Job',[]);
+    app.controller("jobCtrl", function ($scope,$http,$timeout,$window){
+        $scope.reload = function () {
+            $scope.total = 0;
+            $http.get('/job/api/job/').
+            then(function (response) {
+                if(response.status == 302 && response.data.url){
+                    console.log(response.status);
+                    $window.location.href=response.data.url;
+                }
+                else{
+                    $scope.job_list = response.data;
+                    $scope.total = $scope.job_list.length
+                    console.log($scope.job_list);
+                }
+            });
+            $timeout(function(){
+                $scope.reload();
+            },10000)
+        };
+        // Fiter By State checkbox
+        $scope.filters = {};
+        //function
+        $scope.filterByState = function(job){
+            return $scope.filters[job.state] || noFilter($scope.filters);
+        };
+        $scope.getStates = function(){
+            return ($scope.job_list || []).map(function(job){return job.state;}).filter(function (cat, idx, arr) { return arr.indexOf(cat) === idx;});
+        };
+        function noFilter(filterObj){
+            return Object.keys(filterObj).every(function(key){return !filterObj[key];});
+        }
+        //end filter
+        $scope.reload();
+        $scope.moreinfo = function(jobID){
+            // console.log(jobID);
+            $http.get('/job/api/job/'+jobID+'/').then(function(response){
+                $scope.workflow = response.data;
+                console.log($scope.workflow);
+            });
+            $http.get('/log/api/'+jobID+'/').then(function(response){
+                $scope.lstLogJob = response.data;
+                console.log($scope.lstLogJob);
+            });
+            $scope.clickrow = true;
+            $scope.showpara = true;
+        }
+    });
 </script>
 <script type="text/javascript">
-	var $scroll = $('table.scrollTable');
-	$scroll.floatThead({
-		scrollContainer: function($table){
-	    return $table.closest('.wrapper');
-		}
-	});
+    var $scroll = $('table.scrollTable');
+    $scroll.floatThead({
+        scrollContainer: function($table){
+        return $table.closest('.wrapper');
+        }
+    });
 </script>
 {% endblock %}

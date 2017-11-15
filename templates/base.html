@@ -25,7 +25,7 @@
     <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
     <!-- jQuery -->
     <script src="/static/ajax/libs/jquery/jquery-3.2.1.min.js"></script>
-    <script type="/static/ajax/libs/jquery/1.11.3/jquery-ui.min.js" ></script>
+    <script type="text/javascript" src="https://code.jquery.com/ui/1.11.3/jquery-ui.min.js" ></script>
     
     <script src="/static/assets/js/jasny-bootstrap.min.js"></script>
     <script src="/static/assets/js/ie-emulation-modes-warning.js"></script>
@@ -37,7 +37,7 @@
     <![endif]-->
     <!-- AngularJS -->
     <script type="text/javascript" src="/static/angular.min.js"></script>
-    <script src="/static/assets/js/ui-bootstrap-tpls-0.14.3.js"></script>
+    <script src="https://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.14.3.js"></script>
     <!-- Custom css -->
 <!--     <link rel="stylesheet" type="text/css" href="/static/assets/css/jasny-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="/static/assets/css/main.css"> -->
@@ -52,15 +52,9 @@
   <!-- end navbar -->
     <div class="container-fluid">
       <div class="row">
-    <!-- navbar -->
-    {% block nav-sidebar %}
-      {% include 'nav-sidebar.html' %}
-    {% endblock %}
-    <!-- end navbar -->
 
-    <!-- content -->
 
-    <div class="col-sm-10 col-sm-offset-2 col-md-11 col-md-offset-1 main">
+    <div class="col-sm-12 col-md-12 main">
       {% block content %}
       {% endblock %}
     </div>

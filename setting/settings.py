@@ -118,7 +118,7 @@ STATICFILES_DIRS = [
 ]
 
 # Session timeout (minute)
-# AUTO_LOGOUT_DELAY = 180
+# AUTO_LOGOUT_DELAY = 1
 AUTO_LOGOUT_DELAY = 1440
 
 # Thomson config
@@ -129,3 +129,4 @@ url = 'http://%s/services/Maltese' % (host)
 
 # login redirect
 LOGIN_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = '/'

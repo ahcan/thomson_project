@@ -20,6 +20,9 @@ urlpatterns = [
     #Link redirect node detail
     url(r'^detail-node/(?P<node_id>\d+)/$',views.redirect_node, name='node_detail'),
 
+    #Link monitor
+    url(r'^monitor/$', views.monitor, name='monitor'),
+
     #Main template dashboard
     url(r'^$', views.get_system, name="system"),
 ]
