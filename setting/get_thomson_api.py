@@ -681,7 +681,7 @@ class JobDetail:
         from setting.JobDetailReq import HEADERS, BODY
         headers = HEADERS
         body = BODY
-        body = body.replace('JobID', str(jid))
+        body = body.replace('JobID', str(self.jid))
         #response_xml = Thomson().get_response(headers, body)
         response_xml = File().get_response('JobGetParamsRsp.xml')
         return response_xml
