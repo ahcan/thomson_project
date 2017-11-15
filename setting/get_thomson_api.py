@@ -149,25 +149,29 @@ class Node:
         text = str(dom_object.attributes.items())
         NStatus = dom_object.attributes['NStatus'].value if "'NStatus'" in text else ''
         Cpu = dom_object.attributes['Cpu'].value if "'Cpu'" in text else '-1'
+        AllocCpu = dom_object.attributes['AllocCpu'].value if "'AllocCpu'" in text else '-1'
         Unreachable = dom_object.attributes['Unreachable'].value if "'Unreachable'" in text else ''
         NId = dom_object.attributes['NId'].value if "'NId'" in text else '-1'
         NState = dom_object.attributes['NState'].value if "'NState'" in text else ''
         Mem =  dom_object.attributes['Mem'].value if "'Mem'" in text else '-1'
-        return NStatus,Cpu,Unreachable,NId,NState,Mem
+        AllocMem = dom_object.attributes['AllocMem'].value if "'AllocMem'" in text else '-1'
+        return NStatus,Cpu,AllocCpu,Unreachable,NId,NState,Mem,AllocMem
 
     def parse_xml(self, xml):
         args = []
         xmldoc = minidom.parseString(xml)
         itemlist = xmldoc.getElementsByTagName('sGetNodesStats:RspSGNSOk')
         for node in itemlist.item(0).childNodes:
-            NStatus,Cpu,Unreachable,NId,NState,Mem = self.parse_dom_object(node)
+            NStatus,Cpu,AllocCpu,Unreachable,NId,NState,Mem,AllocMem = self.parse_dom_object(node)
             JError, JCounter = NodeDetail(NId).count_job_error()
             args.append({'status'             : NStatus,
                         'cpu'                 : int(Cpu),
+                        'alloccpu'            : int(AllocCpu),
                         'uncreahable'         : Unreachable,
                         'nid'                 : int(NId),
                         'state'               : NState,
                         'mem'                 : int(Mem),
+                        'allocmem'            : int(AllocMem),
                         'jerror'              : JError,
                         'jcounter'            : JCounter
                 })
@@ -208,15 +212,17 @@ class NodeDetail:
         args = []
         array_jid = self.get_array_job_id()
         dom_node = self.get_dom_node()
-        NStatus,Cpu,Unreachable,NId,NState,Mem = Node().parse_dom_object(dom_node)
+        NStatus,Cpu,AllocCpu,Unreachable,NId,NState,Mem,AllocMem = Node().parse_dom_object(dom_node)
         JError, JCounter = self.count_job_error()
         job_list = Job().get_job_detail_by_job_id(array_jid)
         args.append({'status'             : NStatus,
                     'cpu'                 : int(Cpu),
+                    'alloccpu'            : int(AllocCpu),
                     'uncreahable'         : Unreachable,
                     'nid'                 : int(NId),
                     'state'               : NState,
                     'mem'                 : int(Mem),
+                    'allocmem'            : int(AllocMem),
                     'jerror'              : JError,
                     'jcounter'            : JCounter,
                     'job_list'            : job_list

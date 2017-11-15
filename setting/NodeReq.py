@@ -3,9 +3,8 @@ HEADERS = {
     'SOAPAction': 'SystemGetNodesStats'
 }
 
-BODY = """<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
-        <s:Body>
-            <ns67:SystemGetNodesStatsReq xmlns:ns67="SystemGetNodesStats" Cmd="Start" OpV="01.00.00">
-            </ns67:SystemGetNodesStatsReq>
-        </s:Body>
-    </s:Envelope>"""
+BODY = """<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+        <S:Body>
+            <sGetNodesStats:SystemGetNodesStatsReq xmlns:sGetNodesStats="SystemGetNodesStats" Cmd="Start" OpV="00.00.00"/>
+        </S:Body>
+    </S:Envelope>"""
