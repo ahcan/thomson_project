@@ -89,3 +89,8 @@ def redirect_node(request, node_id):
 @login_required()
 def monitor(request):
     return render_to_response('system/monitor.html')
+    
+@login_required()
+def get_license_json(request):
+    license_status = Thomson().get_license()
+    return HttpResponse(license_status, content_type='application/json', status=200)

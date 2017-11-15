@@ -4,8 +4,18 @@ HEADERS = {
 }
 
 BODY = """<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
-  <s:Body>
-    <ns67:SystemGetStatusReq xmlns:ns67="SystemGetStatus" Cmd="Start" OpV="01.00.00">
-    </ns67:SystemGetStatusReq>
-   </s:Body>
-</s:Envelope>"""
+        <s:Body>
+            <sGetStatus:SystemGetStatusReq xmlns:sGetStatus="SystemGetStatus" Cmd="Start" OpV="00.00.00"/>
+        </s:Body>
+    </s:Envelope>"""
+
+LICENSE_HEADERS = {
+    'content-type': 'text/xml; charset=utf-8',
+    'SOAPAction': 'SystemGetVersions'
+}
+
+LICENSE_BODY = """<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+        <s:Body>
+            <sGetVersions:SystemGetVersionsReq xmlns:sGetVersions="SystemGetVersions" Cmd="Start" OpV="00.00.00"/>
+        </s:Body>
+    </s:Envelope>"""
