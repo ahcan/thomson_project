@@ -1,121 +1,238 @@
 {% extends 'base.html' %}
 {% block content %}
-<!-- <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-app="System" ng-controller="systemCtrl"> -->
-
+<script type="text/javascript" src="/static/assets/js/jquery.floatThead.min.js"></script>
 <div ng-app="System" ng-controller="systemCtrl">
     <div class="content">
         <h2 class="sub-header">Device</h2>
         <!-- table total -->
-        <div style="display: inline; font-size: 13px; padding-right: 10px; float: right; margin-top:-7px;">
-            <table style="width: 200px; background-color: #edeff2; font-size: 11px;">
-                <tr>
-                    <td style="width: 40px; font-size: 14px;"><p>Total:</p></td>
-                    <td style="width: 170px;">
-                        <table class="table" style="margin-bottom: 0px; background-color: #edeff2;">
-                        <tr>
-                            <td style="padding: 1px;">
-                                <div class="progress" style="height: 20px;"> <div class="progress">
-                                <div class="progressbar progress-bar-info" role="progressbar" aria-valuemax='100' style="width: {{'{{PCStatus.alloccpu}'}}}%;">
-                                    <div class="progressbar progress-bar-real" role="progressbar" aria-valuenow="{{'{{PCStatus.cpu}'}}}" aria-valuemin="0" aria-valuemax="100" style="width:{{'{{PCStatus.cpu}'}}}%;"></div>
-                                    <p>{{'{{PCStatus.alloccpu}'}}}%</p>
+            <div style="display: inline; font-size: 13px; padding-right: 10px; float: right; margin-top:-7px;">
+                <table style="width: 200px; background-color: #edeff2; font-size: 11px;">
+                    <tr>
+                        <td style="width: 40px; font-size: 14px;"><p>Total:</p></td>
+                        <td style="width: 170px;">
+                            <table class="table" style="margin-bottom: 0px; background-color: #edeff2;">
+                            <tr>
+                                <td style="padding: 1px;">
+                                    <div class="progress" style="height: 20px;"> <div class="progress">
+                                    <div class="progressbar progress-bar-info" role="progressbar" aria-valuemax='100' style="width: {{'{{PCStatus.alloccpu}'}}}%;">
+                                        <div class="progressbar progress-bar-real" role="progressbar" aria-valuenow="{{'{{PCStatus.cpu}'}}}" aria-valuemin="0" aria-valuemax="100" style="width:{{'{{PCStatus.cpu}'}}}%;"></div>
+                                        <p>{{'{{PCStatus.alloccpu}'}}}%</p>
+                                    </div>
                                 </div>
-                            </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 1px;">
-                                 <div class="progress" style="height: 20px;"> <div class="progress">
-                                <div class="progressbar progress-bar-info" role="progressbar" aria-valuemax='100' style="width: {{'{{PCStatus.allocmem}'}}}%;">
-                                    <div class="progressbar progress-bar-real" role="progressbar" aria-valuenow="{{'{{PCStatus.mem}'}}}" aria-valuemin="0" aria-valuemax="100" style="width:{{'{{PCStatus.mem}'}}}%;"></div>
-                                    <p>{{'{{PCStatus.allocmem}'}}}%</p>
-                                </div>
-                            </td>
-                        </tr>
-                        </table>
-                    </td>
-                </tr>
-            </table>
-        </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 1px;">
+                                     <div class="progress" style="height: 20px;"> <div class="progress">
+                                    <div class="progressbar progress-bar-info" role="progressbar" aria-valuemax='100' style="width: {{'{{PCStatus.allocmem}'}}}%;">
+                                        <div class="progressbar progress-bar-real" role="progressbar" aria-valuenow="{{'{{PCStatus.mem}'}}}" aria-valuemin="0" aria-valuemax="100" style="width:{{'{{PCStatus.mem}'}}}%;"></div>
+                                        <p>{{'{{PCStatus.allocmem}'}}}%</p>
+                                    </div>
+                                </td>
+                            </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </div>
         <!-- end table total -->
     </div>
     <div class="content">
         <!-- table main left -->
-        <div class="colpadding col-md-5 table-responsive">
-            <table class="table table-bordered table-hover table-striped">
-                <thead>
-                    <th class="col-md-1 sortting" ><a role="button" ng-click="orderByField = 'nid'; reverseSort = !reverseSort">Device<i class="glyphicon" ng-show="orderByField=='nid'" ng-class="{'glyphicon-chevron-up': !reverseSort, 'glyphicon-chevron-down': reverseSort}"></i></a></th>
-                    <th class="col-md-1">Status</th>
-                    <th class="col-md-1">State</th>
-                    <th class="col-md-1">Creahable</th>
-                    <th class="col-md-1 sortting"><a role="button" ng-click="orderByField='!jerror'; reverseSort=ture;">Error/Job</th>
-                    <!-- <th class="col-md-1">Counter</th> -->
-                    <th class="col-md-3 sortting"><a role="button" ng-click="orderByField = 'alloccpu'; reverseSort = !reverseSort">Cpu <i class="glyphicon" ng-show="orderByField=='allccpu'" ng-class="{'glyphicon-chevron-up': !reverseSort, 'glyphicon-chevron-down': reverseSort}"></i></a></th>
-                    <th class="col-md-3 sortting"><a role="button" ng-click="orderByField = 'allocmem'; reverseSort = !reverseSort">Mem <i class="glyphicon" ng-show="orderByField=='allcmem'" ng-class="{'glyphicon-chevron-up': !reverseSort, 'glyphicon-chevron-down': reverseSort}"></i></a></th>
-                </thead>
-                <tbody>
-                    <tr ng-repeat="node in lstNodes | orderBy: '-alloccpu' | orderBy:'-jerror' | orderBy: orderByField: reverseSort" ng-click="show_detail(node.nid)">
-                        <td class="col-md-1" ng-class="{'alarm': node.jerror >0}">{{'{{node.nid}'}}}</td>
-                        <td class="col-md-1" ng-class="{'oke': node.status == 'OK', 'error': node.status == 'ER', 'watting': node.status == 'WAT', 'alarm': node.jerror >0}"><span>{{'{{node.status}'}}}</span></td>
-                        <td class="col-md-1" ng-class="{'alarm': node.jerror >0}">{{'{{node.state}'}}}</td>
-                        <td class="col-md-1" ng-class="{'alarm': node.jerror >0}">{{'{{node.uncreahble}'}}}<i class="glyphicon" ng-bind="creahable = node.uncreahble" ng-class="{'glyphicon-ok': !creahable, 'glyphicon-remove': creahable}"></i></td>
-                        <td class="col-md-1" ng-class="{'alarm': node.jerror >0}">{{'{{node.jerror}'}}}/{{'{{node.jcounter}'}}}</td>
-                        <td class="col-md-3" ng-class="{'alarm': node.jerror >0}">
-                            <div class="progress">
-                            <div class="progressbar progress-bar-info" role="progressbar" aria-valuemax='100' style="width: {{'{{node.alloccpu}'}}}%;">
-                                <div class="progressbar progress-bar-real" role="progressbar" aria-valuenow="{{'{{node.cpu}'}}}" aria-valuemin="0" aria-valuemax="100" style="width:{{'{{node.cpu}'}}}%;"></div>
-                                <p>{{'{{node.alloccpu}'}}}%</p>
-                                </div>
-                        </div>
-                        </td>
-                        <td class="col-md-3" ng-class="{'alarm': node.jerror >0}">
-                            <div class="progress">
-                                <div class="progressbar progress-bar-info" role="progressbar" aria-valuemax='100' style="width: {{'{{node.allocmem}'}}}%;">
-                                    <div class="progressbar progress-bar-real" role="progressbar" aria-valuenow="{{'{{node.mem}'}}}" aria-valuemin="0" aria-valuemax="100" style="width:{{'{{node.mem}'}}}%;"></div>
-                                    <p>{{'{{node.allocmem}'}}}%</p>
-                                </div>
+            <div class="colpadding col-md-5 table-responsive wrapper" style="overflow-y: scroll;">
+                <table class="table table-bordered table-hover table-striped">
+                    <thead>
+                        <th class="col-md-1 sortting" ><a role="button" ng-click="orderByField = 'nid'; reverseSort = !reverseSort">Nodes<i class="glyphicon" ng-show="orderByField=='nid'" ng-class="{'glyphicon-chevron-up': !reverseSort, 'glyphicon-chevron-down': reverseSort}"></i></a></th>
+                        <th class="col-md-1">Status</th>
+                        <th class="col-md-1">State</th>
+                        <th class="col-md-1">Creahable</th>
+                        <th class="col-md-1 sortting"><a role="button" ng-click="orderByField='!jerror'; reverseSort=ture;">Error/Job</th>
+                        <!-- <th class="col-md-1">Counter</th> -->
+                        <th class="col-md-3 sortting"><a role="button" ng-click="orderByField = 'alloccpu'; reverseSort = !reverseSort">Cpu <i class="glyphicon" ng-show="orderByField=='alloccpu'" ng-class="{'glyphicon-chevron-up': !reverseSort, 'glyphicon-chevron-down': reverseSort}"></i></a></th>
+                        <th class="col-md-3 sortting"><a role="button" ng-click="orderByField = 'allocmem'; reverseSort = !reverseSort">Mem <i class="glyphicon" ng-show="orderByField=='allocmem'" ng-class="{'glyphicon-chevron-up': !reverseSort, 'glyphicon-chevron-down': reverseSort}"></i></a></th>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="node in lstNodes | orderBy: '-alloccpu' | orderBy:'-jerror' | orderBy: orderByField: reverseSort" ng-click="show_detail(node.nid)">
+                            <td class="col-md-1" ng-class="{'alarm': node.jerror >0}">{{'{{node.nid}'}}}</td>
+                            <td class="col-md-1" ng-class="{'oke': node.status == 'OK', 'error': node.status == 'ER', 'watting': node.status == 'WAT', 'alarm': node.jerror >0}"><span>{{'{{node.status}'}}}</span></td>
+                            <td class="col-md-1" ng-class="{'alarm': node.jerror >0}">{{'{{node.state}'}}}</td>
+                            <td class="col-md-1" ng-class="{'alarm': node.jerror >0}">{{'{{node.uncreahble}'}}}<i class="glyphicon" ng-bind="creahable = node.uncreahble" ng-class="{'glyphicon-ok': !creahable, 'glyphicon-remove': creahable}"></i></td>
+                            <td class="col-md-1" ng-class="{'alarm': node.jerror >0}">{{'{{node.jerror}'}}}/{{'{{node.jcounter}'}}}</td>
+                            <td class="col-md-3" ng-class="{'alarm': node.jerror >0}">
+                                <div class="progress">
+                                <div class="progressbar progress-bar-info" role="progressbar" aria-valuemax='100' style="width: {{'{{node.alloccpu}'}}}%;">
+                                    <div class="progressbar progress-bar-real" role="progressbar" aria-valuenow="{{'{{node.cpu}'}}}" aria-valuemin="0" aria-valuemax="100" style="width:{{'{{node.cpu}'}}}%;"></div>
+                                    <p>{{'{{node.alloccpu}'}}}%</p>
+                                    </div>
                             </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+                            </td>
+                            <td class="col-md-3" ng-class="{'alarm': node.jerror >0}">
+                                <div class="progress">
+                                    <div class="progressbar progress-bar-info" role="progressbar" aria-valuemax='100' style="width: {{'{{node.allocmem}'}}}%;">
+                                        <div class="progressbar progress-bar-real" role="progressbar" aria-valuenow="{{'{{node.mem}'}}}" aria-valuemin="0" aria-valuemax="100" style="width:{{'{{node.mem}'}}}%;"></div>
+                                        <p>{{'{{node.allocmem}'}}}%</p>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         <!-- end table left -->
         <!-- table right -->
-        
+            <div class="colpadding col-md-7 body-right table-responsive">
+                <!-- table Job -->
+                    <div>
+                        <h4 style="text-align:center;">
+                            Node:&nbsp{{'{{node.nid}'}}}
+                        </h4>
+                        <table class="table table-bordered table-hover table-striped">
+                            <thead>
+                                <tr>
+                                    <th style="width: 4%;">#</th>
+                                    <th style="width: 2%;">Job ID</th>
+                                    <th style="width: 20%;">Job name</th>
+                                    <th style="width: 2%;">Status</th>
+                                    <th style="width: 5%;">State</th>
+                                    <th style="width: 20%;">Workflow Name</th>
+                                    <th style="width: 2%;">Edit</th>    
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="job in node.job_list">
+                                    <td style="width: 4%;" ng-click="showLog(job.jid);"><span>{{'{{$index + 1}'}}}</span></td>
+                                    <td style="width: 2%;" ng-click="showLog(job.jid);"><span>{{'{{job.jid}'}}}</span></td>
+                                    <td style="width: 20%;" ng-click="showLog(job.jid);"><span>{{'{{job.jname}'}}}</span></td>
+                                    <td style="width: 2%;" ng-click="showLog(job.jid);"><span ng-class="{'alarm': job.status == 'Critical'}">{{'{{job.status}'}}}</span></td>
+                                    <td style="width: 10%;" ng-click="showLog(job.jid);"><span>{{'{{job.state}'}}}</span></td>
+                                    <td style="width: 20%;" ng-click="showLog(job.jid);"><span>{{'{{job.wname}'}}}</span></td>
+                                    <td style="width: 2%;">
+                                        <button type="button" name="tbnStart{{'{{job.jid}'}}}" class="btn btn-success btn-xs glyphicon glyphicon-play" title="Start" ng-hide="job.state == 'Running'" ng-click="startJob(job.jid, node.nid);"></button>
+                                        <button type="button" name="tbnStop{{'{{job.jid}'}}}" class="btn btn-danger btn-xs glyphicon glyphicon-stop" title="Stop" ng-show="job.state == 'Running'" ng-click="stopJob(job.jid, node.nid);"></button> 
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                  <td colspan="9" class="text-center">Jobs: {{'{{node.job_list.length}'}}}</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                <!-- end table Job -->
+                <!-- table Log -->
+                    <div>
+                        <h4 style="text-align: center;">Log</h4>
+                        <div class="wrapper" style="overflow-y: scroll; height: 665px;">
+                            <table class="table table-panel table-bordered table-hover table-striped scrollTable">
+                                <thead>
+                                    <th style="width: 5%;"><label><span>Severity</span></label></th>
+                                    <th><label><span>Catogory</span></label></th>
+                                    <th><label><span>Node ID</span></label></th>
+                                    <th style="width: 20%;"><label><span>Resource</span></label></th>
+                                    <th style="width: 20%;"><label><span>Descriptipn</span></label></th>
+                                    <th><label><span>Raising Date</span></label></th>
+                                    <th><label><span>Cealrning Date</span></label></th>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="log in lstLogJob">
+                                        <td><span>{{'{{log.sev}'}}}</span></td>
+                                        <td><span>{{'{{log.cat}'}}}</span></td>
+                                        <td><span>{{'{{log.nid}'}}}</span></td>
+                                        <td><span>{{'{{log.res}'}}}</span></td>
+                                        <td><span>{{'{{log.desc}'}}}</span></td>
+                                        <td><span>{{'{{log.opdate | date:"dd-M-yyyy H:mm:ss" }'}}}</span></td>
+                                        <td><span>{{'{{log.cldate | date:"dd-M-yyyy H:mm:ss" }'}}}</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                <!-- end table Log -->
+            </div>
+        <!-- end table right -->
     </div>
 </div>
-
 <script type="text/javascript">
-var app =angular.module('System', []);
-app.controller('systemCtrl', function($scope, $http, $timeout, $window) {
-// body...
+    var app =angular.module('System', []);
+    app.controller('systemCtrl', function($scope, $http, $timeout, $window) {
+    // body...
 
-$scope.reloadNodes = function(){
-    $http.get("/system/api/nstatus/").then(function(reponse){
-        $scope.lstNodes = reponse.data;
-        // console.log($scope.lstStatus[0].cpu);
+    $scope.reloadNodes = function(){
+        $http.get("/system/api/nstatus/").then(function(reponse){
+            $scope.lstNodes = reponse.data;
+            // console.log($scope.lstStatus[0].cpu);
+        });
+        $timeout(function() {
+            // $scope.reloadNodes();
+        }, 20000)
+    }
+    $scope.reloadDevice = function(){
+        $http.get("/system/api/status/").then(function(reponse){
+            $scope.PCStatus = reponse.data[0];
+            // console.log($scope.PCStatus);
+        });
+        $timeout(function() {
+            // $scope.reloadDevice();
+        }, 20000)
+    }
+    $scope.show_detail = function(node_id) {
+        // $window.location.href = '/system/detail-node/'+node_id+'/'
+        $scope.lstLogJob = '';
+        $http({
+            method:'GET',
+            url:'/system/api/'+node_id+'/',
+        }).then(function(response){
+            $scope.node = response.data[0];
+            $scope.job_list = response.data[0].job_list;
+            // console.log($scope.job_list);
+        });
+    }
+    $scope.startJob = function(job_id, node_id){
+        $http({
+            method: 'PUT',
+            url: '/job/api/' + job_id + '/start/',
+        }).then(function(response){
+            if (response.status == 200) {
+                $scope.show_detail(node_id);
+                console.log("#########Start Job########"+job_id);
+            }
+        });
+    }
+    $scope.stopJob = function(job_id, node_id){
+        $http({
+            method: 'PUT',
+            url: '/job/api/'+ job_id + '/abort/',
+        }).then(function(response){
+            if (response.status == 200) {
+                $scope.show_detail(node_id);
+                console.log("########Stop Job-##############"+job_id);
+            }
+        });
+    }
+    $scope.showLog = function(job_id){
+        $http({
+            method: 'GET',
+            url: '/log/api/'+ job_id +'/',
+        }).then(function(response){
+            if (response.status == 200){
+                $scope.lstLogJob = response.data;
+            }else{
+                console.log("Error");
+            }
+        });
+    }
+    $scope.reverseSort = false;
+    $scope.reloadDevice();
+    $scope.reloadNodes();
     });
-    $timeout(function() {
-        // $scope.reloadNodes();
-    }, 20000)
-}
-$scope.reloadDevice = function(){
-    $http.get("/system/api/status/").then(function(reponse){
-        $scope.PCStatus = reponse.data[0];
-        console.log($scope.PCStatus);
+</script>
+<script type="text/javascript">
+    var $scroll = $('table.scrollTable');
+    $scroll.floatThead({
+        scrollContainer: function($table){
+        return $table.closest('.wrapper');
+        }
     });
-    $timeout(function() {
-        // $scope.reloadDevice();
-    }, 20000)
-}
-$scope.show_detail = function(node_id) {
-    $window.location.href = '/system/detail-node/'+node_id+'/'
-}
-$scope.reverseSort = false;
-$scope.reloadDevice();
-$scope.reloadNodes();
-// $scope.reloadJobStatus();
-// $scope.reloadMountPoint();
-});
 </script>
 {% endblock %}

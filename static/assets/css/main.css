@@ -254,7 +254,7 @@ table.floatThead-table {
     /*margin-top:10px;*/
     /*color:#fff;*/
     /*font-size: 16px;*/ } }
-@media only screen and (min-width: 1100px) {
+@media only screen and (min-width: 1080px) {
   #txtTime {
     display: none; }
 
@@ -269,7 +269,10 @@ table.floatThead-table {
     left: 45%;
     /*margin-top:10px;*/
     /*color:#fff;*/
-    /*font-size: 16px;*/ } }
+    /*font-size: 16px;*/ }
+    .wrapper{
+      height: 844px;
+      } }
 @media only screen and (min-width: 1120px) {
   #txtTime {
     display: inline; }

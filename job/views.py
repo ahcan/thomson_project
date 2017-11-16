@@ -224,7 +224,8 @@ job/api/125/start/
 @require_http_methods(['PUT'])
 @csrf_exempt
 def start_job(request, jid):
-    pass
+    print "start"
+    return HttpResponse(content_type="application/json", status=200)
 
 ##############################################################################
 #                                                                            #
@@ -238,4 +239,5 @@ job/api/125/abort/
 @require_http_methods(['PUT'])
 @csrf_exempt
 def abort_job(request, jid):
-    pass
+    print "stop"
+    return HttpResponse(content_type="application.json", status=200)
