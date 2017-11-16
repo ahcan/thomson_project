@@ -703,6 +703,21 @@ class JobDetail:
         workflowIdRef = job.attributes['workflowIdRef'].value if \
         "'workflowIdRef'" in str(job.attributes.items()) else ''
         return jobname, workflowIdRef
+        
+    def parse_status(self, xml):
+        result = 'NotOK'
+        try:
+            xmldoc = minidom.parseString(xml)
+            if xmldoc.getElementsByTagName('mg:RspNotOK'):
+                message = xmldoc.getElementsByTagName('mg:RspNotOK')
+                result = message[0].attributes['Desc'].value \
+                 if "'Desc'" in str(message[0].attributes.items()) else result
+            elif xmldoc.getElementsByTagName('mg:RspDone'):
+                result = 'OK'
+        except Exception as e:
+            print e
+            result = 'Unknow'
+        return result
 
     def start(self):
         from setting.JobDetailReq import START_HEADERS, START_BODY
