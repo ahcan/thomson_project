@@ -148,14 +148,17 @@ class Crontab:
             return 'Schedule is empty!'
         #remove schedule by line number
         new_content = ''
-        for schedule in installed_content.split('\n'):
-            schedule = CrontabDetail(schedule).serialization()
+        for task in installed_content.split('\n'):
+            schedule = CrontabDetail(task).serialization()
             if schedule:
                 schedule_id = int(re.search('(?<=-n )\d+',schedule).group(0))
-                if id != schedule_id:
-                    #exeption crontab is none
-                    if schedule:
-                        new_content += '%s\n' % schedule
+                if id == schedule_id:
+                    continue
+                else:
+                    new_content += schedule + '\n'
+            else:
+                new_content += task + '\n'
+
         #end remove        
         # install back and return status
         if new_content:
