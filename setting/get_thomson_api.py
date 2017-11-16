@@ -158,7 +158,7 @@ class Thomson:
             args.append({'license'         : Desc,
                         'partnumber'       : Name,
                         'used'             : NbOfUsedLicenceDec,
-                        'max'              : Nb
+                        'max'              : int(Nb)
                 })
         return args
 
