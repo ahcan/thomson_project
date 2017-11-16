@@ -158,7 +158,7 @@ class Thomson:
             args.append({'license'         : Desc,
                         'partnumber'       : Name,
                         'used'             : NbOfUsedLicenceDec,
-                        'max'              : Nb
+                        'max'              : int(Nb)
                 })
         return args
 
@@ -503,8 +503,9 @@ class Job:
         xmldoc = minidom.parseString(xml)
         itemlist = xmldoc.getElementsByTagName('jGetList:JItem')
         args=[]
+        workflow_list_json = Workflow().get_workflow()
         for s in itemlist:
-            State,Status,JId,Prog,StartDate,EndDate,Ver,jobname,workflowIdRef,workflow_name = self.parse_dom_object(s)
+            State,Status,JId,Prog,StartDate,EndDate,Ver,jobname,workflowIdRef,workflow_name = self.parse_dom_object(s, workflow_list_json)
             args.append({'jname'    : jobname,
                         'jid'       : int(JId),
                 })

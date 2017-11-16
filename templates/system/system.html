@@ -3,70 +3,47 @@
 <!-- <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-app="System" ng-controller="systemCtrl"> -->
 
 <div ng-app="System" ng-controller="systemCtrl">
-<div class="content">
-<h2 class="sub-header">System</h2>
-<!-- table total -->
-<div style="display: inline; font-size: 13px; padding-right: 10px; float: right; margin-top:-7px;">
-    <table style="width: 200px; background-color: #edeff2; font-size: 11px;">
-        <tr>
-            <td style="width: 40px; font-size: 14px;"><p>Total:</p></td>
-            <td style="width: 170px;">
-                <table class="table" style="margin-bottom: 0px; background-color: #edeff2;">
-                <tr>
-                    <td style="padding: 1px;">
-                        <div class="progress" style="height: 20px;"><div role="progressbar" aria-valuenow="{{'{{PCStatus.cpu}'}}}" aria-valuemin="0" aria-valuemax="100" style="width:{{'{{PCStatus.cpu}'}}}%;" ng-class="{'progress-bar-success': PCStatus.cpu <= 50, 'progress-bar-warning': PCStatus.cpu <= 70 && PCStatus.cpu > 50, 'progress-bar-danger': PCStatus.cpu > 70}"><span>{{'{{PCStatus.cpu}'}}}% CPU</span></div>
+    <div class="content">
+        <h2 class="sub-header">System</h2>
+    </div>
+    <!-- table main -->
+    <div class="colpadding col-md-10 table-responsive">
+        <table class="table table-bordered table-hover table-striped">
+            <thead>
+                <td class="colpadding col-md-7">
+                    License
+                </td>
+                <td class="colpadding col-md-1">
+                    Part number
+                </td>
+                <td class="colpadding col-md-1">
+                    Quanlity used
+                </td>
+                <td class="colpadding col-md-1">
+                    Quanlity max
+                </td>
+            </thead>
+            <tbody>
+                <tr ng-repeat="license in lstLicenses | orderBy: '-max'">
+                    <td>
+                        {{'{{license.license}'}}}
+                    </td>
+                    <td>
+                        {{'{{license.partnumber}'}}}
+                    </td>
+                    <td>
+                        {{'{{license.used}'}}}
+                    </td>
+                    <td>
+                        {{'{{license.max}'}}}
                     </td>
                 </tr>
-                <tr>
-                    <td style="padding: 1px;">
-                        <div class="progress" style="height: 20px;"><div role="progressbar" aria-valuenow="{{'{{PCStatus.mem}'}}}" aria-valuemin="0" aria-valuemax="100" style="width:{{'{{PCStatus.mem}'}}}%;" ng-class="{'progress-bar-success': PCStatus.mem <= 50, 'progress-bar-warning': PCStatus.mem <= 70 && PCStatus.mem > 50, 'progress-bar-danger': PCStatus.mem > 70}"><span>{{'{{PCStatus.mem}'}}}% MEM</span></div>
-                    </td>
-                </tr>
-                </table>
-            </td>
-        </tr>
-    </table>
-</div>
-<!-- end table total -->
-</div>
-
-<div class="content">
-<!-- table main -->
-<div class="colpadding col-md-7 table-responsive">
-    <table class="table table-bordered table-hover table-striped">
-        <thead>
-            <th class="col-md-1 sortting" ><a role="button" ng-click="orderByField = 'nid'; reverseSort = !reverseSort">Device<i class="glyphicon" ng-show="orderByField=='nid'" ng-class="{'glyphicon-chevron-up': !reverseSort, 'glyphicon-chevron-down': reverseSort}"></i></a></th>
-            <th class="col-md-1">Status</th>
-            <th class="col-md-1">State</th>
-            <th class="col-md-1">Creahable</th>
-            <th class="col-md-1 sortting"><a role="button" ng-click="orderByField='!jerror'; reverseSort=ture;">Error/Job</th>
-            <!-- <th class="col-md-1">Counter</th> -->
-            <th class="col-md-3 sortting"><a role="button" ng-click="orderByField = 'cpu'; reverseSort = !reverseSort">Cpu <i class="glyphicon" ng-show="orderByField=='cpu'" ng-class="{'glyphicon-chevron-up': !reverseSort, 'glyphicon-chevron-down': reverseSort}"></i></a></th>
-            <th class="col-md-3 sortting"><a role="button" ng-click="orderByField = 'mem'; reverseSort = !reverseSort">Mem <i class="glyphicon" ng-show="orderByField=='mem'" ng-class="{'glyphicon-chevron-up': !reverseSort, 'glyphicon-chevron-down': reverseSort}"></i></a></th>
-        </thead>
-        <tbody>
-            <tr ng-repeat="node in lstNodes | orderBy: '-cpu' | orderBy:'-jerror' | orderBy: orderByField: reverseSort" ng-click="show_detail(node.nid)">
-                <td class="col-md-1" ng-class="{'alarm': node.jerror >0}">{{'{{node.nid}'}}}</td>
-                <td class="col-md-1" ng-class="{'oke': node.status == 'OK', 'error': node.status == 'ER', 'watting': node.status == 'WAT', 'alarm': node.jerror >0}"><span>{{'{{node.status}'}}}</span></td>
-                <td class="col-md-1" ng-class="{'alarm': node.jerror >0}">{{'{{node.state}'}}}</td>
-                <td class="col-md-1" ng-class="{'alarm': node.jerror >0}">{{'{{node.uncreahble}'}}}<i class="glyphicon" ng-bind="creahable = node.uncreahble" ng-class="{'glyphicon-ok': !creahable, 'glyphicon-remove': creahable}"></i></td>
-                <td class="col-md-1" ng-class="{'alarm': node.jerror >0}">{{'{{node.jerror}'}}}/{{'{{node.jcounter}'}}}</td>
-                <td class="col-md-3" ng-class="{'alarm': node.jerror >0}">
-                    <div class="progress"><div class="progress-bar-success" role="progressbar" aria-valuenow="{{'{{node.cpu}'}}}" aria-valuemin="0" aria-valuemax="100" style="width:{{'{{node.cpu}'}}}%;" ng-class="{'progress-bar-success': node.cpu <= 50, 'progress-bar-warning': node.cpu <= 70 && node.cpu > 50, 'progress-bar-danger': node.cpu > 70}"><span>{{'{{node.cpu}'}}}%</span></div>
-                </td>
-                <td class="col-md-3" ng-class="{'alarm': node.jerror >0}">
-                    <div class="progress"><div class="progress-bar-success" role="progressbar" aria-valuenow="{{'{{node.mem}'}}}" aria-valuemin="0" aria-valuemax="100" style="width:{{'{{node.mem}'}}}%;" ng-class="{'progress-bar-success': node.mem <= 50, 'progress-bar-warning': node.mem <= 70 && node.mem > 50, 'progress-bar-danger': node.mem > 70}"><span>{{'{{node.mem}'}}}%</span></div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-<!-- table main -->
-<div class="body-right">
-    <!-- Second column -->
-    <div class="colpadding col-md-3">
-        <!-- Panel show job status -->
-        <div class="panel panel-primary">
+            </tbody>
+        </table>
+    </div>
+    <!-- table main -->
+    <div class="colpadding col-md-2"> <!-- Table right -->
+        <div class="panel panel-primary"><!--Panel show job status -->
             <div class="panel-heading">Job Status</div>
             <div class="panel-body">
                 <table class="table table-panel table-bordered table-hover table-striped">
@@ -96,10 +73,8 @@
                     </tr>
                 </table>
             </div>
-        </div><!-- Panel show job status -->
-
-        <!-- Panel show mountpoint -->
-        <div class="panel panel-primary">
+        </div><!--End panel show job status -->
+        <div class="panel panel-primary"><!-- mount point -->
             <div class="panel-heading">Mount Point</div>
             <div class="panel-body">
                 <table class="table table-bordered table-panel table-hover table-striped">
@@ -108,20 +83,8 @@
                     </tr>
                 </table>
             </div>
-        </div><!-- Panel show mountpoint -->
-    </div><!-- Second column -->
-    <!-- Third column -->
-    <div class="colpadding col-md-2">
-        <!-- Panel show Lisense -->
-        <div class="panel panel-primary">
-            <div class="panel-heading">License</div>
-            <div class="panel-body">
-            </div>
-        </div><!-- Panel show License -->
-    </div><!-- Third column -->
-</div>
-</div>
-
+        </div><!-- End mount point -->
+    </div> <!-- end table right -->
 </div>
 <script type="text/javascript">
 var app =angular.module('System', []);
@@ -141,54 +104,21 @@ $scope.reloadMountPoint=function(){
     });
     $timeout(function() {
         // $scope.reloadMountPoint();
-    }, 60000);
+    }, 6000000);
 }
-$scope.reloadNodes = function(){
-    $http.get("/system/api/nstatus/").then(function(reponse){
-        $scope.lstNodes = reponse.data;
+$scope.reloadLicense = function(){
+    $http.get("/system/api/license/").then(function(reponse){
+        $scope.lstLicenses = reponse.data;
         // console.log($scope.lstStatus[0].cpu);
     });
     $timeout(function() {
-        // $scope.reloadNodes();
-    }, 20000)
+        // $scope.reloadLicense();
+    }, 6000000)
 }
-$scope.reloadDevice = function(){
-    $http.get("/system/api/status/").then(function(reponse){
-        $scope.PCStatus = reponse.data[0];
-        console.log($scope.PCStatus);
-    });
-    $timeout(function() {
-        // $scope.reloadDevice();
-    }, 20000)
-}
-$scope.show_detail = function(node_id) {
-    $window.location.href = '/system/detail-node/'+node_id+'/'
-}
-$scope.reverseSort = false;
-$scope.reloadDevice();
-$scope.reloadNodes();
+
 $scope.reloadJobStatus();
+$scope.reloadLicense();
 $scope.reloadMountPoint();
 });
 </script>
-<!-- <script type="text/javascript">
-// fix columns
-// Change the selector if needed
-var $table = $('table.scroll'),
-$bodyCells = $table.find('tbody tr:first').children(),
-colWidth;
-
-// Adjust the width of thead cells when window resizes
-$(window).resize(function() {
-// Get the tbody columns width array
-colWidth = $bodyCells.map(function() {
-return $(this).width();
-}).get();
-
-// Set the width of thead columns
-$table.find('thead tr').children().each(function(i, v) {
-$(v).width(colWidth[i]);
-});    
-}).resize(); // Trigger resize handler
-</script> -->
 {% endblock %}
