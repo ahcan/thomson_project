@@ -174,6 +174,7 @@ def get_job_params(request, jid):
  link: /job/api/create/"""
 @require_http_methods(['POST'])
 @csrf_exempt
+@login_required()
 def create_job(request, wfid):
     print wfid
     json_data = json.loads(request.body)
@@ -192,6 +193,7 @@ def create_job(request, wfid):
  link: /job/api/<jid>/modify/"""
 @require_http_methods(['PUT'])
 @csrf_exempt
+@login_required()
 def modify_job(request, jid):
     print "ok"
     json_data = json.loads(request.body)
@@ -207,6 +209,7 @@ def modify_job(request, jid):
 """curl -H "Content-Type: application/json" -X DELETE http://localhost:8000/
 job/api/125/delete/"""
 @csrf_exempt
+@login_required()
 def delete_job(request, jid):
     if request.method == 'DELETE':
         print "ok"
@@ -223,7 +226,9 @@ job/api/125/start/
  link: job/api/<jid>/start/"""
 @require_http_methods(['PUT'])
 @csrf_exempt
+@login_required()
 def start_job(request, jid):
+    json_data = JobDetail().start();
     print "start"
     return HttpResponse(content_type="application/json", status=200)
 
@@ -238,6 +243,7 @@ job/api/125/abort/
  link: job/api/<jid>/abort/"""
 @require_http_methods(['PUT'])
 @csrf_exempt
+@login_required()
 def abort_job(request, jid):
     print "stop"
     return HttpResponse(content_type="application.json", status=200)
