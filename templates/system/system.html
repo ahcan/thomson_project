@@ -4,7 +4,7 @@
 
 <div ng-app="System" ng-controller="systemCtrl">
     <div class="content">
-        <h2 class="sub-header">System</h2>
+        <h2 class="sub-header" title="Software version: {{'{{version}'}}}">System ({{'{{version}'}}})</h2>
     </div>
     <!-- table main -->
     <div class="colpadding col-md-10 table-responsive">
@@ -108,7 +108,8 @@ $scope.reloadMountPoint=function(){
 }
 $scope.reloadLicense = function(){
     $http.get("/system/api/license/").then(function(reponse){
-        $scope.lstLicenses = reponse.data;
+        $scope.lstLicenses = reponse.data[0].license_list;
+        $scope.version = reponse.data[0].version;
         // console.log($scope.lstStatus[0].cpu);
     });
     $timeout(function() {

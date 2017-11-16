@@ -1,158 +1,153 @@
 {% extends 'base.html' %}
 {% block content %}
-	<script src="/static/ajax/libs/jquery/jquery-3.2.1.min.js"></script>
-	<!-- <script type="text/javascript" src="https://code.jquery.com/ui/1.11.3/jquery-ui.min.js" ></script> -->
-	<script src="/static/assets/js/multiple-select.js"></script>
-	<link href="/static/assets/css/multiple-select.min.css" rel="stylesheet">
-	<script type="text/javascript" src="/static/assets/js/moment.min.js"></script>
-	<script type="text/javascript" src="/static/assets/js/bootstrap-datetimepicker.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="/static/assets/css/bootstrap-datetimepicker.min.css">
-	<!-- Sroll table -->
-	<script type="text/javascript" src="/static/assets/js/jquery.floatThead.min.js"></script>
-	<div ng-app="schedule" ng-controller="scheCtrl">
-		<div class="content">
-			<h2 class="sub-header">Schedule</h2>
-		</div>
-		<div class="content">
-			<div class="table-responsive col-md-12">
-				<div class="panel-body">
-					<div>
-						<a href="#myModal" role="button" data-parent="#createJob" data-toggle="modal" class="btn btn-success btn-xs" >Add new schedule <span class="glyphicon glyphicon-plus"></span></a>
-					</div>
-				</div>
-				<div class="" style="overflow-y: scroll;">
-					<table class="table table-bordered table-hover table-striped">
-						<thead>
-							<tr>
-								<th class="col-md-1">STT</th>
-								<th class="col-md-1">ID</th>
-								<th class="col-md-1">Date</th>
-								<th class="col-md-1">Watting time</th>
-								<th class="col-md-1">State</th>
-								<th class="col-md-1">Action</th>
-								<th class="col-md-5">Job</th>
-								<th class="col-md-1"></th>
-								<!-- <th>Job Name</th>
-								<th>Job State</th> -->
-							</tr>
-						</thead>
-						<tfoot>
-						<tr>
-							<td colspan="9" class="text-center">Total: {{'{{filterState.length}'}}}</td>
-						</tr>
-						</tfoot>
-						<tbody data-link="row" class="rowlink">
-							<tr ng-repeat="scrontab in (scrontab_list | orderBy:'-unix_timestamp') as filterState" >
-								<td class="col-md-1" ng-click="moreInfor(scrontab.id)">{{'{{$index + 1}'}}}</td>
-								<td class="col-md-1" ng-click="moreInfor(scrontab.id)">{{'{{scrontab.id}'}}}</td>
-								<td class="col-md-1" ng-click="moreInfor(scrontab.id)"><span>{{'{{scrontab.unix_timestamp*1000 | date: "dd-M-yyyy HH:mm:ss Z"}'}}}</span></td>
-								<td class="col-md-1" ng-click="moreInfor(scrontab.id)"><span>{{'{{scrontab.alarm}'}}}</span></td>
-								<td class="col-md-1" ng-click="moreInfor(scrontab.id)" ng-class="{'completed': scrontab.state==1, 'watting': scrontab.state==0}"><span ng-if="scrontab.state == 1"> Completed</span>
-								<span ng-if="scrontab.state == 0"> Watting</span></td>
-								<td class="col-md-1" ng-click="moreInfor(scrontab.id)"><sapn>{{'{{scrontab.action}'}}}</sapn></td>
-								<td class="col-md-5" ng-click="moreInfor(scrontab.id)"><div>
-									<table class="table table-bordered">
-										<thead>
-											<tr style="background-color: #337ab7; color: #ffff;">
-												<th>JobID</th>
-												<th>Name</th>
-												<th>State</th>
-											</tr>
-										</thead>
-										<tbody>
-											<tr ng-repeat="job in scrontab.list_job">
-												<td><span>{{'{{job.jid}'}}}</span></td>
-												<td><span>{{'{{job.jname}'}}}</span></td>
-												<td  ng-class="{'running': job.state == 'Running', 'aborted': job.state == 'Aborted', 'watting': job.state == 'Watting', 'paused': job.state == 'Paused', 'completed': job.state == 'Completed'}"><span>{{'{{job.state}'}}}</span></td>
-											</tr>
-										</tbody>
-									</table>
-								</div></td>
-								<td class="col-md-1"><input id="btnDelete-{{'{{scrontab.id}'}}}" type="button" class="button" value="Delete" ng-click="deteleRow(scrontab)"></td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<!-- Modal -->
-			<div class="modal fade" id="myModal" role="dialog">
-				<div class="modal-dialog">
-					<!-- Modal content-->
-					<div class="modal-content">
-						<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal">&times;</button>
-							<h4 class="modal-title">Add Schedule</h4>
-						</div>
-						<div class="modal-body">
-							<form id="formAddJob" name="formAddJob" action="/schedule/add/" method="POST" onsubmit="return SubmitCheckTextField()">
-								<p style="color:red; font-size: 18px;">Chý ý! Đối với kịch tương tác nên định giờ trước lúc out luồng 10s.</p>
-								<div class="form-group">
-									<label>Job ID:</label>
-									<multiple-autocomplete ng-model="schedule.jobid_list"
-								    object-property="jid"
-								    api-url="/job/api/job-name"
-								    suggestions-arr="optionsList">
-									</multiple-autocomplete>
-								</div>
-								<div class="form-group">
-									<label>Date:</label>
-									<div class="input-group date" id="daypicker" ng-click="updateTime()">
-										<input type="text" class="form-control" ng-model="schedule.date_time" ><span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-									</div>
-								</div>
-							</form>
-						</div>
-						<div class="modal-footer">
-							<input type="button" name="create" id="submit" value="Create" ng-click="create_schedule()">
-							<input type="button" data-dismiss="modal" value="Cancel">
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- End Modal -->
-		</div>
+    <script src="/static/ajax/libs/jquery/jquery-3.2.1.min.js"></script>
+    <!-- <script type="text/javascript" src="https://code.jquery.com/ui/1.11.3/jquery-ui.min.js" ></script> -->
+    <script src="/static/assets/js/multiple-select.js"></script>
+    <link href="/static/assets/css/multiple-select.min.css" rel="stylesheet">
+    <script type="text/javascript" src="/static/assets/js/moment.min.js"></script>
+    <script type="text/javascript" src="/static/assets/js/bootstrap-datetimepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/assets/css/bootstrap-datetimepicker.min.css">
+    <!-- Sroll table -->
+    <script type="text/javascript" src="/static/assets/js/jquery.floatThead.min.js"></script>
+    <div ng-app="schedule" ng-controller="scheCtrl">
+        <div class="content">
+            <h2 class="sub-header">Schedule<a href="#myModal" role="button" data-parent="#createJob" data-toggle="modal" class="btn btn-success btn-xs" title="Add new schedule"><span class="glyphicon glyphicon-plus"></span></a></h2>
+        </div>
+        <div class="content">
+            <div class="table-responsive col-md-12">
+                <div class="" style="overflow-y: scroll;">
+                    <table class="table table-bordered table-hover table-striped">
+                        <thead>
+                            <tr>
+                                <th class="col-md-1">STT</th>
+                                <th class="col-md-1">ID</th>
+                                <th class="col-md-1">Date</th>
+                                <th class="col-md-1">Watting time</th>
+                                <th class="col-md-1">State</th>
+                                <th class="col-md-1">Action</th>
+                                <th class="col-md-5">Job</th>
+                                <th class="col-md-1"></th>
+                                <!-- <th>Job Name</th>
+                                <th>Job State</th> -->
+                            </tr>
+                        </thead>
+                        <tfoot>
+                        <tr>
+                            <td colspan="9" class="text-center">Total: {{'{{filterState.length}'}}}</td>
+                        </tr>
+                        </tfoot>
+                        <tbody data-link="row" class="rowlink">
+                            <tr ng-repeat="scrontab in (scrontab_list | orderBy:'-unix_timestamp') as filterState" >
+                                <td class="col-md-1" ng-click="moreInfor(scrontab.id)">{{'{{$index + 1}'}}}</td>
+                                <td class="col-md-1" ng-click="moreInfor(scrontab.id)">{{'{{scrontab.id}'}}}</td>
+                                <td class="col-md-1" ng-click="moreInfor(scrontab.id)"><span>{{'{{scrontab.unix_timestamp*1000 | date: "dd-M-yyyy HH:mm:ss Z"}'}}}</span></td>
+                                <td class="col-md-1" ng-click="moreInfor(scrontab.id)"><span>{{'{{scrontab.alarm}'}}}</span></td>
+                                <td class="col-md-1" ng-click="moreInfor(scrontab.id)" ng-class="{'completed': scrontab.state==1, 'watting': scrontab.state==0}"><span ng-if="scrontab.state == 1"> Completed</span>
+                                <span ng-if="scrontab.state == 0"> Watting</span></td>
+                                <td class="col-md-1" ng-click="moreInfor(scrontab.id)"><sapn>{{'{{scrontab.action}'}}}</sapn></td>
+                                <td class="col-md-5" ng-click="moreInfor(scrontab.id)"><div>
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr style="background-color: #337ab7; color: #ffff;">
+                                                <th>JobID</th>
+                                                <th>Name</th>
+                                                <th>State</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr ng-repeat="job in scrontab.list_job">
+                                                <td><span>{{'{{job.jid}'}}}</span></td>
+                                                <td><span>{{'{{job.jname}'}}}</span></td>
+                                                <td  ng-class="{'running': job.state == 'Running', 'aborted': job.state == 'Aborted', 'watting': job.state == 'Watting', 'paused': job.state == 'Paused', 'completed': job.state == 'Completed'}"><span>{{'{{job.state}'}}}</span></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div></td>
+                                <td class="col-md-1"><input id="btnDelete-{{'{{scrontab.id}'}}}" type="button" class="button" value="Delete" ng-click="deteleRow(scrontab)"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- Modal -->
+            <div class="modal fade" id="myModal" role="dialog">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Add Schedule</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form id="formAddJob" name="formAddJob" action="/schedule/add/" method="POST" onsubmit="return SubmitCheckTextField()">
+                                <p style="color:red; font-size: 18px;">Chý ý! Đối với kịch tương tác nên định giờ trước lúc out luồng 10s.</p>
+                                <div class="form-group">
+                                    <label>Job ID:</label>
+                                    <multiple-autocomplete ng-model="schedule.jobid_list"
+                                    object-property="jid"
+                                    api-url="/job/api/job-name"
+                                    suggestions-arr="optionsList">
+                                    </multiple-autocomplete>
+                                </div>
+                                <div class="form-group">
+                                    <label>Date:</label>
+                                    <div class="input-group date" id="daypicker" ng-click="updateTime()">
+                                        <input type="text" class="form-control" ng-model="schedule.date_time" ><span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <input type="button" name="create" id="submit" value="Create" ng-click="create_schedule()">
+                            <input type="button" data-dismiss="modal" value="Cancel">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Modal -->
+        </div>
 
 
 <script>
 var app = angular.module('schedule',['multipleSelect']);
-	app.controller("scheCtrl", function ($scope,$http,$timeout,$window){
-		$scope.onload = function () {
-			$scope.total = 0;
-			$http.get('/schedule/api/schedule').then(function (response) {
-				$scope.scrontab_list = response.data;
-				$scope.total = $scope.scrontab_list.length
-			});
-		$timeout(function(){
-			// $scope.reload();
-			},10000)
-		};
-	$scope.schedule={'jobid_list':'', 'date_time':''};
-	$scope.onload();
-	$scope.deteleRow = function (field) {
+    app.controller("scheCtrl", function ($scope,$http,$timeout,$window){
+        $scope.onload = function () {
+            $scope.total = 0;
+            $http.get('/schedule/api/schedule').then(function (response) {
+                $scope.scrontab_list = response.data;
+                $scope.total = $scope.scrontab_list.length
+            });
+        $timeout(function(){
+            // $scope.reload();
+            },10000)
+        };
+    $scope.schedule={'jobid_list':'', 'date_time':''};
+    $scope.onload();
+    $scope.deteleRow = function (field) {
 
     if ($window.confirm("Please confirm?")) {
-			// body...
-			var id = field.id;
-			$http({
-					method : 'DELETE',
-					url : '/schedule/delete/'+id+'/',
-			}).then(function(response){
-				if(response.status == 203){
-				$window.alert(response.data.detail);
-			}
-			else
-				if (response.status == 202){
-					$window.alert(response.data.detail);
-					$scope.onload();
-				}
-			});
+            // body...
+            var id = field.id;
+            $http({
+                    method : 'DELETE',
+                    url : '/schedule/delete/'+id+'/',
+            }).then(function(response){
+                if(response.status == 203){
+                $window.alert(response.data.detail);
+            }
+            else
+                if (response.status == 202){
+                    $window.alert(response.data.detail);
+                    $scope.onload();
+                }
+            });
     } else {
         //$scope.Message = "You clicked NO.";
     }
-	}
-	$scope.moreInfor = function(crontab_id){
-		$window.location.href='/schedule/detail/'+crontab_id+'/';
-	}
+    }
+    $scope.moreInfor = function(crontab_id){
+        $window.location.href='/schedule/detail/'+crontab_id+'/';
+    }
 
   $scope.create_schedule = function () {
     console.log($scope.schedule);
@@ -167,54 +162,54 @@ var app = angular.module('schedule',['multipleSelect']);
       }
       else
         if (response.status == 202){
-        	$window.alert(response.data.detail);
+            $window.alert(response.data.detail);
           $window.location.href='/schedule/';
         }
     });
   }
   // $scope.cancel_schedule = function(){
-  // 	console.log($scope.schedule);
+  //    console.log($scope.schedule);
   // }
 
   $scope.updateTime  = function(){
-  	//getElement via DOM in angular
-  	var da = angular.element( document.getElementById('daypicker').firstElementChild);
+    //getElement via DOM in angular
+    var da = angular.element( document.getElementById('daypicker').firstElementChild);
      $scope.schedule.date_time = da.val();
   }
   $scope.new = function(){
-  	$http({
-  		method: 'GET',
-  		url: '/job/api/job/',
-  	}).then(function(response){
-  		$scope.optionsList = response.data;
-  		console.log($scope.optionsList);
-  	});
+    $http({
+        method: 'GET',
+        url: '/job/api/job/',
+    }).then(function(response){
+        $scope.optionsList = response.data;
+        console.log($scope.optionsList);
+    });
   }
 });
 </script>
-	<script type="text/javascript">
-		$(document).ready(function () {
-			$('#createJob').on('click', function(e){
-				// console.log("$$$$$$$");
-			});
-			var $scroll = $('table.scrollTable');
-			$scroll.floatThead({
-			scrollContainer: function($table){
-		    return $table.closest('.wrapper');
-			}
-			});
-		});
-		
-	</script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#createJob').on('click', function(e){
+                // console.log("$$$$$$$");
+            });
+            var $scroll = $('table.scrollTable');
+            $scroll.floatThead({
+            scrollContainer: function($table){
+            return $table.closest('.wrapper');
+            }
+            });
+        });
+        
+    </script>
 
 <script type="text/javascript">
-	$(document).ready(function () {
-		// body...
-		$('#daypicker').datetimepicker({
-		    format: 'YYYY-MM-DD HH:mm:ss',
-		    allowInputToggle: true,
-		    useCurrent: true
-		});
-	});
+    $(document).ready(function () {
+        // body...
+        $('#daypicker').datetimepicker({
+            format: 'YYYY-MM-DD HH:mm:ss',
+            allowInputToggle: true,
+            useCurrent: true
+        });
+    });
 </script>
-	{% endblock %}
+    {% endblock %}
