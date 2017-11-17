@@ -3,10 +3,8 @@
 <script type="text/javascript" src="/static/assets/js/jquery.floatThead.min.js"></script>
 <div ng-app="Job" ng-controller="jobCtrl">
     <div class="content">
-        <h2 class="sub-header">Jobs</h2>
-    </div>
-    <div class="content">
         <div class="table-responsive col-md-4">
+            <h2 class="sub-header">Jobs</h2>
             <div class="panel-body">
                 <div>
                     <label class="checkbox-inline" ng-repeat="state in getStates()">
@@ -18,7 +16,7 @@
                 <table class="table table-bordered table-hover table-striped scrollTable">
                     <thead>
                         <tr>
-                            <th class="col-md-1">Job id</th>
+                            <th class="col-md-1">ID</th>
                             <th class="col-md-3">Name</th>
                             <th class="col-md-1">Status</th>
                             <th class="col-md-1">State</th>
