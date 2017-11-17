@@ -228,9 +228,12 @@ job/api/125/start/
 @csrf_exempt
 @login_required()
 def start_job(request, jid):
-    json_data = JobDetail().start();
+    result = JobDetail(jid).start()
+    arg = {}
+    arg["message"] = result
+    message = json.dumps(arg)
     print "start"
-    return HttpResponse(content_type="application/json", status=200)
+    return HttpResponse(message, content_type="application.json",status=202)
 
 ##############################################################################
 #                                                                            #

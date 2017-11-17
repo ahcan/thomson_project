@@ -731,15 +731,16 @@ class JobDetail:
         from setting.JobDetailReq import START_HEADERS, START_BODY
         headers = START_HEADERS
         body = START_BODY
-        body = body.replace('JobID', str(jid))
-        response_xml = Thomson().get_response(headers, body)
-        return self.parse_status(response_xml)
+        body = body.replace('JobID', str(self.jid))
+        # response_xml = Thomson().get_response(headers, body)
+        # return self.parse_status(response_xml)
+        return "Oke"
 
     def abort(self):
         from setting.JobDetailReq import ABORT_HEADERS, ABORT_BODY
         headers = ABORT_HEADERS
         body = ABORT_BODY
-        body = body.replace('JobID', str(jid))
+        body = body.replace('JobID', str(self.jid))
         response_xml = Thomson().get_response(headers, body)
         return self.parse_status(response_xml)
 
@@ -747,7 +748,7 @@ class JobDetail:
         from setting.JobDetailReq import DELETE_HEADERS, DELETE_BODY
         headers = DELETE_HEADERS
         body = DELETE_BODY
-        body = body.replace('JobID', str(jid))
+        body = body.replace('JobID', str(self.jid))
         response_xml = Thomson().get_response(headers, body)
         return self.parse_status(response_xml)
 

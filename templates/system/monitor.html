@@ -189,15 +189,17 @@
         });
     }
     $scope.startJob = function(job_id, node_id){
-        $http({
+        if($window.confirm("Confirm Start Job"+job_id)){
+            $http({
             method: 'PUT',
             url: '/job/api/' + job_id + '/start/',
-        }).then(function(response){
-            if (response.status == 200) {
-                $scope.show_detail(node_id);
-                console.log("#########Start Job########"+job_id);
-            }
-        });
+            }).then(function(response){
+                if (response.status == 202) {
+                    $window.alert(response.data.message);
+                    $scope.show_detail(node_id);
+                }
+            });
+        }
     }
     $scope.stopJob = function(job_id, node_id){
         $http({
