@@ -248,5 +248,9 @@ job/api/125/abort/
 @csrf_exempt
 @login_required()
 def abort_job(request, jid):
+    result = JobDetail(jid).abort()
+    arg = {}
+    arg["message"] = result
+    message = json.dumps(arg)
     print "stop"
-    return HttpResponse(content_type="application.json", status=200)
+    return HttpResponse(message, content_type="application.json", status=202)

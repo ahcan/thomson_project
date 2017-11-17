@@ -151,23 +151,15 @@ class Thomson:
 
     def parse_license(self, license_xml):
         xmldoc = minidom.parseString(license_xml)
-        args=[]
-        version_item = xmldoc.getElementsByTagName('sGetVersions:SRItem')
-        str_version_obj = str(version_item[0].attributes.items())
-        version = version_item[0].attributes['Ver'].value if "'Ver'" in str_version_obj else ''
-        args_license=[]
         itemlist = xmldoc.getElementsByTagName('sGetVersions:LicItem')
+        args=[]
         for license_obj in itemlist:
             Nb,Name,NbOfUsedLicenceDec,NbOfUsedLicence,Desc = self.parse_license_xml_object(license_obj)
-            args_license.append({'license' : Desc,
+            args.append({'license'         : Desc,
                         'partnumber'       : Name,
                         'used'             : NbOfUsedLicenceDec,
                         'max'              : int(Nb)
                 })
-        args.append({
-            'version'       : version,
-            'license_list'  : args_license
-            })
         return args
 
     def get_license(self):
@@ -741,8 +733,9 @@ class JobDetail:
         headers = ABORT_HEADERS
         body = ABORT_BODY
         body = body.replace('JobID', str(self.jid))
-        response_xml = Thomson().get_response(headers, body)
-        return self.parse_status(response_xml)
+        # response_xml = Thomson().get_response(headers, body)
+        # return self.parse_status(response_xml)
+        return "Oke"
 
     def delete(self):
         from setting.JobDetailReq import DELETE_HEADERS, DELETE_BODY

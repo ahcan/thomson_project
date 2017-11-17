@@ -115,7 +115,12 @@ body {
 .nav li a:focus {
   background-color: #419BE8;
   color: #fff; }
-
+.nav li.nav-menu a:hover {
+  background-color: #419BE8;
+  color: #fff; }
+.nav li.nav-menu a:focus {
+  background-color: #419BE8;
+  color: #fff;}
 .nav-tabs li.active a {
   color: #e1e7e9;
   background-color: #337ab7; }
@@ -235,44 +240,64 @@ table.floatThead-table {
   border-bottom: none;
   /*background-color: #eee;*/ }
 
-@media only screen and (min-height: 320px) {
-  .wrapper {
-    height: 720px; } }
-@media only screen and (min-width: 425px) {
-  #txtTime {
-    display: none; }
+/*=======Media Screen=======*/
+  @media only screen and (min-height: 320px) {
+    .wrapper {
+      height: 200px; }
+    .wrapper-device {
+      height: 200px;
+    } }
+  @media only screen and (min-height: 720px) {
+    .wrapper {
+      height: 775px;
+    }
+    .wrapper-panel {
+      height: 693px;
+    }
+    .wrapper-device {
+      height: 250px;
+      }
+    .wrapper-node {
+      height: 270px;
+    }
+    .wrapper-log {
+      height: 540px;
+    }
+    .wrapper-realtime{
+      height: 200px;
+      } }
+  @media only screen and (min-width: 425px) {
+    #txtTime {
+      display: none; }
 
-  #txtZone {
-    display: none; }
+    #txtZone {
+      display: none; }
 
-  #lblZone {
-    display: none; }
+    #lblZone {
+      display: none; }
 
-  div#systemTime {
-    /*position: fixed;*/
-    left: 35%;
-    /*margin-top:10px;*/
-    /*color:#fff;*/
-    /*font-size: 16px;*/ } }
-@media only screen and (min-width: 1080px) {
-  #txtTime {
-    display: none; }
+    div#systemTime {
+      /*position: fixed;*/
+      left: 35%;
+      /*margin-top:10px;*/
+      /*color:#fff;*/
+      /*font-size: 16px;*/ } }
+  @media only screen and (min-width: 1080px) {
+    #txtTime {
+      display: none; }
 
-  #txtZone {
-    display: none; }
+    #txtZone {
+      display: none; }
 
-  #lblZone {
-    display: none; }
-
+    #lblZone {
+      display: none; }
   div#systemTime {
     /*position: fixed;*/
     left: 45%;
     /*margin-top:10px;*/
     /*color:#fff;*/
     /*font-size: 16px;*/ }
-    .wrapper{
-      height: 844px;
-      } }
+    }
 @media only screen and (min-width: 1120px) {
   #txtTime {
     display: inline; }
@@ -282,13 +307,26 @@ table.floatThead-table {
 
   #lblZone {
     display: inline; }
-
-  div#systemTime {
-    /*position: fixed;*/
-    left: 26%;
-    /*margin-top:10px;*/
-    /*color:#fff;*/
-    /*font-size: 16px;*/ } }
+div#systemTime {
+  /*position: fixed;*/
+  left: 26%;
+  /*margin-top:10px;*/
+  /*color:#fff;*/
+  /*font-size: 16px;*/ } }
+@media only screen and (min-width: 1200px) {
+  .header-device {
+    width: 42%;
+  }
+  .right-device {
+    margin-top:-65px;
+  }
+}
+@media only screen and (min-width: 1900px){
+  .header-device{
+    width: 42%;
+  }
+}
+/*=========End Media Screen=======*/
 div#systemTime {
   position: fixed;
   /*left: 26%;*/
@@ -301,4 +339,9 @@ div#systemTime {
   padding-left: 0px;
   padding: 10px; }
 
+.total-row {
+  font-size: 16px;
+  margin-left: 1%;
+  margin-top: 5px;
+}
 /*# sourceMappingURL=main.css.map */
