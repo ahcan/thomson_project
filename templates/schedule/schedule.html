@@ -11,63 +11,84 @@
     <script type="text/javascript" src="/static/assets/js/jquery.floatThead.min.js"></script>
     <div ng-app="schedule" ng-controller="scheCtrl">
         <div class="content">
-            <h2 class="sub-header">Schedule<a href="#myModal" role="button" data-parent="#createJob" data-toggle="modal" class="btn btn-success btn-xs" title="Add new schedule"><span class="glyphicon glyphicon-plus"></span></a></h2>
-        </div>
-        <div class="content">
             <div class="table-responsive col-md-12">
-                <div class="" style="overflow-y: scroll;">
-                    <table class="table table-bordered table-hover table-striped">
-                        <thead>
+                <div class="col-md-8"><!-- Main schedule table -->
+                    <div class="content">
+                        <h2 class="sub-header">Schedule<a href="#myModal" role="button" data-parent="#createJob" data-toggle="modal" class="btn btn-success btn-xs" title="Add new schedule"><span class="glyphicon glyphicon-plus"></span></a></h2>
+                    </div>
+                    <div class="" style="overflow-y: scroll;">
+                        <table class="table table-bordered table-hover table-striped">
+                            <thead>
+                                <tr>
+                                    <th class="col-md-1">ID</th>
+                                    <th class="col-md-1">Date</th>
+                                    <th class="col-md-1">Watting time</th>
+                                    <th class="col-md-1">State</th>
+                                    <th class="col-md-1">Action</th>
+                                    <th class="col-md-5">Job</th>
+                                    <th class="col-md-1">Options</th>
+                                </tr>
+                            </thead>
+                            <tfoot>
                             <tr>
-                                <th class="col-md-1">STT</th>
-                                <th class="col-md-1">ID</th>
-                                <th class="col-md-1">Date</th>
-                                <th class="col-md-1">Watting time</th>
-                                <th class="col-md-1">State</th>
-                                <th class="col-md-1">Action</th>
-                                <th class="col-md-5">Job</th>
-                                <th class="col-md-1"></th>
-                                <!-- <th>Job Name</th>
-                                <th>Job State</th> -->
+                                <td colspan="9" class="text-center">Total: {{'{{filterState.length}'}}}</td>
                             </tr>
-                        </thead>
-                        <tfoot>
-                        <tr>
-                            <td colspan="9" class="text-center">Total: {{'{{filterState.length}'}}}</td>
-                        </tr>
-                        </tfoot>
-                        <tbody data-link="row" class="rowlink">
-                            <tr ng-repeat="scrontab in (scrontab_list | orderBy:'-unix_timestamp') as filterState" >
-                                <td class="col-md-1" ng-click="moreInfor(scrontab.id)">{{'{{$index + 1}'}}}</td>
-                                <td class="col-md-1" ng-click="moreInfor(scrontab.id)">{{'{{scrontab.id}'}}}</td>
-                                <td class="col-md-1" ng-click="moreInfor(scrontab.id)"><span>{{'{{scrontab.unix_timestamp*1000 | date: "dd-M-yyyy HH:mm:ss Z"}'}}}</span></td>
-                                <td class="col-md-1" ng-click="moreInfor(scrontab.id)"><span>{{'{{scrontab.alarm}'}}}</span></td>
-                                <td class="col-md-1" ng-click="moreInfor(scrontab.id)" ng-class="{'completed': scrontab.state==1, 'watting': scrontab.state==0}"><span ng-if="scrontab.state == 1"> Completed</span>
-                                <span ng-if="scrontab.state == 0"> Watting</span></td>
-                                <td class="col-md-1" ng-click="moreInfor(scrontab.id)"><sapn>{{'{{scrontab.action}'}}}</sapn></td>
-                                <td class="col-md-5" ng-click="moreInfor(scrontab.id)"><div>
-                                    <table class="table table-bordered">
-                                        <thead>
-                                            <tr style="background-color: #337ab7; color: #ffff;">
-                                                <th>JobID</th>
-                                                <th>Name</th>
-                                                <th>State</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr ng-repeat="job in scrontab.list_job">
-                                                <td><span>{{'{{job.jid}'}}}</span></td>
-                                                <td><span>{{'{{job.jname}'}}}</span></td>
-                                                <td  ng-class="{'running': job.state == 'Running', 'aborted': job.state == 'Aborted', 'watting': job.state == 'Watting', 'paused': job.state == 'Paused', 'completed': job.state == 'Completed'}"><span>{{'{{job.state}'}}}</span></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div></td>
-                                <td class="col-md-1"><input id="btnDelete-{{'{{scrontab.id}'}}}" type="button" class="button" value="Delete" ng-click="deteleRow(scrontab)"></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                            </tfoot>
+                            <tbody data-link="row" class="rowlink">
+                                <tr ng-repeat="scrontab in (scrontab_list | orderBy:'-unix_timestamp') as filterState" >
+                                    <td class="col-md-1" ng-click="moreInfor(scrontab.id)">{{'{{scrontab.id}'}}}</td>
+                                    <td class="col-md-1" ng-click="moreInfor(scrontab.id)"><span>{{'{{scrontab.unix_timestamp*1000 | date: "dd-M-yyyy HH:mm:ss Z"}'}}}</span></td>
+                                    <td class="col-md-1" ng-click="moreInfor(scrontab.id)"><span>{{'{{scrontab.alarm}'}}}</span></td>
+                                    <td class="col-md-1" ng-click="moreInfor(scrontab.id)" ng-class="{'completed': scrontab.state==1, 'watting': scrontab.state==0}"><span ng-if="scrontab.state == 1"> Completed</span>
+                                    <span ng-if="scrontab.state == 0"> Watting</span></td>
+                                    <td class="col-md-1" ng-click="moreInfor(scrontab.id)"><sapn>{{'{{scrontab.action}'}}}</sapn></td>
+                                    <td class="col-md-5" ng-click="moreInfor(scrontab.id)"><div>
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr style="background-color: #337ab7; color: #ffff;">
+                                                    <th>JobID</th>
+                                                    <th>Name</th>
+                                                    <th>State</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="job in scrontab.list_job">
+                                                    <td><span>{{'{{job.jid}'}}}</span></td>
+                                                    <td><span>{{'{{job.jname}'}}}</span></td>
+                                                    <td  ng-class="{'running': job.state == 'Running', 'aborted': job.state == 'Aborted', 'watting': job.state == 'Watting', 'paused': job.state == 'Paused', 'completed': job.state == 'Completed'}"><span>{{'{{job.state}'}}}</span></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div></td>
+                                    <td class="col-md-1"><input id="btnDelete-{{'{{scrontab.id}'}}}" type="button" class="button" value="Delete" ng-click="deteleRow(scrontab)"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div><!-- End main schedule table -->
+                <div class="col-md-4"><!-- Main schedule table -->
+                    <div class="content">
+                        <h4 class="sub-header">Historys</h4>
+                    </div>
+                    <div class="" style="overflow-y: scroll;">
+                        <table class="table table-bordered table-hover table-striped">
+                            <thead>
+                                <tr>
+                                    <th class="col-md-1">ScheduleID</th>
+                                    <th class="col-md-11">Messages</th>
+                                </tr>
+                            </thead>
+                            <tbody data-link="row" class="rowlink">
+                                <tr ng-repeat="history in history_list | orderBy:'-date_time'">
+                                    <td>{{'{{history.schedule_id}'}}}</td>
+                                    <td>{{'{{history.messages}'}}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                <div><!-- History -->
+                    
+                </div><!-- End History -->
             </div>
             <!-- Modal -->
             <div class="modal fade" id="myModal" role="dialog">
@@ -116,6 +137,9 @@ var app = angular.module('schedule',['multipleSelect']);
             $http.get('/schedule/api/schedule').then(function (response) {
                 $scope.scrontab_list = response.data;
                 $scope.total = $scope.scrontab_list.length
+            });
+            $http.get('/schedule/api/history/').then(function (response) {
+                $scope.history_list = response.data.history;
             });
         $timeout(function(){
             // $scope.reload();
