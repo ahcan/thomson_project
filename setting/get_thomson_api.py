@@ -330,8 +330,8 @@ class Log:
                         'nid'              : int(NId),
                         'sev'              : Sev,
                         'desc'             : Desc,
-                        'opdate'           : OpDate,
-                        'cldate'           : ClDate
+                        'opdate'           : int(OpDate) if OpDate else None,
+                        'cldate'           : int(ClDate) if ClDate else None
                 })
         return json.dumps(args)
 
