@@ -170,6 +170,7 @@ def get_schedule_history_json(request):
         for row in resulf:
             args_history.append({
                 'date_time'     : int(row[0]),
+                'host'          : row[1],
                 'schedule_id'   : int(row[3]),
                 'messages'      : row[2]
                 })

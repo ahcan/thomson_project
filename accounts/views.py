@@ -12,6 +12,7 @@ from accounts.user_info import *
 from django.shortcuts import render, redirect
 from accounts.models import *
 from setting import settings
+from setting.DateTime import *
             
 # ------------auth
 @require_http_methods(['GET', 'POST'])
@@ -86,10 +87,37 @@ def password_change(request):
 @require_http_methods(['GET', 'POST'])
 @csrf_exempt
 def profile(request):
-    if not request.user.is_authenticated():
-        return HttpResponseRedirect('/accounts/login')
-    user = user_info(request)
-    return render_to_response('accounts/profile.html', user)
+    if request.method == 'GET':
+        user = user_info(request)
+        return render_to_response('accounts/profile.html', user)
+    agrs = {}
+    if request.method == 'POST':
+        user = User.objects.get(pk=int(request.user.id))
+        data = json.loads(request.body)
+        first_name = data['first_name'].strip()
+        last_name = data['last_name'].strip()
+        email = data['email'].strip()
+        flag = 0
+        if user.first_name != first_name:
+            user.first_name = first_name
+            flag = 1
+        if  user.last_name != last_name:
+            user.last_name = last_name
+            flag = 1
+        if user.email != email:
+            user.email = email
+            flag = 1
+        if flag:
+            user.save()
+            agrs["detail"] = "Profile change sucessfuly!"
+            messages = json.dumps(agrs)
+            return HttpResponse(messages, content_type='application/json', status=202)
+        agrs["detail"] = "Info! Profile no change."
+        messages = json.dumps(agrs)
+        return HttpResponse(messages, content_type='application/json', status=203)
+    agrs["detail"] = "Eror! unknow."
+    messages = json.dumps(agrs)
+    return HttpResponse(messages, content_type='application/json', status=203)
 
 
 
@@ -104,7 +132,7 @@ def profile_json(request):
         'last_name'     : user.last_name,
         'is_staff'      : user.is_staff,
         'is_active'     : user.is_active,
-        'date_joined'   : str(user.date_joined),
-        'last_login'    : str(user.last_login)
+        'date_joined'   : DateTime().conver_human_creadeble_2_unix_timetamp_local(str(user.date_joined)),
+        'last_login'    : DateTime().conver_human_creadeble_2_unix_timetamp_local(str(user.last_login))
         })
     return HttpResponse(json.dumps(agrs), content_type='application/json', status=200)

@@ -23,7 +23,7 @@
                                     <th class="col-md-1">ID</th>
                                     <th class="col-md-1">Date</th>
                                     <th class="col-md-1">Watting time</th>
-                                    <th class="col-md-1">State</th>
+                                    <th class="col-md-1">Status</th>
                                     <th class="col-md-1">Action</th>
                                     <th class="col-md-5">Job</th>
                                     <th class="col-md-1">Options</th>
@@ -37,7 +37,7 @@
                             <tbody data-link="row" class="rowlink">
                                 <tr ng-repeat="scrontab in (scrontab_list | orderBy:'-unix_timestamp') as filterState" >
                                     <td class="col-md-1" ng-click="moreInfor(scrontab.id)">{{'{{scrontab.id}'}}}</td>
-                                    <td class="col-md-1" ng-click="moreInfor(scrontab.id)"><span>{{'{{scrontab.unix_timestamp*1000 | date: "dd-M-yyyy HH:mm:ss Z"}'}}}</span></td>
+                                    <td class="col-md-1" ng-click="moreInfor(scrontab.id)"><span>{{'{{scrontab.unix_timestamp*1000 | date: "dd-M-yyyy HH:mm:ss"}'}}}</span></td>
                                     <td class="col-md-1" ng-click="moreInfor(scrontab.id)"><span>{{'{{scrontab.alarm}'}}}</span></td>
                                     <td class="col-md-1" ng-click="moreInfor(scrontab.id)" ng-class="{'completed': scrontab.state==1, 'watting': scrontab.state==0}"><span ng-if="scrontab.state == 1"> Completed</span>
                                     <span ng-if="scrontab.state == 0"> Watting</span></td>
@@ -74,13 +74,15 @@
                         <table class="table table-bordered table-hover table-striped">
                             <thead>
                                 <tr>
-                                    <th class="col-md-1">ScheduleID</th>
+                                    <th class="col-md-1" title="Schedule id">ID</th>
+                                    <th class="col-md-1" title="Ip Thomson">Thomson</th>
                                     <th class="col-md-11">Messages</th>
                                 </tr>
                             </thead>
                             <tbody data-link="row" class="rowlink">
                                 <tr ng-repeat="history in history_list | orderBy:'-date_time'">
                                     <td>{{'{{history.schedule_id}'}}}</td>
+                                    <td>{{'{{history.host}'}}}</td>
                                     <td>{{'{{history.messages}'}}}</td>
                                 </tr>
                             </tbody>
