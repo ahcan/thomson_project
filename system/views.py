@@ -74,7 +74,7 @@ def get_nodes_status_json(request):
 @require_http_methods(['GET'])
 @csrf_exempt
 @login_required()
-
+    
 def get_node_job_json(request, node_id):
     nodes_status = NodeDetail(node_id).get_list_job()
     return HttpResponse(nodes_status, content_type='application/json', status=200)
