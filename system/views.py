@@ -88,7 +88,8 @@ def redirect_node(request, node_id):
 # link to page monitor
 @login_required()
 def monitor(request):
-    return render_to_response('system/monitor.html')
+    user = user_info(request)
+    return render_to_response('system/monitor.html', user)
     
 @login_required()
 def get_license_json(request):
