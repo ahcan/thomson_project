@@ -233,7 +233,10 @@ body {
 .alarm {
   background-color: #DB1104;
   color: #fff; }
-
+/*.warning {
+  background-color: #EBE449;
+  color:#333;
+}*/
 .glyphicon-ok {
   color: #25C829; }
 

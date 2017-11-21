@@ -18,8 +18,9 @@
                 </div>
             </div>
         </div>
+        {{'{{nowDate}'}}}
         <div class="col-md-12">
-            <div style="margin-top:10px;">
+            <div style="margin-top:10px; margin-bottom:10px;">
                 <div class="input-group">
                     <label class="checkbox-inline" ng-repeat="sev in getSevs()">
                     <input type="checkbox" ng-model="filters[sev]">{{'{{sev}'}}}</input>
@@ -34,7 +35,7 @@
                     <tr>
                         <th style="width: 4%;">#</th>
                         <th style="width: 2%;">Serverily</th>
-                        <th style="width: 2%;">Node ID</th>
+                        <th style="width: 2%;">Node</th>
                         <th style="width: 20%;">Resource</th>
                         <th style="width: 20%;">Description</th>
                         <th style="width: 10%;">Open date</th>
@@ -44,21 +45,21 @@
                     </tr>
                 </thead>
                 <tbody class="width-col-default">
-                    <tr ng-repeat="log in log_list | filter:search | filter:filterBySev | orderBy: '-opdate'">
+                    <tr ng-repeat="log in log_list | filter:search | filter:filterBySev | orderBy: '-opdate'" ng-class="{'warning': nowDate-opdate<=180000}">
                         <td style="width: 4%;"><span>{{'{{$index + 1}'}}}</span></td>
                         <td style="width: 2%;"><span>{{'{{log.sev}'}}}</span></td>
                         <td style="width: 2%;"><span>{{'{{log.nid}'}}}</span></td>
                         <td style="width: 20%;"><span>{{'{{log.res}'}}}</span></td>
                         <td style="width: 20%;"><span>{{'{{log.desc}'}}}</span></td>
-                        <td style="width: 10%;"><span>{{'{{log.opdate | date:"dd-MM-yyyy HH:MM:ss"}'}}}</span></td>
-                        <td style="width: 10%;"><span>{{'{{log.cldate | date:"dd-MM-yyyy HH:MM:ss"}'}}}</span></td>
+                        <td style="width: 10%;"><span>{{'{{log.opdate | date:"dd-MM-yyyy HH:mm:ss"}'}}}</span></td>
+                        <td style="width: 10%;"><span>{{'{{log.cldate | date:"dd-MM-yyyy HH:mm:ss"}'}}}</span></td>
                         <td style="width: 4%;"><span>{{'{{log.jid}'}}}</span></td>
                         <td style="width: 10%;"><span>{{'{{log.jname}'}}}</span></td>
                     </tr>
                 </tbody>
                 <tfoot>
                 <tr>
-                    <td colspan="8" class="text-center">Total: {{'{{total}'}}}</td>
+                    <td colspan="8" class="text-center">Total: {{'{{log_list.length}'}}}</td>
                 </tr>
                 </tfoot>
             </table>
@@ -69,13 +70,14 @@
     var app = angular.module('Log',[]);
     app.controller("logCtrl", function ($scope,$http,$timeout){
         $scope.reload = function () {
-            $scope.total = 0;
+        	$scope.nowDate = +new Date();
             $http.get('/log/api/log').
             then(function (response) {
                 $scope.log_list = response.data;
                 $scope.total = $scope.log_list.length;
                 console.log($scope.log_list);
             });
+            // console.log($scope.nowDate);
             $timeout(function(){
                 // $scope.reload();
             },10000)
@@ -92,7 +94,10 @@
         function noFilter(filterObj){
             return Object.keys(filterObj).every(function(key){return !filterObj[key];});
         }
-        //end filter
+    //end filter
+    // warrning time log
+    	
+    // end warrning
         $scope.reload();
     });
 </script>

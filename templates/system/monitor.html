@@ -141,8 +141,8 @@
                                     <td style="width: 5%;"><span>{{'{{log.nid}'}}}</span></td>
                                     <td style="width: 20%;"><span>{{'{{log.res}'}}}</span></td>
                                     <td style="width: 40%;"><span>{{'{{log.desc}'}}}</span></td>
-                                    <td style="width: 10%;"><span>{{'{{log.opdate | date:"dd-M-yyyy H:mm:ss" }'}}}</span></td>
-                                    <td style="width: 10%;"><span>{{'{{log.cldate | date:"dd-M-yyyy H:mm:ss" }'}}}</span></td>
+                                    <td style="width: 10%;"><span>{{'{{log.opdate | date:"dd-MM-yyyy HH:mm:ss" }'}}}</span></td>
+                                    <td style="width: 10%;"><span>{{'{{log.cldate | date:"dd-MM-yyyy HH:mm:ss" }'}}}</span></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -168,14 +168,14 @@
                                 </tr>
                             </thead>
                             <tbody class="width-col-default">
-                                <tr ng-repeat="log in log_list | filter:search | filter:filterBySev | orderBy: '-opdate'">
+                                <tr ng-repeat="log in log_list | filter:search | filter:filterBySev | orderBy: '-opdate'" ng-class="{'warning': nowDate-log.opdate<=180000}">
                                     <td style="width: 2%;"><span>{{'{{$index + 1}'}}}</span></td>
                                     <td style="width: 2%;"><span>{{'{{log.sev}'}}}</span></td>
                                     <td style="width: 2%;"><span>{{'{{log.nid}'}}}</span></td>
                                     <td style="width: 20%;"><span>{{'{{log.res}'}}}</span></td>
                                     <td style="width: 20%;"><span>{{'{{log.desc}'}}}</span></td>
-                                    <td style="width: 10%;"><span>{{'{{log.opdate | date:"dd-MM-yyyy HH:MM:ss"}'}}}</span></td>
-                                    <td style="width: 10%;"><span>{{'{{log.cldate | date:"dd-MM-yyyy HH:MM:ss"}'}}}</span></td>
+                                    <td style="width: 10%;"><span>{{'{{log.opdate | date:"dd-MM-yyyy HH:mm:ss"}'}}}</span></td>
+                                    <td style="width: 10%;"><span>{{'{{log.cldate | date:"dd-MM-yyyy HH:mm:ss"}'}}}</span></td>
                                     <td style="width: 4%;"><span>{{'{{log.jid}'}}}</span></td>
                                     <td style="width: 10%;"><span>{{'{{log.jname}'}}}</span></td>
                                 </tr>
@@ -274,6 +274,7 @@
         });
     };
     $scope.loadAllLog = function(){
+        $scope.nowDate = +new Date();
         $http({
             method: 'GET',
             url: '/log/api/log',
