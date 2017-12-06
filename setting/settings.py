@@ -25,6 +25,8 @@ INSTALLED_APPS = [
     'system',
     'log',
     'schedule',
+    'job',
+    'workflow',
 ]
 
 MIDDLEWARE = [

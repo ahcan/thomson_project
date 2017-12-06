@@ -9,7 +9,7 @@ class Database:
         password = settings.DATABASES['default']['PASSWORD']
         host = settings.DATABASES['default']['HOST']
         port = settings.DATABASES['default']['PORT']
-        return mdb.connect(host=host, port=port, user=user, passwd=password, db=db)
+        return mdb.connect(host=host, port=port, user=user, passwd=password, db=db, charset='utf8')
 
     def close_connect(self, session):
         return session.close()

@@ -9,6 +9,7 @@ from rest_framework import status
 from setting.get_thomson_api import *
 from accounts.user_info import *
 from django.contrib.auth.decorators import login_required
+from utils import DatabaseJob as JobDB
 
 # Create your views here.
 
@@ -22,7 +23,8 @@ from django.contrib.auth.decorators import login_required
 @csrf_exempt
 @login_required()
 def get_job_json(request):
-    job_list = Job().get_job()
+    job_list = JobDB().json_all_job()
+    # job_list = Job().get_job()
     return HttpResponse(job_list, content_type='application/json', status=200)
 
 #link get all job name and id /job/api/job-name

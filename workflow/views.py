@@ -9,6 +9,7 @@ from rest_framework import status
 from setting.get_thomson_api import *
 from accounts.user_info import *
 from django.contrib.auth.decorators import login_required
+from utils import DatabaseWorkflow as WorkflowDB
 
 # Create your views here.
 
@@ -22,7 +23,8 @@ from django.contrib.auth.decorators import login_required
 @csrf_exempt
 @login_required() # login required
 def workflow_json(request):
-    workflow_list = Workflow().get_workflow()
+    # workflow_list = Workflow().get_workflow()
+    workflow_list = WorkflowDB().json_all_workflow()
     return HttpResponse(workflow_list, content_type='application/json', status=200)
 
 def get_workflow(request):

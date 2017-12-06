@@ -497,11 +497,11 @@ class Job:
                         'state'     : State,
                         'status'    : Status,
                         'jid'       : int(JId),
-                        'prog'      : int(Prog),
-                        'startdate' : DateTime().conver_UTC_2_unix_timestamp(StartDate) \
+                        # 'prog'      : int(Prog),
+                        'startdate' : StartDate \
                         if StartDate else None,
-                        'ver'       : int(Ver),
-                        'enddate'   : DateTime().conver_UTC_2_unix_timestamp(EndDate) \
+                        # 'ver'       : int(Ver),
+                        'enddate'   : EndDate \
                         if EndDate else None
                 })
         return json.dumps(args)
