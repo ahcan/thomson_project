@@ -122,7 +122,7 @@
                         </div>
                         <div class="modal-footer">
                             <input type="button" name="create" id="submit" value="Create" ng-click="create_schedule()">
-                            <input type="button" data-dismiss="modal" value="Cancel">
+                            <input type="button" data-dismiss="modal" value="Cancel" ng-click="cancel_schedule()">
                         </div>
                     </div>
                 </div>
@@ -193,9 +193,10 @@ var app = angular.module('schedule',['multipleSelect']);
         }
     });
   }
-  // $scope.cancel_schedule = function(){
-  //    console.log($scope.schedule);
-  // }
+
+  $scope.cancel_schedule = function(){
+    console.log($scope.modelArr)
+  }
 
   $scope.updateTime  = function(){
     //getElement via DOM in angular
