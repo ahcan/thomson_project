@@ -72,6 +72,8 @@ DATABASES = {
         'NAME': 'thomson',
         'USER': 'root',
         'PASSWORD': 'root',
+        #'USER': 'thomson',
+        #'PASSWORD': 'thomson@$@',
         'HOST': 'localhost',
         'PORT': 3306,
     }
@@ -129,12 +131,14 @@ HOTS_THOMSON={
     {
         'user' : 'nguyennt9',
         'passwd' : '123456',
+        'host'  :   '172.29.3.189',
         'url' : 'http://%s/services/Maltese' % ('172.29.3.189'),
     },
     'thomson-lab':
     {
         'user' : 'iptv_tool',
         'passwd' : '123456',
+        'host'  : '172.29.5.110',
         'url' : 'http://%s/services/Maltese' % ('172.29.5.110'),
     }
 }
