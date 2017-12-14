@@ -41,11 +41,10 @@ class File:
 ##############################################################################
 
 class Thomson:
-    def __init__(self):
-        self.user = settings.user
-        self.passwd = settings.passwd
-        self.url = settings.url
-
+    def __init__(self, name):
+        self.user = settings.HOTS_THOMSON[name]['user']
+        self.passwd = settings.HOTS_THOMSON[name]['passwd']
+        self.url = settings.HOTS_THOMSON[name]['url']
     def get_response(self, headers, body):
         response = requests.post(self.url, data=body, headers=headers, \
             auth=HTTPDigestAuth(self.user, self.passwd))
@@ -117,6 +116,7 @@ class Thomson:
                      'mem'      : int(Mem),
                      'allocmem' : int(AllocMem)
                     })
+        print self.user
         return json.dumps(agrs)
 
     def get_job_status(self):
@@ -183,15 +183,16 @@ class Thomson:
 ##############################################################################
 
 class Node:
-    def __init__(self):
+    def __init__(self, name):
         from setting.xmlReq import NodeReq
         headers = NodeReq.HEADERS
         body = NodeReq.BODY
         self.headers = headers
         self.body = body
+        self.name = name
 
     def get_nodes_xml(self):
-        #response_xml = Thomson().get_response(self.headers, self.body)
+        #response_xml = Thomson(self.name).get_response(self.headers, self.body)
         response_xml = File().get_response('SystemGetNodesStatsRsp.xml')
         return response_xml
 
@@ -213,7 +214,7 @@ class Node:
         itemlist = xmldoc.getElementsByTagName('sGetNodesStats:RspSGNSOk')
         for node in itemlist.item(0).childNodes:
             NStatus,Cpu,AllocCpu,Unreachable,NId,NState,Mem,AllocMem = self.parse_dom_object(node)
-            JError, JCounter = NodeDetail(NId).count_job_error()
+            JError, JCounter = NodeDetail(NId, self.name).count_job_error()
             args.append({'status'             : NStatus,
                         'cpu'                 : int(Cpu),
                         'alloccpu'            : int(AllocCpu),
@@ -233,12 +234,13 @@ class Node:
 
 class NodeDetail:
 
-    def __init__(self, node_id):
+    def __init__(self, node_id, name):
         self.nid = int(node_id)
+        self.name = name
 
     def get_dom_node(self):
         dom_node = None
-        nodes_xml = Node().get_nodes_xml()
+        nodes_xml = Node(self.name).get_nodes_xml()
         xmldoc = minidom.parseString(nodes_xml)
         itemlist = xmldoc.getElementsByTagName('sGetNodesStats:RspSGNSOk')
         for node in itemlist.item(0).childNodes:
@@ -262,7 +264,7 @@ class NodeDetail:
         args = []
         array_jid = self.get_array_job_id()
         dom_node = self.get_dom_node()
-        NStatus,Cpu,AllocCpu,Unreachable,NId,NState,Mem,AllocMem = Node().parse_dom_object(dom_node)
+        NStatus,Cpu,AllocCpu,Unreachable,NId,NState,Mem,AllocMem = Node(self.name).parse_dom_object(dom_node)
         JError, JCounter = self.count_job_error()
         job_list = Job().get_job_detail_by_job_id(array_jid)
         args.append({'status'             : NStatus,

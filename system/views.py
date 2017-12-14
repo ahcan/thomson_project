@@ -39,8 +39,8 @@ def datetime_json(request):
 @csrf_exempt
 @login_required()
 
-def mountpoint_list_json(request):
-    mountpoint_list = Thomson().get_mountpoint()
+def mountpoint_list_json(request, thomson_name):
+    mountpoint_list = Thomson(thomson_name).get_mountpoint()
     return HttpResponse(mountpoint_list, content_type='application/json', status=200)
 
 #Link get thomson info CPU, RAAM: /system/api/status
@@ -48,8 +48,8 @@ def mountpoint_list_json(request):
 @csrf_exempt
 @login_required()
 
-def get_system_status_json(request):
-    system_status = Thomson().get_system_status()
+def get_system_status_json(request, thomson_name):
+    system_status = Thomson(thomson_name).get_system_status()
     return HttpResponse(system_status, content_type='application/json', status=200)
 
 #Link get job status: /system/api/jobstatus
@@ -57,8 +57,8 @@ def get_system_status_json(request):
 @csrf_exempt
 @login_required()
 
-def get_job_status_json(request):
-    job_status = Thomson().get_job_status()
+def get_job_status_json(request, thomson_name):
+    job_status = Thomson(thomson_name).get_job_status()
     return HttpResponse(job_status, content_type='application/json', status=200)
 
 #Link get info CPU, RAM... each node: /system/api/status
@@ -66,8 +66,8 @@ def get_job_status_json(request):
 @csrf_exempt
 @login_required()
 
-def get_nodes_status_json(request):
-    nodes_status = Node().get_info()
+def get_nodes_status_json(request, thomson_name):
+    nodes_status = Node(thomson_name).get_info()
     return HttpResponse(nodes_status, content_type='application/json', status=200)
 
 #Link get list job on node: /system/api/<nid>/
@@ -75,8 +75,8 @@ def get_nodes_status_json(request):
 @csrf_exempt
 @login_required()
     
-def get_node_job_json(request, node_id):
-    nodes_status = NodeDetail(node_id).get_list_job()
+def get_node_job_json(request, node_id, thomson_name):
+    nodes_status = NodeDetail(node_id, thomson_name).get_list_job()
     return HttpResponse(nodes_status, content_type='application/json', status=200)
 
 @login_required()
@@ -90,7 +90,12 @@ def redirect_node(request, node_id):
 def monitor(request):
     user = user_info(request)
     return render_to_response('system/monitor.html', user)
-    
+
+@login_required()
+def test(request):
+    user = user_info(request)
+    return render_to_response('system/template-base.html', user)    
+
 @login_required()
 def get_license_json(request):
     license_status = Thomson().get_license()

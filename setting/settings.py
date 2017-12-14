@@ -124,10 +124,21 @@ STATICFILES_DIRS = [
 AUTO_LOGOUT_DELAY = 1440
 
 # Thomson config
-user = 'nguyennt9'
-passwd = '123456'
-host = '172.29.3.189'
-url = 'http://%s/services/Maltese' % (host)
+HOTS_THOMSON={
+    'thomson-hcm':
+    {
+        'user' : 'nguyennt9',
+        'passwd' : '123456',
+        'url' : 'http://%s/services/Maltese' % ('172.29.3.189'),
+    },
+    'thomson-lab':
+    {
+        'user' : 'iptv_tool',
+        'passwd' : '123456',
+        'url' : 'http://%s/services/Maltese' % ('172.29.5.110'),
+    }
+}
+
 
 # login redirect
 LOGIN_URL = '/accounts/login/'

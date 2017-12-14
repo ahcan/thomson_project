@@ -198,10 +198,11 @@
     var app =angular.module('System', []);
     app.controller('systemCtrl', function($scope, $http, $timeout, $window) {
     // body...
+    $scope.host = 'thomson-hcm'
     $scope.isLog = false;
     $scope.isRealTime = false;
     $scope.reloadNodes = function(){
-        $http.get("/system/api/nstatus/").then(function(reponse){
+        $http.get("/system/api/"+$scope.host+"/nstatus/").then(function(reponse){
             $scope.lstNodes = reponse.data;
         });
         $timeout(function() {
@@ -209,7 +210,7 @@
         }, 20000)
     };
     $scope.reloadDevice = function(){
-        $http.get("/system/api/status/").then(function(reponse){
+        $http.get("/system/api/"+$scope.host+"/status/").then(function(reponse){
             $scope.PCStatus = reponse.data[0];
             // console.log($scope.PCStatus);
         });
@@ -224,7 +225,7 @@
         $scope.isRealTime = false;
         $http({
             method:'GET',
-            url:'/system/api/'+node_id+'/',
+            url:'/system/api/'+$scope.host+"/"+node_id+'/',
         }).then(function(response){
             $scope.node = response.data[0];
             $scope.job_list = response.data[0].job_list;
@@ -282,7 +283,7 @@
             $scope.log_list = response.data;
         });
         $timeout(function(){
-            // $scope.loadAllLog();
+            $scope.loadAllLog();
         }, 10000);
     };
     $scope.reverseSort = false;

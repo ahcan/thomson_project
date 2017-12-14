@@ -247,6 +247,10 @@ table.floatThead-table {
   border-top: none;
   border-bottom: none;
   /*background-color: #eee;*/ }
+.node-h4 {
+  margin-bottom: 0px;
+  padding-left: 10px;
+}
 
 /*=======Media Screen=======*/
   @media only screen and (min-height: 320px) {
@@ -277,13 +281,16 @@ table.floatThead-table {
       height: 693px;
     }
     .wrapper-device {
-      height: 775px;
+      height: 250px;
       }
     .wrapper-node {
-      height: 270px;
+      height: 190px;
     }
     .wrapper-log {
-      height: 535px;
+      height: 329px;
+    }
+    .wrapper-log-1 {
+      height: 550px;
     }}
   @media only screen and (min-width: 425px) {
     #txtTime {
