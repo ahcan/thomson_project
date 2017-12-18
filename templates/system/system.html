@@ -91,7 +91,7 @@ var app =angular.module('System', []);
 app.controller('systemCtrl', function($scope, $http, $timeout, $window) {
 // body...
 $scope.reloadJobStatus=function(){
-    $http.get("/system/api/jobstatus/").then(function(reponse){
+    $http.get("/system/api/thomson-hcm/jobstatus/").then(function(reponse){
         $scope.jobStatus = reponse.data;
     });
     $timeout(function(){
@@ -99,7 +99,7 @@ $scope.reloadJobStatus=function(){
     },60000)
 }
 $scope.reloadMountPoint=function(){
-    $http.get("/system/api/mountpoint/").then(function(reponse){
+    $http.get("/system/api/thomson-hcm/mountpoint/").then(function(reponse){
         $scope.mountPoints = reponse.data;
     });
     $timeout(function() {

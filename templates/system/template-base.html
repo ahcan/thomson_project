@@ -414,7 +414,7 @@
             if($window.confirm("Confirm Start Job: "+job_id)){
                 $http({
                 method: 'PUT',
-                url: '/job/api/' + job_id + '/start/',
+                url: '/job/api/' + $scope.host + '/' + job_id + '/start/',
                 }).then(function(response){
                     if (response.status == 202) {
                         $window.alert(response.data.message);
@@ -427,7 +427,7 @@
             if($window.confirm("Confirm Stop Job: "+job_id)){
                 $http({
                 method: 'PUT',
-                url: '/job/api/'+ job_id + '/abort/',
+                url: '/job/api/'+ $scope.host + '/'+job_id + '/abort/',
                 }).then(function(response){
                     if (response.status == 202) {
                     $window.alert(response.data.message);
@@ -441,7 +441,7 @@
             $scope.isRealTime = true;
             $http({
                 method: 'GET',
-                url: '/log/api/'+ job_id +'/',
+                url: '/log/api/'+ $scope.host +'/'+ job_id +'/',
             }).then(function(response){
                 if (response.status == 200){
                     $scope.lstLogJob = response.data;
@@ -455,7 +455,7 @@
             $scope.nowDate = +new Date();
             $http({
                 method: 'GET',
-                url: '/log/api/log',
+                url: '/log/api/'+$scope.host+'/log/',
             }).then(function (response){
                 $scope.log_list = response.data;
             });
@@ -535,7 +535,7 @@
             $scope.isRealTime = true;
             $http({
                 method: 'GET',
-                url: '/log/api/'+ job_id +'/',
+                url: '/log/api/'+$scope.host+ '/'+ job_id +'/',
             }).then(function(response){
                 if (response.status == 200){
                     $scope.lstLogJob = response.data;
@@ -549,7 +549,7 @@
             $scope.nowDate = +new Date();
             $http({
                 method: 'GET',
-                url: '/log/api/log',
+                url: '/log/api/'+$scope.host+'/log/',
             }).then(function (response){
                 $scope.log_list = response.data;
             });

@@ -138,8 +138,8 @@ HOTS_THOMSON={
     {
         'user' : 'iptv_tool',
         'passwd' : '123456',
-        'host'  : '172.29.5.110',
-        'url' : 'http://%s/services/Maltese' % ('172.29.5.110'),
+        'host'  : '172.17.5.110',
+        'url' : 'http://%s/services/Maltese' % ('172.17.5.110'),
     }
 }
 

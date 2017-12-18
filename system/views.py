@@ -98,5 +98,5 @@ def test(request):
 
 @login_required()
 def get_license_json(request):
-    license_status = Thomson().get_license()
+    license_status = Thomson('thomson-hcm').get_license()
     return HttpResponse(license_status, content_type='application/json', status=200)

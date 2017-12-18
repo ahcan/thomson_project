@@ -45,6 +45,7 @@ class Thomson:
         self.user = settings.HOTS_THOMSON[name]['user']
         self.passwd = settings.HOTS_THOMSON[name]['passwd']
         self.url = settings.HOTS_THOMSON[name]['url']
+        self.name = name
     def get_response(self, headers, body):
         response = requests.post(self.url, data=body, headers=headers, \
             auth=HTTPDigestAuth(self.user, self.passwd))
@@ -122,12 +123,12 @@ class Thomson:
     def get_job_status(self):
         agrs = []
         agrs.append({
-            'total'     :Job().count_job(),
-            'running'   :Job().count_Running(),
-            'completed' :Job().count_Completed(),
-            'waiting'   :Job().count_Waiting(),
-            'paused'    :Job().count_Paused(),
-            'aborted'   :Job().count_Aborted()
+            'total'     :Job(self.name).count_job(),
+            'running'   :Job(self.name).count_Running(),
+            'completed' :Job(self.name).count_Completed(),
+            'waiting'   :Job(self.name).count_Waiting(),
+            'paused'    :Job(self.name).count_Paused(),
+            'aborted'   :Job(self.name).count_Aborted()
             })
         return json.dumps(agrs)
 
@@ -266,7 +267,7 @@ class NodeDetail:
         dom_node = self.get_dom_node()
         NStatus,Cpu,AllocCpu,Unreachable,NId,NState,Mem,AllocMem = Node(self.name).parse_dom_object(dom_node)
         JError, JCounter = self.count_job_error()
-        job_list = Job().get_job_detail_by_job_id(array_jid)
+        job_list = Job(self.name).get_job_detail_by_job_id(array_jid)
         args.append({'status'             : NStatus,
                     'cpu'                 : int(Cpu),
                     'alloccpu'            : int(AllocCpu),
@@ -283,7 +284,7 @@ class NodeDetail:
 
     def count_job_error(self):
         array_jid = self.get_array_job_id()
-        job_list = Job().get_job_detail_by_job_id(array_jid)
+        job_list = Job(self.name).get_job_detail_by_job_id(array_jid)
         error=0
         for job in job_list:
             if job['status'] != 'Ok':
@@ -297,9 +298,10 @@ class NodeDetail:
 ##############################################################################
 
 class Log:
-    def __init__(self):
+    def __init__(self, name):
         from setting.xmlReq.LogReq import HEADERS
         self.headers = HEADERS
+        self.name  = name
 
     def parse_xml(self, xml):
         args = []
@@ -341,7 +343,7 @@ class Log:
     def get_log(self):
         from setting.xmlReq.LogReq import BODY
         body = BODY
-        #response_xml = Thomson().get_response(self.headers, body)
+        #response_xml = Thomson(self.name).get_response(self.headers, body)
         response_xml = File().get_response('LogsAllGetRsp.xml')
         return self.parse_xml(response_xml)
 
@@ -349,7 +351,7 @@ class Log:
     def get_open(self):
         from setting.xmlReq.LogReq import OPEN
         body = OPEN
-        #response_xml = Thomson().get_response(self.headers, body)
+        #response_xml = Thomson(self.name).get_response(self.headers, body)
         response_xml = File().get_response('LogsOpenGetRsp.xml')
         #print response_xml
         return self.parse_xml(response_xml)
@@ -360,14 +362,14 @@ class Log:
         body = ID
         body = body.replace('JobID', str(jobID))
         response_xml = File().get_response('LogsGetByJobIDRsp.xml')
-        #response_xml = Thomson().get_response(self.headers, body)
+        #response_xml = Thomson(self.name).get_response(self.headers, body)
         return self.parse_xml(response_xml)
 
     def get_sys_log(self):
         from setting.xmlReq.LogReq import SYSTEM
         body = SYSTEM
         response_xml = File().get_response('LogsGetSysRsp.xml')
-        #response_xml = Thomson().get_response(self.headers, body)
+        #response_xml = Thomson(self.name).get_response(self.headers, body)
         return self.parse_xml(response_xml)
 
 
@@ -378,9 +380,10 @@ class Log:
 ##############################################################################
 
 class Workflow:
-    def __init__(self):
+    def __init__(self, name):
         from setting.xmlReq.WorkflowReq import HEADERS
         self.headers = HEADERS
+        self.name = name
 
     def parse_xml(self, xml):
         xmldoc = minidom.parseString(xml)
@@ -403,17 +406,18 @@ class Workflow:
     def get_workflow(self):
         from setting.xmlReq.WorkflowReq import BODY
         body = BODY
-        #response_xml = Thomson().get_response(self.headers, body)
+        #response_xml = Thomson(self.name).get_response(self.headers, body)
         response_xml = File().get_response('WorklowGetListRsp.xml')
         return self.parse_xml(response_xml)
 
 class WorkflowDetail:
-    def __init__(self, wfid):
+    def __init__(self, wfid, name):
         from setting.xmlReq.WorkflowDetailReq import HEADERS, BODY
         self.headers = HEADERS
         self.body = BODY
         self.body = self.body.replace('WorkflowID', wfid)
         self.wfid = wfid
+        self.name = name
 
     def parse_xml(self, xml):
         xmldoc = minidom.parseString(xml)
@@ -450,7 +454,7 @@ class WorkflowDetail:
         return json.dumps(args)
 
     def get_param(self):
-        #response_xml = Thomson().get_response(self.headers, self.body)
+        #response_xml = Thomson(self.name).get_response(self.headers, self.body)
         response_xml = File().get_response('WorkflowGetParamsRsp.xml')
         #print response_xml
         return self.parse_xml(response_xml)
@@ -462,9 +466,10 @@ class WorkflowDetail:
 ##############################################################################
 
 class Job:
-    def __init__(self):
+    def __init__(self, name):
         from setting.xmlReq.JobReq import HEADERS
         self.headers = HEADERS
+        self.name = name
 
     def parse_dom_object(self, dom_object, workflow_list_json):
         str_tmp = str(dom_object.attributes.items())
@@ -476,7 +481,7 @@ class Job:
         if "'StartDate'" in str_tmp else ''
         Ver = dom_object.attributes['Ver'].value if "'Ver'" in str_tmp else ''
         EndDate = dom_object.attributes['EndDate'].value if "'EndDate'" in str_tmp else ''
-        jobname, workflowIdRef = JobDetail(str(JId)).get_job_name() if JId else ''
+        jobname, workflowIdRef = JobDetail(str(JId), self.name).get_job_name() if JId else ''
         '''Get workflow name'''
         workflow_name = ''
         workflow_list_json = json.loads(workflow_list_json)
@@ -530,7 +535,7 @@ class Job:
     def get_job_xml(self):
         from setting.xmlReq.JobReq import BODY
         body = BODY
-        #response_xml = Thomson().get_response(self.headers, body)
+        #response_xml = Thomson(self.name).get_response(self.headers, body)
         response_xml = File().get_response('JobGetListRsp.xml')
         return response_xml
 
@@ -560,7 +565,7 @@ class Job:
     def get_Waiting_xml(self):
         from setting.xmlReq.JobReq import WAITTING
         body = WAITTING
-        #response_xml = Thomson().get_response(self.headers, body)
+        #response_xml = Thomson(self.name).get_response(self.headers, body)
         response_xml = File().get_response('JobGetListRsp.xml')
         return response_xml
 
@@ -575,7 +580,7 @@ class Job:
     def get_Running_xml(self):
         from setting.xmlReq.JobReq import RUNNING
         body = RUNNING
-        #response_xml = Thomson().get_response(self.headers, body)
+        #response_xml = Thomson(self.name).get_response(self.headers, body)
         response_xml = File().get_response('JobGetListRsp.xml')
         return response_xml
 
@@ -590,7 +595,7 @@ class Job:
     def get_Paused_xml(self):
         from setting.xmlReq.JobReq import PAUSED
         body = PAUSED
-        #response_xml = Thomson().get_response(self.headers, body)
+        #response_xml = Thomson(self.name).get_response(self.headers, body)
         response_xml = File().get_response('JobGetListRsp.xml')
         return response_xml
 
@@ -605,7 +610,7 @@ class Job:
     def get_Completed_xml(self):
         from setting.xmlReq.JobReq import COMPLETED
         body = COMPLETED
-        #response_xml = Thomson().get_response(self.headers, body)
+        #response_xml = Thomson(self.name).get_response(self.headers, body)
         response_xml = File().get_response('JobGetListRsp.xml')
         return response_xml
 
@@ -620,7 +625,7 @@ class Job:
     def get_Aborted_xml(self):
         from setting.xmlReq.JobReq import ABORTED
         body = ABORTED
-        #response_xml = Thomson().get_response(self.headers, body)
+        #response_xml = Thomson(self.name).get_response(self.headers, body)
         response_xml = File().get_response('JobGetListRsp.xml')
         return response_xml
 
@@ -638,7 +643,7 @@ class Job:
         xmldoc = minidom.parseString(job_xml)
         itemlist = xmldoc.getElementsByTagName('jGetList:JItem')
         args=[]
-        workflow_list_json = Workflow().get_workflow()
+        workflow_list_json = Workflow(self.name).get_workflow()
         for job in itemlist:
             str_tmp = str(job.attributes.items())
             JId = job.attributes['JId'].value if "'JId'" in str_tmp else '-1'
@@ -660,9 +665,9 @@ class Job:
         return args
 
 class JobDetail:
-    def __init__(self, jid):
+    def __init__(self, jid, name):
         self.jid = jid
-
+        self.name = name
     def parse_xml(self, xml):
         xmldoc = minidom.parseString(xml)
         joblist = xmldoc.getElementsByTagName('wd:Job')
@@ -693,7 +698,7 @@ class JobDetail:
         headers = HEADERS
         body = BODY
         body = body.replace('JobID', str(self.jid))
-        #response_xml = Thomson().get_response(headers, body)
+        #response_xml = Thomson(self.name).get_response(headers, body)
         response_xml = File().get_response('JobGetParamsRsp.xml')
         return response_xml
 
@@ -734,25 +739,25 @@ class JobDetail:
         headers = START_HEADERS
         body = START_BODY
         body = body.replace('JobID', str(self.jid))
-        # response_xml = Thomson().get_response(headers, body)
+        # response_xml = Thomson(self.name).get_response(headers, body)
         # return self.parse_status(response_xml)
-        return "Oke"
+        return "Oke"+self.name
 
     def abort(self):
         from setting.xmlReq.JobDetailReq import ABORT_HEADERS, ABORT_BODY
         headers = ABORT_HEADERS
         body = ABORT_BODY
         body = body.replace('JobID', str(self.jid))
-        # response_xml = Thomson().get_response(headers, body)
+        # response_xml = Thomson(self.name).get_response(headers, body)
         # return self.parse_status(response_xml)
-        return "Oke"
+        return "Oke" + self.name
 
     def delete(self):
         from setting.xmlReq.JobDetailReq import DELETE_HEADERS, DELETE_BODY
         headers = DELETE_HEADERS
         body = DELETE_BODY
         body = body.replace('JobID', str(self.jid))
-        response_xml = Thomson().get_response(headers, body)
+        response_xml = Thomson(self.name).get_response(headers, body)
         return self.parse_status(response_xml)
 
 ##############################################################################
@@ -762,10 +767,10 @@ class JobDetail:
 ##############################################################################
 #
 #if __name__ == "__main__":
-    #print Thomson().get_nodes_status()
-    #print Thomson().get_datetime()
-    #print Thomson().get_mountpoint()
-    #print Thomson().get_system_status()
+    #print Thomson(self.name).get_nodes_status()
+    #print Thomson(self.name).get_datetime()
+    #print Thomson(self.name).get_mountpoint()
+    #print Thomson(self.name).get_system_status()
     #print Log().get_log()
     #print Log().get_open()
     #print Job().get_Running()
@@ -774,8 +779,8 @@ class JobDetail:
     #print Workflow().get_workflow()
     #Job().get_Running()
     #print WorkflowDetail('dsg').get_param()
-    #print Thomson().get_system_status()
-    #print Thomson().get_job_status()
+    #print Thomson(self.name).get_system_status()
+    #print Thomson(self.name).get_job_status()
     #print Node().get_info()
     #print Log().get_sys_log()
     #print Workflow().get_workflow()

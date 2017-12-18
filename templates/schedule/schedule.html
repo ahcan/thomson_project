@@ -34,7 +34,7 @@
                                 <td colspan="9" class="text-center">Total: {{'{{filterState.length}'}}}</td>
                             </tr>
                             </tfoot>
-                            <tbody data-link="row" class="rowlink">
+                            <tbody class="rowlink">
                                 <tr ng-repeat="scrontab in (scrontab_list | orderBy:'-unix_timestamp') as filterState" >
                                     <td class="col-md-1" ng-click="moreInfor(scrontab.id)">{{'{{scrontab.id}'}}}</td>
                                     <td class="col-md-1" ng-click="moreInfor(scrontab.id)"><span>{{'{{scrontab.unix_timestamp*1000 | date: "dd-M-yyyy HH:mm:ss"}'}}}</span></td>
@@ -46,16 +46,16 @@
                                         <table class="table table-bordered">
                                             <thead>
                                                 <tr style="background-color: #337ab7; color: #ffff;">
-                                                    <th>JobID</th>
-                                                    <th>Name</th>
-                                                    <th>State</th>
+                                                    <th class="col-md-1">JobID</th>
+                                                    <th class="col-md-6">Name</th>
+                                                    <th class="col-md-3">State</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <tr ng-repeat="job in scrontab.list_job">
-                                                    <td><span>{{'{{job.jid}'}}}</span></td>
-                                                    <td><span>{{'{{job.jname}'}}}</span></td>
-                                                    <td  ng-class="{'running': job.state == 'Running', 'aborted': job.state == 'Aborted', 'watting': job.state == 'Watting', 'paused': job.state == 'Paused', 'completed': job.state == 'Completed'}"><span>{{'{{job.state}'}}}</span></td>
+                                                    <td class="col-md-1"><span>{{'{{job.jid}'}}}</span></td>
+                                                    <td class="col-md-6"><span>{{'{{job.jname}'}}}</span></td>
+                                                    <td class="col-md-3" ng-class="{'running': job.state == 'Running', 'aborted': job.state == 'Aborted', 'watting': job.state == 'Watting', 'paused': job.state == 'Paused', 'completed': job.state == 'Completed'}"><span>{{'{{job.state}'}}}</span></td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -66,12 +66,12 @@
                         </table>
                     </div>
                 </div><!-- End main schedule table -->
-                <div class="col-md-4"><!-- Main schedule table -->
+                <div class="col-md-4"><!-- History schedule table -->
                     <div class="content">
                         <h4 class="sub-header">Historys</h4>
                     </div>
-                    <div class="" style="overflow-y: scroll;">
-                        <table class="table table-bordered table-hover table-striped">
+                    <div class="wrapper" style="overflow-y: scroll;" style="overflow-y: scroll;">
+                        <table class="table table-bordered table-hover table-striped scrollTable">
                             <thead>
                                 <tr>
                                     <th class="col-md-1" title="Schedule id">ID</th>
@@ -79,7 +79,7 @@
                                     <th class="col-md-11">Messages</th>
                                 </tr>
                             </thead>
-                            <tbody data-link="row" class="rowlink">
+                            <tbody>
                                 <tr ng-repeat="history in history_list | orderBy:'-date_time'">
                                     <td>{{'{{history.schedule_id}'}}}</td>
                                     <td>{{'{{history.host}'}}}</td>
@@ -108,7 +108,7 @@
                                     <label>Job ID:</label>
                                     <multiple-autocomplete ng-model="schedule.jobid_list"
                                     object-property="jid"
-                                    api-url="/job/api/job-name"
+                                    api-url="/job/api/thomson-hcm/job-name/"
                                     suggestions-arr="optionsList">
                                     </multiple-autocomplete>
                                 </div>
@@ -134,9 +134,10 @@
 <script>
 var app = angular.module('schedule',['multipleSelect']);
     app.controller("scheCtrl", function ($scope,$http,$timeout,$window){
+        $scope.host = 'thomson-hcm';
         $scope.onload = function () {
             $scope.total = 0;
-            $http.get('/schedule/api/schedule').then(function (response) {
+            $http.get('/schedule/api/'+$scope.host+'/schedule/').then(function (response) {
                 $scope.scrontab_list = response.data;
                 $scope.total = $scope.scrontab_list.length
             });
@@ -180,7 +181,7 @@ var app = angular.module('schedule',['multipleSelect']);
     $scope.updateTime();
     $http({
       method : 'POST',
-      url : '/schedule/add/',
+      url : '/schedule/'+$scope.host+'/add/',
       data : $scope.schedule
     }).then(function(response){
       if(response.status == 203){
@@ -202,15 +203,6 @@ var app = angular.module('schedule',['multipleSelect']);
     //getElement via DOM in angular
     var da = angular.element( document.getElementById('daypicker').firstElementChild);
      $scope.schedule.date_time = da.val();
-  }
-  $scope.new = function(){
-    $http({
-        method: 'GET',
-        url: '/job/api/job/',
-    }).then(function(response){
-        $scope.optionsList = response.data;
-        console.log($scope.optionsList);
-    });
   }
 });
 </script>
@@ -237,6 +229,14 @@ var app = angular.module('schedule',['multipleSelect']);
             allowInputToggle: true,
             useCurrent: true
         });
+    });
+</script>
+<script type="text/javascript">
+    var $scroll = $('table.scrollTable');
+    $scroll.floatThead({
+        scrollContainer: function($table){
+        return $table.closest('.wrapper');
+        }
     });
 </script>
     {% endblock %}

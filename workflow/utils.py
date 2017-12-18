@@ -3,20 +3,21 @@ from django.contrib.auth.models import User
 from job.models import *
 from setting.MySQL_Database import Database
 import json
-
+from setting import settings
 class DatabaseWorkflow():
     """docstring for DataBaseWorkflow"""
     def __init__(self):
         # super (DataBaseWorkflow, self).__init__()
         self.db = Database()
 
-    def get_all_workflow(self):
-        sql = "select name, wid from workflow;"
+    def get_all_workflow(self, thomson_name):
+        host = settings.HOTS_THOMSON[thomson_name]['host']
+        sql = "select name, wid from workflow where host = '%s';"%(host)
         # print self.db.execute_query(sql)
         return self.db.execute_query(sql)
 
-    def  json_all_workflow(self):
-        lstworkflow = self.get_all_workflow()
+    def  json_all_workflow(self, thomson_name):
+        lstworkflow = self.get_all_workflow(thomson_name)
         args=[]
         for item in lstworkflow:
             Name = item[0]
@@ -29,5 +30,5 @@ class DatabaseWorkflow():
                         # 'pubver'            : int(PubVer),
                         # 'priver'            : int(PriVer)
                 })
-        print args
+        # print args
         return json.dumps(args)   

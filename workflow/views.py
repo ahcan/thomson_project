@@ -22,9 +22,9 @@ from utils import DatabaseWorkflow as WorkflowDB
 @require_http_methods(['GET'])
 @csrf_exempt
 @login_required() # login required
-def workflow_json(request):
+def workflow_json(request, thomson_name):
     # workflow_list = Workflow().get_workflow()
-    workflow_list = WorkflowDB().json_all_workflow()
+    workflow_list = WorkflowDB().json_all_workflow(thomson_name)
     return HttpResponse(workflow_list, content_type='application/json', status=200)
 
 def get_workflow(request):
@@ -42,8 +42,8 @@ def get_workflow(request):
 @require_http_methods(['GET'])
 @csrf_exempt
 @login_required()
-def get_workflow_params(request, wfid):
-	param_list = WorkflowDetail(wfid).get_param()
+def get_workflow_params(request, wfid, thomson_name):
+	param_list = WorkflowDetail(wfid, thomson_name).get_param()
 	return HttpResponse(param_list, content_type='application/json', status=200)
 
 

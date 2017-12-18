@@ -5,6 +5,7 @@ from workflow.models import Workflow as workflow
 from setting.MySQL_Database import Database
 from setting import DateTime
 import json
+from setting import settings
 
 class DatabaseJob():
     """docstring for RequsetGetJob"""
@@ -19,7 +20,8 @@ class DatabaseJob():
                 INNER JOIN workflow w ON w.wid = p.wid and w.host = p.host;"
         return self.db.execute_query(sql)
 
-    def get_job_host(self, host):
+    def get_job_host(self, thomson_name):
+        host = settings.HOTS_THOMSON[thomson_name]['host']
         sql = "select j.jid, p.name, w.name, j.state, j.status, j.startdate, j.enddate, w.wid from job j \
                 INNER JOIN job_param p ON j.jid = p.jid and j.host = '%s'\
                 INNER JOIN workflow w ON w.wid = p.wid and w.host = p.host;"%(host)
@@ -31,14 +33,16 @@ class DatabaseJob():
         #     result
         return self.db.execute_query(sql)
 
-    def get_job_name(self):
+    def get_job_name(self, thomson_name):
+        host = settings.HOTS_THOMSON[thomson_name]['host']
         sql = "select j.jid, p.name from job j \
-                INNER JOIN job_param p ON j.jid = p.jid and j.host = p.host;"
+                INNER JOIN job_param p ON j.jid = p.jid and j.host = '%s'\
+                 and j.host = p.host;"%(host)
         return self.db.execute_query(sql)
 
     # Return Json Job
-    def json_job_host(self, host):
-        lstjob = self.get_job_host(host)
+    def json_job_host(self, thomson_name):
+        lstjob = self.get_job_host(thomson_name)
         args=[]
         for item in lstjob:
             JId,jobname,workflow_name,State,Status,StartDate,EndDate,workflowIdRef = item[0], item[1], item[2], item[3], item[4], item[5], item[6], item[7]
@@ -77,8 +81,8 @@ class DatabaseJob():
                 })
         return json.dumps(args)
 
-    def json_job_name(self):
-        lstjob = self.get_job_name()
+    def json_job_name(self, thomson_name):
+        lstjob = self.get_job_name(thomson_name)
         args=[]
         for item in lstjob:
             JId,jobname = item[0], item[1]

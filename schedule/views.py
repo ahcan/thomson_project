@@ -25,11 +25,11 @@ import logging
 #Link get all job: /job/api/job
 @require_http_methods(['GET'])
 # @csrf_exempt
-def get_schedule_list_json(request):
+def get_schedule_list_json(request, thomson_name):
     if not request.user.is_authenticated():
         return HttpResponseRedirect('/accounts/login')
-    schedule_list = Crontab().get_all()
-    #print schedule_list
+    schedule_list = Crontab().get_all(thomson_name)
+    # print schedule_list
     return HttpResponse(schedule_list, content_type='application/json', status=200)
 def get_index(request):
     if not request.user.is_authenticated():
@@ -39,7 +39,7 @@ def get_index(request):
 
 @require_http_methods(['GET', 'POST'])
 @csrf_exempt
-def add_schedule(request):
+def add_schedule(request, thomson_name):
     if not request.user.is_authenticated():
         return HttpResponseRedirect('/accounts/login')
     # get value post
@@ -64,7 +64,7 @@ def add_schedule(request):
             return HttpResponse(messages, content_type='application/json', status=203)     	
         '''End alidate date time'''
         '''validate jobid input'''
-        jobid_list, error = RequestGetParam(request).get_job_id()
+        jobid_list, error = RequestGetParam(request).get_job_id(thomson_name)
         if error:
             agrs["detail"] = error
             messages = json.dumps(agrs)
@@ -140,10 +140,10 @@ def remove_schedule(request, id):
 ### api time countdown and server ###
 @require_http_methods(['GET'])
 @login_required()
-def get_schedule_json(request, id):
+def get_schedule_json(request, id, thomson_name):
     # if not request.user.is_authenticated():
     #     return HttpResponseRedirect('/accounts/login')
-	schedule = CrontabDetail(id).get_schedule()
+	schedule = CrontabDetail(id).get_schedule(thomson_name)
 	return HttpResponse(schedule, content_type='application/json', status=status.HTTP_200_OK)
 @login_required()
 def redirect_schedule(request, id):

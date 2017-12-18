@@ -105,9 +105,10 @@
 <script>
     var app = angular.module('Job',[]);
     app.controller("jobCtrl", function ($scope,$http,$timeout,$window){
+        $scope.host = 'thomson-hcm'
         $scope.reload = function () {
             $scope.total = 0;
-            $http.get('/job/api/job/').
+            $http.get('/job/api/'+$scope.host+'/job/').
             then(function (response) {
                 if(response.status == 302 && response.data.url){
                     console.log(response.status);
@@ -139,11 +140,11 @@
         $scope.reload();
         $scope.moreinfo = function(jobID){
             // console.log(jobID);
-            $http.get('/job/api/job/'+jobID+'/').then(function(response){
+            $http.get('/job/api/'+$scope.host+'/job/'+jobID+'/').then(function(response){
                 $scope.workflow = response.data;
                 console.log($scope.workflow);
             });
-            $http.get('/log/api/'+jobID+'/').then(function(response){
+            $http.get('/log/api/'+$scope.host+'/'+jobID+'/').then(function(response){
                 $scope.lstLogJob = response.data;
                 console.log($scope.lstLogJob);
             });

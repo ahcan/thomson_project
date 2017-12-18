@@ -13,7 +13,7 @@ class RequestGetParam:
         self.data = json.loads(Request.body)
     def get_action(self):
         return 'start'
-    def get_job_id(self):
+    def get_job_id(self, thomson_name):
         jobid_list = ''
         error = ''
         try:
@@ -21,7 +21,7 @@ class RequestGetParam:
             # job_pattern = re.compile("\d{3,10}")
             # jobid_list_data = re.findall(job_pattern,jobid_list_data)
             jobid_not_found = ''
-            jobid_list_all = Job().get_jobid_list()
+            jobid_list_all = Job(thomson_name).get_jobid_list()
             for job in jobid_list_data:
                 job = job['jid']
                 if int(job) in jobid_list_all:
@@ -192,7 +192,7 @@ class Crontab:
         # find back and return status
         return task
 
-    def get_all(self):
+    def get_all(self, thomson_name):
         list_task = self.get_list()
         agrs = []
         for task in list_task.split('\n'):
@@ -203,7 +203,7 @@ class Crontab:
                 array_jid = []
                 for jid in list_jid:
                     array_jid.append(int(jid))
-                list_job = Job().get_job_detail_by_job_id(array_jid)
+                list_job = Job(thomson_name).get_job_detail_by_job_id(array_jid)
                 agrs.append({'id'              : int(schedule_id),
                              'list_job'        : list_job,
                              'action'          : action,
@@ -275,7 +275,7 @@ class CrontabDetail:
         message = 'At %s %s job(s) ID: %s.'%(human_date, action, list_jid)
         return message
 
-    def get_schedule(self):
+    def get_schedule(self, thomson_name):
         agrs = []
         schedule = CrontabDetail(self.task).serialization()
         if schedule:
@@ -283,7 +283,7 @@ class CrontabDetail:
             array_jid = []
             for jid in list_jid:
                 array_jid.append(int(jid))
-            list_job = Job().get_job_detail_by_job_id(array_jid)
+            list_job = Job(thomson_name).get_job_detail_by_job_id(array_jid)
             now = DateTime().get_now()
             agrs.append({'list_job'        : list_job,
                          'action'          : action,
@@ -297,7 +297,7 @@ class CrontabDetail:
 
 class ScheduleHistory:
     def create_message(self, user_name='', action = '', crontab = ''):
-        host = settings.host
+        host = settings.HOTS_THOMSON['thomson-hcm']['host']
         message = ''
         msg = CrontabDetail(crontab).human_readable()
         now = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
@@ -309,16 +309,16 @@ class ScheduleHistory:
         schedule_obj = Schedule.objects.get(id=int(schedule_id))
         msg = self.create_message(user_name, action, schedule)
         now = DateTime().get_now()
-        new_history = History(schedule=schedule_obj, date_time=now, host=settings.host, messages=msg)
+        new_history = History(schedule=schedule_obj, date_time=now, host=settings.HOTS_THOMSON['thomson-hcm']['host'], messages=msg)
         new_history.save()
         return 1
 
     def get_new_id(self, request):
-        host = settings.host
+        host = settings.HOTS_THOMSON['thomson-hcm']['host']
         user_id = request.user.id
         user = User.objects.get(id=user_id)
         action = RequestGetParam(request).get_action()
-        jobid_list, error = RequestGetParam(request).get_job_id()
+        jobid_list, error = RequestGetParam(request).get_job_id('thomson-hcm')
         schedule_time, error = RequestGetParam(request).get_date_time()
         description = RequestGetParam(request).get_description()
         schedule_time = DateTime().conver_human_creadeble_2_unix_timetamp(schedule_time)

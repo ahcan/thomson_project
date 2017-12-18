@@ -69,8 +69,9 @@
     var app = angular.module('Log',[]);
     app.controller("logCtrl", function ($scope,$http,$timeout){
         $scope.reload = function () {
+            $scope.host = 'thomson-hcm'
         	$scope.nowDate = +new Date();
-            $http.get('/log/api/log').
+            $http.get('/log/api/'+$scope.host+'/log/').
             then(function (response) {
                 $scope.log_list = response.data;
                 $scope.total = $scope.log_list.length;

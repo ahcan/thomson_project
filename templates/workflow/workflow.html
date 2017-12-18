@@ -15,7 +15,7 @@
             </div>
         </div>
 
-        <div class="wrapper" style="overflow-y: scroll;">
+        <div class="wrapper" style="overflow-y: scroll;" >
             <table class="table table-bordered table-hover table-striped scrollTable">
                 <thead>
                     <tr>
@@ -24,8 +24,8 @@
                         <th>Name</th>
                     </tr>
                 </thead>
-                <tbody class="rowlink" data-link="row">
-                    <tr ng-repeat="workflow in workflow_list | filter: search" ng-click="showinfo(workflow.wid)"  tooltip-is-open="isOpen">
+                <tbody class="rowlink">
+                    <tr ng-repeat="workflow in workflow_list | filter: search" ng-click="showinfo(workflow.id)">
                         <td>{{'{{$index + 1}'}}}</td>
                         <td><p>{{'{{workflow.wid}'}}}</p></td>
                         <td>{{'{{workflow.name}'}}}</td>
@@ -34,7 +34,7 @@
             </table>
         </div>
     </div>
-    <div class="col-md-6 col-sm-6 table-responsive" ng-click="isOpen">
+    <div class="col-md-6 col-sm-6 table-responsive">
         <div class="panel panel-default" ng-show="isOpen">
             <div class="panel-heading">
             <h4>{{'{{selectedWorkf.name}'}}}</h4>
@@ -71,11 +71,12 @@
     </div>
 </div>
 <script>
-    var app = angular.module('Workflow',['ui.bootstrap']);
+    var app = angular.module('Workflow',[]);
     app.controller("workflowCtrl", function ($scope,$http,$timeout,$element,$sce){
+        $scope.host = 'thomson-hcm';
         $scope.reload = function () {
             $scope.total = 0;
-            $http.get('/workflow/api/workflow/').
+            $http.get('/workflow/api/'+$scope.host+'/workflow/').
             then(function (response) {
                 $scope.workflow_list = response.data;
                 $scope.total = $scope.workflow_list.length;
@@ -87,8 +88,8 @@
         };
         $scope.reload();
         $scope.showinfo = function(id){
-            var tootcontents = '<div>loading....</div>';
-            $http.get('/workflow/api/workflow/'+id+'/').then(
+            // var tootcontents = '<div>loading....</div>';
+            $http.get('/workflow/api/'+$scope.host+'/workflow/'+id+'/').then(
                 function(response){
                     $scope.selectedWorkf = response.data[0];
                     var oj = response.data[0];
@@ -105,7 +106,7 @@
                     console.log(oj.params);
                     $scope.isOpen = true;
                 }); 
-            $scope.text = $sce.trustAsHtml(tootcontents);
+            // $scope.text = $scope.trustAsHtml(tootcontents);
         }
     });
 </script>

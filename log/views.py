@@ -20,12 +20,12 @@ from django.contrib.auth.decorators import login_required
 @require_http_methods(['GET'])
 @csrf_exempt
 @login_required()
-def get_log_list_json(request):
+def get_log_list_json(request, thomson_name):
     """
     List all Logs.
     /log/api/log
     """
-    log_list = Log().get_log()
+    log_list = Log(thomson_name).get_log()
     return HttpResponse(log_list, content_type='application/json', status=200)
 
 def get_log(request):
@@ -74,12 +74,12 @@ def get_open_log(request):
 @csrf_exempt
 @login_required()
 
-def get_log_by_jobID_list_json(request, job_id):
+def get_log_by_jobID_list_json(request, job_id, thomson_name):
     """
     List all Logs by Job_ID.
     /log/api/<Job_ID>/
     """
-    log_list = Log().get_by_jobID(int(job_id))
+    log_list = Log(thomson_name).get_by_jobID(int(job_id))
     return HttpResponse(log_list, content_type='application/json', status=200)
 
 ##############################################################################
@@ -96,7 +96,7 @@ def get_system_log_list_json(request):
     Template show list all system Logs.
     /log/api/system
     """
-    log_list = Log().get_sys_log()
+    log_list = Log(thomson_name).get_sys_log()
     return HttpResponse(log_list, content_type='application/json', status=200)
 
 def get_system_log(request):

@@ -22,15 +22,15 @@ from utils import DatabaseJob as JobDB
 @require_http_methods(['GET'])
 @csrf_exempt
 @login_required()
-def get_job_json(request):
-    job_list = JobDB().json_all_job()
+def get_job_json(request, thomson_name):
+    job_list = JobDB().json_job_host(thomson_name)
     # job_list = Job().get_job()
     return HttpResponse(job_list, content_type='application/json', status=200)
 
 #link get all job name and id /job/api/job-name
 @login_required()
-def get_job_name(request):
-    job_list = JobDB().json_job_name()
+def get_job_name(request, thomson_name):
+    job_list = JobDB().json_job_name(thomson_name)
     return HttpResponse(job_list, content_type='application/json', status=200)
 
 #Link template show all job: /job/
@@ -160,8 +160,8 @@ def get_aborted(request):
 @require_http_methods(['GET'])
 @csrf_exempt
 @login_required()
-def get_job_params(request, jid):
-    param_list = JobDetail(jid).get_param()
+def get_job_params(request, jid, thomson_name):
+    param_list = JobDetail(jid, thomson_name).get_param()
     return HttpResponse(param_list, content_type='application/json', status=200)
 
 ##############################################################################
@@ -177,7 +177,7 @@ def get_job_params(request, jid):
 @require_http_methods(['POST'])
 @csrf_exempt
 @login_required()
-def create_job(request, wfid):
+def create_job(request, wfid, thomson_name):
     print wfid
     json_data = json.loads(request.body)
     print json_data
@@ -229,8 +229,8 @@ job/api/125/start/
 @require_http_methods(['PUT'])
 @csrf_exempt
 @login_required()
-def start_job(request, jid):
-    result = JobDetail(jid).start()
+def start_job(request, jid, thomson_name):
+    result = JobDetail(jid, thomson_name).start()
     arg = {}
     arg["message"] = result
     message = json.dumps(arg)
@@ -249,8 +249,8 @@ job/api/125/abort/
 @require_http_methods(['PUT'])
 @csrf_exempt
 @login_required()
-def abort_job(request, jid):
-    result = JobDetail(jid).abort()
+def abort_job(request, jid, thomson_name):
+    result = JobDetail(jid, thomson_name).abort()
     arg = {}
     arg["message"] = result
     message = json.dumps(arg)

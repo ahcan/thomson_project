@@ -73,7 +73,7 @@
         $scope.reload = function(){
             $http({
                 method: 'GET',
-                url: '/schedule/api/schedule/'+{{id}}+'/',
+                url: '/schedule/api/thomson-hcm/schedule/'+{{id}}+'/',
             }).then(function(response){
                 $scope.schedule = response.data[0];
                 $scope.list_job = $scope.schedule['list_job'];
@@ -82,7 +82,7 @@
         };
         $scope.onload = function () {
             // $scope.idSchedule;
-            $http.get('/schedule/api/schedule/'+{{id}}+'/').then(function (response) {
+            $http.get('/schedule/api/thomson-hcm/schedule/'+{{id}}+'/').then(function (response) {
                 $scope.schedule = response.data[0];
                 $scope.list_job = $scope.schedule['list_job'];
                 var x =  $interval(function() {
