@@ -17,3 +17,12 @@ class Node(models.Model):
     class Meta:
         managed = True
         db_table = 'node'
+
+class NodeDetail(models.Model):
+    nid = models.IntegerField(blank=True, null=True)
+    host = models.CharField(max_length=20, blank=True, null=True)
+    jid = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        managed = True
+        db_table = 'node_detail'

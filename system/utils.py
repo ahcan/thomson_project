@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from system.models import Node
+from system.models import Node, NodeDetail
 from job.models import Job
 from setting.MySQL_Database import Database
 import json
@@ -18,7 +18,7 @@ class DatabaseNode():
         lstnodes = self.get_all_node()
         args=[]
         for node in lstnodes:
-            jerror, jcounter = self.count_job_error(node.host)
+            jerror, jcounter = self.count_job_error(node.host, node.nid)
             args.append({'status'        :node.status,
                         'cpu'           :node.cpu,
                         'alloccpu'      :node.alloccpu,
@@ -31,11 +31,14 @@ class DatabaseNode():
                         'jcounter'      :jcounter})
         return json.dumps(args)
 
-    def count_job_error(self, host):
+    def count_job_error(self, host, nid):
         # print self.host
         job_list = Job.objects.all().filter(host=host)
+        job_node = NodeDetail.objects.all().filter(host=host, nid=nid)
         error=0
-        for job in job_list:
-            if job.status != 'Ok':
-                error += 1
-        return error, len(job_list)
+        for item in job_node:
+            for job in job_list:
+                if job.status != 'Ok' and item.jid == job.jid:
+                    error += 1
+                    break
+        return error, len(job_node)
