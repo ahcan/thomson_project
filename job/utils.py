@@ -21,7 +21,7 @@ class DatabaseJob():
         return self.db.execute_query(sql)
 
     def get_job_host(self, thomson_name):
-        host = settings.HOTS_THOMSON[thomson_name]['host']
+        host = settings.THOMSON_HOST[thomson_name]['host']
         sql = "select j.jid, p.name, w.name, j.state, j.status, j.startdate, j.enddate, w.wid from job j \
                 INNER JOIN job_param p ON j.jid = p.jid and j.host = '%s'\
                 INNER JOIN workflow w ON w.wid = p.wid and w.host = p.host;"%(host)
@@ -34,7 +34,7 @@ class DatabaseJob():
         return self.db.execute_query(sql)
 
     def get_job_name(self, thomson_name):
-        host = settings.HOTS_THOMSON[thomson_name]['host']
+        host = settings.THOMSON_HOST[thomson_name]['host']
         sql = "select j.jid, p.name from job j \
                 INNER JOIN job_param p ON j.jid = p.jid and j.host = '%s'\
                  and j.host = p.host;"%(host)

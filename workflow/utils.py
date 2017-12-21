@@ -1,4 +1,3 @@
-
 from django.contrib.auth.models import User
 from job.models import *
 from setting.MySQL_Database import Database
@@ -11,7 +10,7 @@ class DatabaseWorkflow():
         self.db = Database()
 
     def get_all_workflow(self, thomson_name):
-        host = settings.HOTS_THOMSON[thomson_name]['host']
+        host = settings.THOMSON_HOST[thomson_name]['host']
         sql = "select name, wid from workflow where host = '%s';"%(host)
         # print self.db.execute_query(sql)
         return self.db.execute_query(sql)

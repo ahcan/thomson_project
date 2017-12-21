@@ -42,9 +42,9 @@ class File:
 
 class Thomson:
     def __init__(self, name):
-        self.user = settings.HOTS_THOMSON[name]['user']
-        self.passwd = settings.HOTS_THOMSON[name]['passwd']
-        self.url = settings.HOTS_THOMSON[name]['url']
+        self.user = settings.THOMSON_HOST[name]['user']
+        self.passwd = settings.THOMSON_HOST[name]['passwd']
+        self.url = settings.THOMSON_HOST[name]['url']
         self.name = name
     def get_response(self, headers, body):
         response = requests.post(self.url, data=body, headers=headers, \

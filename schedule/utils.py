@@ -297,7 +297,7 @@ class CrontabDetail:
 
 class ScheduleHistory:
     def create_message(self, user_name='', action = '', crontab = ''):
-        host = settings.HOTS_THOMSON['thomson-hcm']['host']
+        host = settings.THOMSON_HOST['thomson-hcm']['host']
         message = ''
         msg = CrontabDetail(crontab).human_readable()
         now = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
@@ -309,12 +309,12 @@ class ScheduleHistory:
         schedule_obj = Schedule.objects.get(id=int(schedule_id))
         msg = self.create_message(user_name, action, schedule)
         now = DateTime().get_now()
-        new_history = History(schedule=schedule_obj, date_time=now, host=settings.HOTS_THOMSON['thomson-hcm']['host'], messages=msg)
+        new_history = History(schedule=schedule_obj, date_time=now, host=settings.THOMSON_HOST['thomson-hcm']['host'], messages=msg)
         new_history.save()
         return 1
 
     def get_new_id(self, request):
-        host = settings.HOTS_THOMSON['thomson-hcm']['host']
+        host = settings.THOMSON_HOST['thomson-hcm']['host']
         user_id = request.user.id
         user = User.objects.get(id=user_id)
         action = RequestGetParam(request).get_action()

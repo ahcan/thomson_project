@@ -126,7 +126,7 @@ STATICFILES_DIRS = [
 AUTO_LOGOUT_DELAY = 1440
 
 # Thomson config
-HOTS_THOMSON={
+THOMSON_HOST={
     'thomson-hcm':
     {
         'user' : 'nguyennt9',

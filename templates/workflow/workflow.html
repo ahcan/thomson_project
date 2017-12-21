@@ -25,7 +25,7 @@
                     </tr>
                 </thead>
                 <tbody class="rowlink">
-                    <tr ng-repeat="workflow in workflow_list | filter: search" ng-click="showinfo(workflow.id)">
+                    <tr ng-repeat="workflow in workflow_list | filter: search" ng-click="showinfo(workflow.wid)">
                         <td>{{'{{$index + 1}'}}}</td>
                         <td><p>{{'{{workflow.wid}'}}}</p></td>
                         <td>{{'{{workflow.name}'}}}</td>
@@ -40,8 +40,8 @@
             <h4>{{'{{selectedWorkf.name}'}}}</h4>
             </div>
             <div class="panel-body">
-                <div class="content">
-                    <table class="table table-panel table-bordered table-hover table-striped">
+                <div class="content wrapper" style="overflow-y: scroll;">
+                    <table class="table table-panel table-bordered table-hover table-striped scrollTable">
                         <tbody>
                             <tr>
                                 <td><span><label>ID</label></span></td>

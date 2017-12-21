@@ -9,6 +9,7 @@ from rest_framework import status
 from setting.get_thomson_api import *
 from accounts.user_info import *
 from django.contrib.auth.decorators import login_required
+from utils import DatabaseNode as NodeDB
 
 # Create your views here.
 
@@ -67,7 +68,8 @@ def get_job_status_json(request, thomson_name):
 @login_required()
 
 def get_nodes_status_json(request, thomson_name):
-    nodes_status = Node(thomson_name).get_info()
+    # nodes_status = Node(thomson_name).get_info()
+    nodes_status = NodeDB(thomson_name).get_all_node_json()
     return HttpResponse(nodes_status, content_type='application/json', status=200)
 
 #Link get list job on node: /system/api/<nid>/
@@ -100,3 +102,9 @@ def test(request):
 def get_license_json(request):
     license_status = Thomson('thomson-hcm').get_license()
     return HttpResponse(license_status, content_type='application/json', status=200)
+
+@require_http_methods(['GET'])
+@login_required()
+def get_db_node(request, thomson_name):
+    nodes =  NodeDB(thomson_name).get_all_node()
+    return HttpResponse(nodes, content_type='application/json', status=200)
