@@ -17,6 +17,10 @@ class DatabaseNode():
     def get_all_node_json(self):
         lstnodes = self.get_all_node()
         args=[]
+        job_list = Job.objects.all().filter(host=self.host).exclude(status='Ok')
+        print self.host
+        for i in job_list:
+            print i.status
         for node in lstnodes:
             jerror, jcounter = self.count_job_error(node.host, node.nid)
             args.append({'status'        :node.status,
@@ -33,7 +37,7 @@ class DatabaseNode():
 
     def count_job_error(self, host, nid):
         # print self.host
-        job_list = Job.objects.all().filter(host=host)
+        job_list = Job.objects.all().filter(host=host).exclude(status='Ok')
         job_node = NodeDetail.objects.all().filter(host=host, nid=nid)
         error=0
         for item in job_node:

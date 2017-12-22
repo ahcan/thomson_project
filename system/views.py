@@ -91,7 +91,7 @@ def redirect_node(request, node_id):
 @login_required()
 def monitor(request):
     user = user_info(request)
-    return render_to_response('system/monitor.html', user)
+    return render_to_response('system/template-base.html', user)
 
 @login_required()
 def test(request):
