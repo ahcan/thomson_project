@@ -9,7 +9,7 @@ from rest_framework import status
 from setting.get_thomson_api import *
 from accounts.user_info import *
 from django.contrib.auth.decorators import login_required
-from utils import DatabaseNode as NodeDB
+from system.utils import DatabaseNode as NodeDB
 
 # Create your views here.
 
@@ -31,8 +31,8 @@ def get_system(request):
 @csrf_exempt
 @login_required()
 
-def datetime_json(request):
-    date_time = Thomson().get_datetime()
+def datetime_json(request, thomson_name):
+    date_time = Thomson(thomson_name).get_datetime()
     return HttpResponse(date_time, content_type='application/json', status=200)
 
 #Link get thomson datetime: /system/api/mountpoint
@@ -91,12 +91,12 @@ def redirect_node(request, node_id):
 @login_required()
 def monitor(request):
     user = user_info(request)
-    return render_to_response('system/template-base.html', user)
+    return render_to_response('system/monitor.html', user)
 
 @login_required()
 def test(request):
     user = user_info(request)
-    return render_to_response('system/template-base.html', user)    
+    return render_to_response('system/monitor.html', user)    
 
 @login_required()
 def get_license_json(request):
