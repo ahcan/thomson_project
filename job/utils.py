@@ -100,3 +100,11 @@ class DatabaseJob():
                         'jid'       : JId
                 })
         return json.dumps(args)
+
+class History:
+    """docstring for JobHistory"""
+    def create_log(self, thomson_name, user, action, jid, datetime):
+        host = settings.THOMSON_HOST[thomson_name]['host']
+        history = JobHistory(user=user, host=host, action=action, jid=jid, datetime=datetime)
+        history.save()
+        print "log start/stop job"

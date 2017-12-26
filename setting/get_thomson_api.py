@@ -4,6 +4,7 @@ import requests# $ pip install requests
 from requests.auth import HTTPDigestAuth
 from setting.DateTime import *
 from setting import settings
+from job.utils import History
 
 ##############################################################################
 #                                                                            #
@@ -734,21 +735,28 @@ class JobDetail:
             result = 'Unknow'
         return result
 
-    def start(self):
+    def start(self, user):
         from setting.xmlReq.JobDetailReq import START_HEADERS, START_BODY
         headers = START_HEADERS
         body = START_BODY
         body = body.replace('JobID', str(self.jid))
         # response_xml = Thomson(self.name).get_response(headers, body)
+        History().create_log(thomson_name=self.name, user=user, action='start', jid=self.jid, datetime=DateTime().get_now())
         # return self.parse_status(response_xml)
         return "Oke"+self.name
 
-    def abort(self):
+    def restart(self, user):
+        self.abort(user)
+        time.sleep(2)
+        return self.start(user)
+        # return "Oke"+self.name
+    def abort(self, user):
         from setting.xmlReq.JobDetailReq import ABORT_HEADERS, ABORT_BODY
         headers = ABORT_HEADERS
         body = ABORT_BODY
         body = body.replace('JobID', str(self.jid))
         # response_xml = Thomson(self.name).get_response(headers, body)
+        History().create_log(thomson_name=self.name, user=user, action='abort', jid=self.jid, datetime=DateTime().get_now())
         # return self.parse_status(response_xml)
         return "Oke" + self.name
 

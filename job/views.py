@@ -239,6 +239,26 @@ def start_job(request, jid, thomson_name):
 
 ##############################################################################
 #                                                                            #
+#----------------------------------RESTART JOB-------------------------------#
+#                                                                            #
+##############################################################################
+
+"""curl -H "Content-Type: application/json" -X PUT http://localhost:8000/
+job/api/125/start/
+ link: job/api/<jid>/start/"""
+@require_http_methods(['PUT'])
+@csrf_exempt
+@login_required()
+def restart_job(request, jid, thomson_name):
+    result = JobDetail(jid, thomson_name).restart(request.user.username)
+    arg = {}
+    arg["message"] = result
+    message = json.dumps(arg)
+    print "restart"
+    return HttpResponse(message, content_type="application.json",status=202)
+
+##############################################################################
+#                                                                            #
 #-----------------------------------ABORT JOB--------------------------------#
 #                                                                            #
 ##############################################################################
@@ -250,7 +270,7 @@ job/api/125/abort/
 @csrf_exempt
 @login_required()
 def abort_job(request, jid, thomson_name):
-    result = JobDetail(jid, thomson_name).abort()
+    result = JobDetail(jid, thomson_name).abort(request.user.username)
     arg = {}
     arg["message"] = result
     message = json.dumps(arg)

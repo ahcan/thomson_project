@@ -27,3 +27,13 @@ class JobParam(models.Model):
     class Meta:
         managed = True
         db_table = 'job_param'
+
+class JobHistory(models.Model):
+    user = models.CharField(max_length=20, blank=True, null=True)
+    host = models.CharField(max_length=20, blank=True, null=True)
+    action = models.CharField(max_length=10, blank=True, null=True)
+    jid = models.IntegerField(blank=True, null=True)
+    datetime = models.IntegerField(blank=True, null=True)
+    class Meta:
+        managed = True
+        db_table = 'job_history'
