@@ -16,7 +16,7 @@
                     <div class="content">
                         <h2 class="sub-header">Schedule<a href="#myModal" role="button" data-parent="#createJob" data-toggle="modal" class="btn btn-success btn-xs" title="Add new schedule"><span class="glyphicon glyphicon-plus"></span></a></h2>
                     </div>
-                    <div class="" style="overflow-y: scroll;">
+                    <div class="wrapper" style="overflow-y: scroll;">
                         <table class="table table-bordered table-hover table-striped">
                             <thead>
                                 <tr>
@@ -70,20 +70,20 @@
                     <div class="content">
                         <h4 class="sub-header">Historys</h4>
                     </div>
-                    <div class="wrapper" style="overflow-y: scroll;" style="overflow-y: scroll;">
+                    <div class="wrapper" style="overflow-y: scroll;">
                         <table class="table table-bordered table-hover table-striped scrollTable">
                             <thead>
                                 <tr>
                                     <th class="col-md-1" title="Schedule id">ID</th>
-                                    <th class="col-md-1" title="Ip Thomson">Thomson</th>
-                                    <th class="col-md-11">Messages</th>
+                                    <th class="col-md-2" title="Ip Thomson">Thomson</th>
+                                    <th class="col-md-9">Messages</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr ng-repeat="history in history_list | orderBy:'-date_time'">
-                                    <td>{{'{{history.schedule_id}'}}}</td>
-                                    <td>{{'{{history.host}'}}}</td>
-                                    <td>{{'{{history.messages}'}}}</td>
+                                    <td class="col-md-1" >{{'{{history.schedule_id}'}}}</td>
+                                    <td class="col-md-2">{{'{{history.host}'}}}</td>
+                                    <td class="col-md-9">{{'{{history.messages}'}}}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -103,7 +103,7 @@
                         </div>
                         <div class="modal-body">
                             <form id="formAddJob" name="formAddJob" action="/schedule/add/" method="POST" onsubmit="return SubmitCheckTextField()">
-                                <p style="color:red; font-size: 18px;">Chý ý! Đối với kịch tương tác nên định giờ trước lúc out luồng 10s.</p>
+                                <p style="color:red; font-size: 18px;">Chý ý! Đối với kịch tương tác nên định giờ trước lúc out luồng 13s.</p>
                                 <div class="form-group">
                                     <label>Job ID:</label>
                                     <multiple-autocomplete ng-model="schedule.jobid_list"

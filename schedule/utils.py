@@ -253,6 +253,7 @@ class CrontabDetail:
         hh = list_time[1]
         DD = list_time[2]
         MM = list_time[3]
+        #  nam lich
         YYYY = '2017'
         dayofweek = list_time[4]
         full_date = 0
