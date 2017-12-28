@@ -17,7 +17,7 @@ class Job(models.Model):
         managed = True
         db_table = 'job'
 
-
+    
 class JobParam(models.Model):
     jid = models.IntegerField(blank=True, null=True)
     host = models.CharField(max_length=20, blank=True, null=True)

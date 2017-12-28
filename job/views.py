@@ -41,6 +41,11 @@ def get_job(request):
     user = user_info(request)
     return render_to_response('job/job.html', user)
 
+@require_http_methods(['GET'])
+@login_required()
+def count_job_by_host(request, thomson_name):
+    jobs = JobDB().count_job_host(thomson_name)
+    return HttpResponse(jobs, content_type='application/json', status=200)
 #############################################################################
 #                                                                           #
 #------------------------------------WAITING--------------------------------#

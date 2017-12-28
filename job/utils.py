@@ -45,11 +45,11 @@ class DatabaseJob():
     def json_job_host(self, thomson_name):
         lstjob = self.get_job_host(thomson_name)
         args=[]
-        print len(lstjob)
+        # print len(lstjob)
         while not lstjob:
             time.sleep(0.5)
             lstjob = self.get_job_host(thomson_name)
-            print "no data"
+            print "no data list job by host"
         for item in lstjob:
             JId,jobname,workflow_name,State,Status,StartDate,EndDate,workflowIdRef = item[0], item[1], item[2], item[3], item[4], item[5], item[6], item[7]
             args.append({'jname'    : jobname,
@@ -90,15 +90,23 @@ class DatabaseJob():
     def json_job_name(self, thomson_name):
         lstjob = self.get_job_name(thomson_name)
         args=[]
-        while len(lstjob):
-            time.sleep(1)
+        while not lstjob:
+            time.sleep(0.5)
             lstjob = self.get_job_name(thomson_name)
-            print "no data"
+            print "no data list job by name"
         for item in lstjob:
             JId,jobname = item[0], item[1]
             args.append({'jname'    : jobname,
                         'jid'       : JId
                 })
+        return json.dumps(args)
+
+    def count_job_host(self, thomson_name):
+        args=[]
+        host = settings.THOMSON_HOST[thomson_name]['host']
+        total = Job.objects.filter(host = host).count()
+        running = Job.objects.filter(host = host, state='running').count()
+        args.append({'total':   total,'running':   running})
         return json.dumps(args)
 
 class History:
