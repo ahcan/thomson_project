@@ -25,10 +25,17 @@
                 //$scope.reloadNodes();
             }, 3000)
         };
+        $scope.reloadJobs = function(){
+            $http({
+                method:'GET',
+                url:"/job/api/"+$scope.host+"/count-job/",
+            }).then(function(response){
+                $scope.Jobs=response.data;
+            });
+        }
         $scope.reloadDevice = function(){
             $http.get("/system/api/"+$scope.host+"/status/").then(function(reponse){
                 $scope.PCStatus = reponse.data[0];
-                // console.log($scope.PCStatus);
             });
             $timeout(function() {
                 //$scope.reloadDevice();
@@ -50,15 +57,29 @@
                 // console.log($scope.job_list);
             });
             if ($scope.isJob && $scope.nodeDetail == node_id){
+                $scope.reload_detail(node_id);
+            }
+            // console.log($scope.nodeDetail);
+        };
+        $scope.reload_detail = function(node_id){
+            $http({
+                method:'GET',
+                url:'/system/api/'+$scope.host+'/'+node_id+'/',
+            }).then(function(response){
+                if($scope.nodeDetail == node_id){
+                    $scope.node = response.data[0];
+                    // $scope.job_list = response.data[0].job_list;
+                }
+            });
+            if ($scope.isJob && $scope.nodeDetail == node_id){
                 $timeout(function() {
-                    //$scope.show_detail(node_id);
+                    $scope.reload_detail(node_id);
                 }, 3000);
             }
-            console.log($scope.nodeDetail);
         };
         $scope.set_nodedatil = function(node_id){
-            $scope.nodeDetail = node_id
-        }
+            $scope.nodeDetail = node_id;
+        };
         $scope.restartJob = function(job_id, node_id){
             if($window.confirm("Confirm Retart Job: "+job_id)){
                 $http({
@@ -116,6 +137,7 @@
         $scope.reloadDevice();
         $scope.reloadNodes();
         $scope.loadAllLog();
+        $scope.reloadJobs();
     });
     app.controller('ctrl-thomson-HCM', function($scope, $http, $timeout, $window) {
     // body...
@@ -130,6 +152,14 @@
                 $scope.reloadNodes();
             }, 3000)
         };
+        $scope.reloadJobs = function(){
+            $http({
+                method:'GET',
+                url:"/job/api/"+$scope.host+"/count-job/",
+            }).then(function(response){
+                $scope.Jobs=response.data;
+            });
+        }
         $scope.reloadDevice = function(){
             $http.get("/system/api/"+$scope.host+"/status/").then(function(reponse){
                 $scope.PCStatus = reponse.data[0];
@@ -153,22 +183,37 @@
                     $scope.job_list = response.data[0].job_list;
                 }
                 // console.log($scope.job_list);
+            });
+            if ($scope.isJob && $scope.nodeDetail == node_id){
+                $scope.reload_detail()
+            }
+        };
+        $scope.reload_detail = function(node_id){
+            $scope.lstLogJob = '';
+            $http({
+                method:'GET',
+                url:'/system/api/'+$scope.host+'/'+node_id+'/',
+            }).then(function(response){
+                if($scope.nodeDetail == node_id){
+                    $scope.node = response.data[0];
+                    $scope.job_list = response.data[0].job_list;
+                }
+                // console.log($scope.job_list);
+            });
             if ($scope.isJob && $scope.nodeDetail == node_id){
                 $timeout(function() {
-                    $scope.show_detail(node_id);
+                    $scope.reload_detail(node_id);
                 }, 3000);
             }
-                console.log($scope.nodeDetail);
-            });
         };
         $scope.set_nodedatil = function(node_id){
             $scope.nodeDetail = node_id
-        }
+        };
         $scope.restartJob = function(job_id, node_id){
             if($window.confirm("Confirm Restart Job: "+job_id)){
                 $http({
                 method: 'PUT',
-                url: '/job/api/' + job_id + '/restart/',
+                url: '/job/api/' +$scope.host+'/'+job_id + '/restart/',
                 }).then(function(response){
                     if (response.status == 202) {
                         $window.alert(response.data.message);
@@ -181,7 +226,7 @@
             if($window.confirm("Confirm Stop Job: "+job_id)){
                 $http({
                 method: 'PUT',
-                url: '/job/api/'+ job_id + '/abort/',
+                url: '/job/api/'+$scope.host+'/'+ job_id + '/abort/',
                 }).then(function(response){
                     if (response.status == 202) {
                     $window.alert(response.data.message);
@@ -221,6 +266,7 @@
         $scope.reloadDevice();
         $scope.reloadNodes();
         $scope.loadAllLog();
+        $scope.reloadJobs();
     });
 </script>
 <script type="text/javascript">

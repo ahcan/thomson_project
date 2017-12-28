@@ -1,5 +1,5 @@
 <div class="header-device">
-    <h2 class="sub-header">Device {{'{{host}'}}}</h2>
+    <h2 class="sub-header">Device:&nbsp;{{'{{host}'}}}&nbsp;<span style="font-size: 17px;">Running/Job:&nbsp;{{'{{Jobs[0].running}'}}}/{{'{{Jobs[0].total}'}}}</span></h2>
     <!-- table total -->
     <div style="display: inline; font-size: 13px; padding-right: 10px; float: right; margin-top:-7px;">
         <table style="width: 200px; background-color: #edeff2; font-size: 11px;">
@@ -102,7 +102,7 @@
 <!-- table Job -->
 <div class="col-md-12 table-responsive colpadding" ng-show="isJob">
     <h4 class="node-h4">
-        Node:&nbsp{{'{{node.nid}'}}}
+        Node:&nbsp;{{'{{node.nid}'}}}
     </h4>
     <div class="wrapper wrapper-node" style="overflow-y: scroll;">
         <table class="table table-bordered table-hover table-striped scrollTable">
@@ -129,7 +129,7 @@
                         <span>{{'{{job.jname}'}}}</span>
                     </td>
                     <td style="width: 2%;" ng-click="showLog(job.jid, job.jname);">
-                        <span ng-class="{'alarm': job.status == 'Critical'}">{{'{{job.status}'}}}</span>
+                        <span ng-class="{'alarm': job.status != 'Ok'}">{{'{{job.status}'}}}</span>
                     </td>
                     <td style="width: 10%;" ng-click="showLog(job.jid, job.jname);">
                         <span>{{'{{job.state}'}}}</span>
