@@ -185,20 +185,19 @@
                 // console.log($scope.job_list);
             });
             if ($scope.isJob && $scope.nodeDetail == node_id){
-                $scope.reload_detail()
+                $scope.reload_detail(node_id);
             }
+            // console.log($scope.nodeDetail);
         };
         $scope.reload_detail = function(node_id){
-            $scope.lstLogJob = '';
             $http({
                 method:'GET',
                 url:'/system/api/'+$scope.host+'/'+node_id+'/',
             }).then(function(response){
                 if($scope.nodeDetail == node_id){
                     $scope.node = response.data[0];
-                    $scope.job_list = response.data[0].job_list;
+                    // $scope.job_list = response.data[0].job_list;
                 }
-                // console.log($scope.job_list);
             });
             if ($scope.isJob && $scope.nodeDetail == node_id){
                 $timeout(function() {
@@ -207,7 +206,7 @@
             }
         };
         $scope.set_nodedatil = function(node_id){
-            $scope.nodeDetail = node_id
+            $scope.nodeDetail = node_id;
         };
         $scope.restartJob = function(job_id, node_id){
             if($window.confirm("Confirm Restart Job: "+job_id)){

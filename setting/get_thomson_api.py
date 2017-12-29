@@ -118,7 +118,7 @@ class Thomson:
                      'mem'      : int(Mem),
                      'allocmem' : int(AllocMem)
                     })
-        print self.user
+        # print self.user
         return json.dumps(agrs)
 
     def get_job_status(self):

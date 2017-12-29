@@ -18,7 +18,7 @@ class DatabaseNode():
         lstnodes = self.get_all_node()
         args=[]
         job_list = Job.objects.all().filter(host=self.host).exclude(status='Ok')
-        print self.host
+        # print self.host
         while not lstnodes:
             lstnodes = self.get_all_node()
         for node in lstnodes:
