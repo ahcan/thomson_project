@@ -248,8 +248,48 @@ table.floatThead-table {
   border-bottom: none;
   /*background-color: #eee;*/ }
 .node-h4 {
+  margin-top: 0px;
   margin-bottom: 0px;
   padding-left: 10px;
+}
+
+.loader{
+  margin-top: 12%;
+  position: absolute;
+  margin-left: 45%;
+}
+  .loader .content {
+  z-index: 1000;
+  border: 8px solid #b6b1b1;
+  border-radius: 50%;
+  border-top: 8px solid #3498db;
+  width: 40px;
+  height: 40px;
+  -webkit-animation: spin 1s linear infinite; /* Safari */
+  animation: spin 1s linear infinite;
+  }
+.panel{
+  margin-top:5px;
+  margin-bottom:0px;
+}
+.panel-info{
+  background-color: #bce8f1;
+}
+.panel-success{
+  /*background-color:#d6e9c6;;*/
+}
+.panel-heading{
+  padding: 5px 15px;
+}
+/* Safari */
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 /*=======Media Screen=======*/
@@ -287,10 +327,11 @@ table.floatThead-table {
       height: 190px;
     }
     .wrapper-log {
-      height: 329px;
+      /*329*/
+      height: 318px;
     }
     .wrapper-log-1 {
-      height: 550px;
+      height: 546px;
     }}
   @media only screen and (min-width: 425px) {
     #txtTime {

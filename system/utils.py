@@ -4,6 +4,7 @@ from job.models import Job
 from setting.MySQL_Database import Database
 import json
 from setting import settings
+import time
 class DatabaseNode():
     """docstring for DataBaseWorkflow"""
     def __init__(self, thomson_name):
@@ -35,6 +36,7 @@ class DatabaseNode():
                         'jcounter'      :jcounter})
         return json.dumps(args)
 
+    # count job error
     def count_job_error(self, host, nid):
         # print self.host
         job_list = Job.objects.all().filter(host=host).exclude(status='Ok')
@@ -46,3 +48,14 @@ class DatabaseNode():
                     error += 1
                     break
         return error, len(job_node)
+
+    def get_node_by_job(self, jid):
+        tmp = NodeDetail.objects.filter(host= self.host, jid=jid)
+        if not tmp:
+            time.sleep(1)
+            tmp = NodeDetail.objects.filter(host= self.host, jid=jid)
+        try:
+            result = tmp[0].nid
+        except Exception as e:
+            result = e
+        return result

@@ -17,13 +17,13 @@ class Job(models.Model):
         managed = True
         db_table = 'job'
 
-    
+
 class JobParam(models.Model):
     jid = models.IntegerField(blank=True, null=True)
     host = models.CharField(max_length=20, blank=True, null=True)
     name = models.CharField(max_length=50, blank=True, null=True)
     wid = models.CharField(max_length=50, blank=True, null=True)
-
+    backup = models.CharField(max_length=5, blank=True, null=True)
     class Meta:
         managed = True
         db_table = 'job_param'

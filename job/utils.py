@@ -46,8 +46,8 @@ class DatabaseJob():
         lstjob = self.get_job_host(thomson_name)
         args=[]
         # print len(lstjob)
-        while not lstjob:
-            time.sleep(0.5)
+        if not lstjob:
+            time.sleep(1)
             lstjob = self.get_job_host(thomson_name)
             print "no data list job by host"
         for item in lstjob:
@@ -90,8 +90,8 @@ class DatabaseJob():
     def json_job_name(self, thomson_name):
         lstjob = self.get_job_name(thomson_name)
         args=[]
-        while not lstjob:
-            time.sleep(0.5)
+        if not lstjob:
+            time.sleep(1)
             lstjob = self.get_job_name(thomson_name)
             print "no data list job by name"
         for item in lstjob:
@@ -109,6 +109,10 @@ class DatabaseJob():
         args.append({'total':   total,'running':   running})
         return json.dumps(args)
 
+    # check job backup True/False
+    def check_backup_job(self, thomson_name, jid):
+        host = settings.THOMSON_HOST[thomson_name]['host']
+        return JobParam.objects.filter(host = host, jid = jid)[0].backup
 class History:
     """docstring for JobHistory"""
     def create_log(self, thomson_name, user, action, jid, datetime):

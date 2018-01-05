@@ -5,7 +5,7 @@ from requests.auth import HTTPDigestAuth
 from setting.DateTime import *
 from setting import settings
 from job.utils import History
-
+from system.utils import DatabaseNode as dbNodeDetail
 ##############################################################################
 #                                                                            #
 #-------------------------------------FILE-----------------------------------#
@@ -709,7 +709,7 @@ class JobDetail:
 
 
     def get_job_name(self):
-        response_xml = self.get_param_xml()
+        #response_xml = self.get_param_xml()
         response_xml = File().get_response('JobGetParamsRsp.xml')
         xmldoc = minidom.parseString(response_xml)
         joblist = xmldoc.getElementsByTagName('wd:Job')
@@ -743,12 +743,16 @@ class JobDetail:
         # response_xml = Thomson(self.name).get_response(headers, body)
         History().create_log(thomson_name=self.name, user=user, action='start', jid=self.jid, datetime=DateTime().get_now())
         # return self.parse_status(response_xml)
-        return "Oke"+self.name
+        return "OK"
 
     def restart(self, user):
         self.abort(user)
         time.sleep(2)
-        return self.start(user)
+        if self.start(user) == 'OK':
+            message = dbNodeDetail(self.name).get_node_by_job(self.jid)
+        else:
+            message = 'can not start job'
+        return message
         # return "Oke"+self.name
     def abort(self, user):
         from setting.xmlReq.JobDetailReq import ABORT_HEADERS, ABORT_BODY

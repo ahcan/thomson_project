@@ -19,4 +19,6 @@ urlpatterns = [
     url(r'^$', views.get_job, name='job'),
     #link api get name and id job
     url(r'^api/(?P<thomson_name>\w+\-+\w+)/job-name/$', views.get_job_name, name='job_name'),
+    #link api check backup job
+    url(r'^api/(?P<thomson_name>\w+\-+\w+)/(?P<jid>\d+)/check-backup/$', views.check_bckJob, name='job_backup'),
 ]

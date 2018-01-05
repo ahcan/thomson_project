@@ -281,3 +281,21 @@ def abort_job(request, jid, thomson_name):
     message = json.dumps(arg)
     print "stop"
     return HttpResponse(message, content_type="application.json", status=202)
+
+# Check backup Job
+# link job/api/thomson_name/jid/check-backup/
+@require_http_methods(['GET'])
+@csrf_exempt
+@login_required()
+def check_bckJob(request, jid, thomson_name):
+    lstparam = json.loads(JobDetail(jid, thomson_name).get_param())
+    lstparam = lstparam[0]['params']
+    for param in lstparam:
+        print param
+        if param['name'] == 'Define backup input':
+            backup = param['value']
+        if param['name'] == 'Backup input IP address':
+            ip = param['value']
+    result = json.dumps([{'backup': backup, 'ip': ip}])
+    return HttpResponse(result, content_type="application.json", status=202)
+    
