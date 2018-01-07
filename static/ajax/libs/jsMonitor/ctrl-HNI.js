@@ -36,7 +36,7 @@ app.controller('ctrl-thomson-HNI',function($scope, $http, $timeout, $window, $in
         // $window.location.href = '/system/detail-node/'+node_id+'/'
         $scope.lstLogJob = '';
         $scope.isRealTime = false;
-        $scope.isJob = true
+        $scope.isJob = true;
         $timeout(function(){$scope.$broadcast('loadJob-HNI');},0);
         $http({
             method:'GET',
@@ -82,7 +82,7 @@ app.controller('ctrl-thomson-HNI',function($scope, $http, $timeout, $window, $in
             url: '/job/api/' + $scope.host + '/' + job_id + '/restart/',
             }).then(function(response){
                 if (response.status == 202) {
-                    $window.alert(response.data.message);
+                    $window.alert('jod is started on node: '+response.data.message);
                     $scope.show_detail(node_id);
                 }
             });
@@ -118,8 +118,26 @@ app.controller('ctrl-thomson-HNI',function($scope, $http, $timeout, $window, $in
                 $scope.$broadcast('loadLog-HNI');
             }
         });
-        if($scope.isJob){
-            $timeout(function(){$scope.showLog(job_id, job_name);}, 10000);
+        $timeout(function(){$scope.reload_log(job_id, job_name);}, 10000);
+    };
+    $scope.reload_log = function(job_id, job_name){
+        $scope.job_name = job_name;
+        $timeout(function(){$scope.$broadcast('loadLog-HNI');}, 0);
+        $http({
+            method: 'GET',
+            url: '/log/api/'+ $scope.host +'/'+ job_id +'/',
+        }).then(function(response){
+           if (response.status == 200){
+                $scope.lstLogJob = response.data;
+                // console.log(response.data);
+                $scope.$broadcast('uloadLog-HNI');
+            }else{
+                console.log("Error");
+                $scope.$broadcast('loadLog-HNI');
+            } 
+        });
+        if($scope.isJob && $scope.isRealTime){
+            $timeout(function(){$scope.reload_log(job_id, job_name);}, 10000);
         }
     };
     $scope.loadAllLog = function(){
@@ -135,6 +153,18 @@ app.controller('ctrl-thomson-HNI',function($scope, $http, $timeout, $window, $in
         if (!$scope.isRealTime) {
             $timeout(function(){$scope.loadAllLog();}, 10000);
         }
+    };
+    $scope.checkBackup = function(job_id, node_id){
+        $http({
+            method: 'GET',
+            url: '/job/api/' + $scope.host + '/' + job_id + '/check-backup/',
+        }).then(function(response){
+            if(response.status ==202){
+                if ($window.confirm('job ID: '+job_id+'is backuped:'+response.data[0]['backup']+'\nIP backup:'+response.data[0]['ip'])){
+                    $scope.restartJob(job_id, node_id);
+                }
+            }
+        });
     };
     $scope.reverseSort = false;
     $scope.reloadDevice();
