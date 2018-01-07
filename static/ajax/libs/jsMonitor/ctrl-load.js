@@ -13,7 +13,7 @@ app.controller('ctrload-jobs', function($scope){
 app.controller('ctrload-realtime', function($scope){
     $scope.$on('loadRealtime-HNI', function(){$scope.isLoadRealtime = true;});
     $scope.$on('uloadRealtime-HNI', function(){$scope.isLoadRealtime = false;});
-    $scope.$on('loadJRealtime-HCM', function(){$scope.isLoadRealtime = true;});
+    $scope.$on('loadRealtime-HCM', function(){$scope.isLoadRealtime = true;});
     $scope.$on('uloadRealtime-HCM', function(){$scope.isLoadRealtime = false;});
 });
 app.controller('ctrload-log', function($scope){
