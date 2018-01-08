@@ -22,3 +22,8 @@ app.controller('ctrload-log', function($scope){
     $scope.$on('loadLog-HCM', function(){$scope.isLoadLog = true;});
     $scope.$on('uloadLog-HCM', function(){$scope.isLoadLog = false;});
 });
+app.controller('ctrl-main', function($scope){
+    $scope.isload = false;
+    $scope.$on('loadMain-HNI', function(){$scope.isLoad = true;});
+    $scope.$on('uloadMain-HNI', function(){$scope.isLoad = false;});
+});

@@ -1,3 +1,4 @@
+
 <div class="header-device">
     <h2 class="sub-header">Device:&nbsp;{{'{{host}'}}}&nbsp;<span style="font-size: 17px;"><p class="show-text">Running/Job:&nbsp;</p>{{'{{Jobs[0].running}'}}}/{{'{{Jobs[0].total}'}}}</span></h2>
     <!-- table total -->
@@ -141,8 +142,8 @@
                     </td>
                     <td style="width: 4%;">
                         <div style="display: inline-flex;">
-                            <button type="button" name="tbnStart{{'{{job.jid}'}}}" class="btn btn-success btn-xs glyphicon glyphicon-refresh" title="Restart"
-                                ng-click="checkBackup(job.jid, node.nid);"></button>&nbsp;
+                            <a role="button" name="tbnStart{{'{{job.jid}'}}}" class="btn btn-success btn-xs" title="Restart"
+                                ng-click="checkBackup(job.jid, node.nid);" href="#modal-confirm" data-toggle='modal'><span class="glyphicon glyphicon-refresh"></span></a>&nbsp;
                             <button type="button" name="tbnStop{{'{{job.jid}'}}}" class="btn btn-danger btn-xs glyphicon glyphicon-stop" title="Stop"
                                 ng-show="job.state == 'Running'" ng-click="stopJob(job.jid, node.nid);"></button>
                         </div>
@@ -284,3 +285,24 @@
     </div>
 </div>
 <!-- end table Log -->
+<!-- Modal -->
+<div class="modal fade" id="modal-confirm" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title" style="color:red;" ng-bind-html="txtHeader"></h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group" style="text-align: center; font-size: 15px;" ng-bind-html='txtBody'>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="button" name="create" id="submit" value="Create" ng-click="create_schedule()">
+                <input type="button" data-dismiss="modal" value="Cancel">
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Modal -->

@@ -14,7 +14,7 @@
             <div class="table-responsive col-md-12">
                 <div class="col-md-8"><!-- Main schedule table -->
                     <div class="content">
-                        <h2 class="sub-header">Schedule<a href="#myModal" role="button" data-parent="#createJob" data-toggle="modal" class="btn btn-success btn-xs" title="Add new schedule"><span class="glyphicon glyphicon-plus"></span></a></h2>
+                        <h2 class="sub-header">Schedule: Thomson-HCM<a href="#myModal" role="button" data-parent="#createJob" data-toggle="modal" class="btn btn-success btn-xs" title="Add new schedule"><span class="glyphicon glyphicon-plus"></span></a></h2>
                     </div>
                     <div class="wrapper" style="overflow-y: scroll;">
                         <table class="table table-bordered table-hover table-striped">
@@ -177,7 +177,7 @@ var app = angular.module('schedule',['multipleSelect']);
     }
 
   $scope.create_schedule = function () {
-    console.log($scope.schedule);
+    // console.log($scope.schedule);
     $scope.updateTime();
     $http({
       method : 'POST',

@@ -2,8 +2,8 @@
 {% block content %}
 <script type="text/javascript" src="/static/assets/js/jquery.floatThead.min.js"></script>
 <div class="col-md-12" ng-app="System">
-    <div style="background-color:green; height: 100%; width:100%; margin-top:50%; position:absolute; display: none;" class="col-md-12">
-        <div class="sk-fading-circle">
+    <div ng-class="{'container-loadding':isLoad,'container-loadding-hide':!isLoad}" ng-controller="ctrl-main">
+        <div class="sk-fading-circle" ng-show="isLoad">
           <div class="sk-circle1 sk-circle"></div>
           <div class="sk-circle2 sk-circle"></div>
           <div class="sk-circle3 sk-circle"></div>
@@ -17,16 +17,16 @@
           <div class="sk-circle11 sk-circle"></div>
           <div class="sk-circle12 sk-circle"></div>
         </div>
-    </div>
-    <div class="colpadding col-md-6 main-loader" ng-controller="ctrl-thomson-HNI">
+    <div class="colpadding col-md-6" ng-class="{'main-loader':isLoad,'colpadding':!isLoad}" ng-controller="ctrl-thomson-HNI">
         {% include "system/template.html" %}
     </div>
-    <div class="colpadding col-md-6 main-loader" ng-controller="ctrl-thomson-HCM">
+    <div class="colpadding col-md-6" ng-class="{'main-loader':isLoad, 'colpadding':!isLoad}" ng-controller="ctrl-thomson-HCM">
         {% include "system/template.html" %}
+    </div>
     </div>
 </div>
 <script type="text/javascript">
-    var app =angular.module('System',[]);
+    var app =angular.module('System',['ngSanitize']);
 </script>
 <script type="text/javascript" src="/static/ajax/libs/jsMonitor/ctrl-HCM.js"></script>
 <script type="text/javascript" src="/static/ajax/libs/jsMonitor/ctrl-HNI.js"></script>

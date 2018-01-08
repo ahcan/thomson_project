@@ -1,4 +1,4 @@
-app.controller('ctrl-thomson-HNI',function($scope, $http, $timeout, $window, $interval) {
+app.controller('ctrl-thomson-HNI',function($scope, $http, $timeout, $window, $interval, $sce) {
 // body...
     $scope.host = "thomson-lab";
     $scope.isRealTime = false;
@@ -77,6 +77,7 @@ app.controller('ctrl-thomson-HNI',function($scope, $http, $timeout, $window, $in
     };
     $scope.restartJob = function(job_id, node_id){
         if($window.confirm("Confirm Retart Job: "+job_id)){
+            $scope.$emit('loadMain-HNI');
             $http({
             method: 'PUT',
             url: '/job/api/' + $scope.host + '/' + job_id + '/restart/',
@@ -84,12 +85,17 @@ app.controller('ctrl-thomson-HNI',function($scope, $http, $timeout, $window, $in
                 if (response.status == 202) {
                     $window.alert('jod is started on node: '+response.data.message);
                     $scope.show_detail(node_id);
+                    $scope.$emit('uloadMain-HNI');
+                }
+                else{
+                    $scope.$emit('uloadMain-HNI');
                 }
             });
         }
     };
     $scope.stopJob = function(job_id, node_id){
         if($window.confirm("Confirm Stop Job: "+job_id)){
+            $scope.$emit('loadMain-HNI');
             $http({
             method: 'PUT',
             url: '/job/api/'+ $scope.host + '/'+job_id + '/abort/',
@@ -97,6 +103,7 @@ app.controller('ctrl-thomson-HNI',function($scope, $http, $timeout, $window, $in
                 if (response.status == 202) {
                 $window.alert(response.data.message);
                 $scope.show_detail(node_id);
+                $scope.$emit('uloadMain-HNI');
                 }
             });
         }
@@ -160,9 +167,16 @@ app.controller('ctrl-thomson-HNI',function($scope, $http, $timeout, $window, $in
             url: '/job/api/' + $scope.host + '/' + job_id + '/check-backup/',
         }).then(function(response){
             if(response.status ==202){
-                if ($window.confirm('job ID: '+job_id+'is backuped:'+response.data[0]['backup']+'\nIP backup:'+response.data[0]['ip'])){
-                    $scope.restartJob(job_id, node_id);
-                }
+                $scope.txtHeader='Restart Job:&nbsp;'+job_id;
+                // if ($window.confirm('job ID: '+job_id+'is backuped:'+response.data[0]['backup']+'\nIP backup:'+response.data[0]['ip'])){
+                    // $scope.restartJob(job_id, node_id);
+                // }
+                if( response.data[0]['backup']){
+                    var tmp= "glyphicon glyphicon-ok";
+                }else{ var tmp = "glyphicon glyphicon-remove";}
+                var strbackup="<p>Define backup input:&nbsp;<i class=\""+tmp+"\"></i></p></br>";
+                var strip = "<p>IP address:&nbsp;"+response.data[0]['ip']+"</p>";
+                $scope.txtBody = strbackup+ strip;
             }
         });
     };
