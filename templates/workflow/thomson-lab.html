@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block content %}
+<script type="text/javascript" src="/static/assets/js/jquery.floatThead.min.js"></script>
+<div ng-app="Workflow" ng-controller="workflowCtrl">
+    {%include "workflow/template.html" %}
+</div>
+<script>
+    var app = angular.module('Workflow',[]);
+    app.controller("workflowCtrl", function ($scope,$http,$timeout,$element,$sce){
+        $scope.host = 'thomson-lab';
+        $scope.reload = function () {
+            $scope.total = 0;
+            $http.get('/workflow/api/'+$scope.host+'/workflow/').
+            then(function (response) {
+                $scope.workflow_list = response.data;
+                $scope.total = $scope.workflow_list.length;
+                console.log($scope.workflow_list);
+            });
+            $timeout(function(){
+                // $scope.reload();
+            },10000)
+        };
+        $scope.reload();
+        $scope.showinfo = function(id){
+            // var tootcontents = '<div>loading....</div>';
+            $http.get('/workflow/api/'+$scope.host+'/workflow/'+id+'/').then(
+                function(response){
+                    $scope.selectedWorkf = response.data[0];
+                    var oj = response.data[0];
+                    // var vid = oj.id;
+                    // var vcategory ="category:\t"+oj.category;
+                    // var vname ="name:\t"+oj.name;
+                    // var vpagrams;
+                    // for(param in oj.params){
+                    //  vparams = "<p>"+param.name+":\t"+param.value+"</p>"
+                    // }
+                    // tootcontents ="<div class='showinfo'>"+vcategory+"</br>"+vname+"</br>"+vparams+"</div>";
+                    // $scope.text = $sce.trustAsHtml(tootcontents);
+                    console.log($scope.selectedWorkf);
+                    console.log(oj.params);
+                    $scope.isOpen = true;
+                }); 
+            // $scope.text = $scope.trustAsHtml(tootcontents);
+        }
+    });
+</script>
+<script type="text/javascript">
+    var $scroll = $('table.scrollTable');
+    $scroll.floatThead({
+        scrollContainer: function($table){
+        return $table.closest('.wrapper');
+        }
+    });
+</script>
+{% endblock %}

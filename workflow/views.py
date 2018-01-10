@@ -27,11 +27,11 @@ def workflow_json(request, thomson_name):
     workflow_list = WorkflowDB().json_all_workflow(thomson_name)
     return HttpResponse(workflow_list, content_type='application/json', status=200)
 
-def get_workflow(request):
+def get_workflow(request, thomson_name):
     if not request.user.is_authenticated():
         return HttpResponseRedirect('/accounts/login')
     user = user_info(request)
-    return render_to_response('workflow/workflow.html', user)
+    return render_to_response('workflow/'+thomson_name+'.html', user)
 
 #######################################################################
 #                                                                     #
