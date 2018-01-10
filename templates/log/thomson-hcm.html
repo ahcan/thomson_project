@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block content %}
+<!-- <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-app="Log" ng-controller="logCtrl"> -->
+<script type="text/javascript" src="/static/assets/js/jquery.floatThead.min.js"></script>
+<div ng-app="Log" ng-controller="logCtrl">
+   {%include "log/template.html"%}
+</div>
+<script>
+    var app = angular.module('Log',[]);
+    app.controller("logCtrl", function ($scope,$http,$timeout){
+        $scope.reload = function () {
+            $scope.host = 'thomson-hcm'
+        	$scope.nowDate = +new Date();
+            $http.get('/log/api/'+$scope.host+'/log/').
+            then(function (response) {
+                $scope.log_list = response.data;
+                $scope.total = $scope.log_list.length;
+                console.log($scope.log_list);
+            });
+            // console.log($scope.nowDate);
+            $timeout(function(){
+                // $scope.reload();
+            },10000)
+        };
+    // Fiter By State checkbox
+        $scope.filters = {};
+        //function
+        $scope.filterBySev = function(job){
+            return $scope.filters[job.sev] || noFilter($scope.filters);
+        };
+        $scope.getSevs = function(){
+            return ($scope.log_list || []).map(function(job){return job.sev;}).filter(function (cat, idx, arr) { return arr.indexOf(cat) === idx;});
+        };
+        function noFilter(filterObj){
+            return Object.keys(filterObj).every(function(key){return !filterObj[key];});
+        }
+    //end filter
+    // warrning time log
+    	
+    // end warrning
+        $scope.reload();
+    });
+</script>
+<script type="text/javascript">
+    var $scroll = $('table.scrollTable');
+    $scroll.floatThead({
+        scrollContainer: function($table){
+        return $table.closest('.wrapper');
+        }
+    });
+</script>
+{% endblock %}

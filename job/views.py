@@ -35,11 +35,11 @@ def get_job_name(request, thomson_name):
 
 #Link template show all job: /job/
 @login_required()
-def get_job(request):
+def get_job(request, thomson_name):
     if not request.user.is_authenticated():
         return HttpResponseRedirect('/accounts/login')
     user = user_info(request)
-    return render_to_response('job/job.html', user)
+    return render_to_response('job/'+thomson_name+'.html', user)
 
 @require_http_methods(['GET'])
 @login_required()
