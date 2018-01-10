@@ -266,21 +266,6 @@ table.floatThead-table {
   position: absolute;
   background-color: transparent;
 }
-.loader{
-  margin-top: 7%;
-  position: absolute;
-  margin-left: 45%;
-}
-  .loader .content {
-  z-index: 1000;
-  border: 8px solid #b6b1b1;
-  border-radius: 50%;
-  border-top: 8px solid #3498db;
-  width: 40px;
-  height: 40px;
-  -webkit-animation: spin 1s linear infinite; /* Safari */
-  animation: spin 1s linear infinite;
-  }
 .panel{
   margin-top:5px;
   margin-bottom:0px;
@@ -443,9 +428,6 @@ table.floatThead-table {
 
 /*=======Media Screen=======*/
   @media only screen and (min-height: 320px) {
-    .show-text {
-      display: none;
-    }
     .wrapper {
       height: 200px; }
     .wrapper-device {
@@ -457,28 +439,46 @@ table.floatThead-table {
       height: 200px;
     }}
   @media only screen and (min-height: 480px){
-    .show-text {
-      display: none;
-    }
     .wrapper {
       height: 460px;
     }
     .wrapper-device {
       height: 200px;
     }
+    .wrapper-device-1{
+      height: 150px;
+    }
     .wrapper-node {
       height: 150px;
+    }
+    .wrapper-node-1{
+      height: 100px;
     }
     .wrapper-log {
       height: 200px;
     }
     .wrapper-log-1 {
-      height: 300px;
-    }}
-  @media only screen and (min-height: 720px) {
-    .show-text{
-      display: inline-table;
+      height: 290px;
     }
+    .loader{
+      position: absolute;
+      width: 98%;
+      height: 75%;
+      padding: 6%;
+    }
+    .loader .content {
+      margin-left: 45%;
+      z-index: 1000;
+      border: 8px solid #b6b1b1;
+      border-radius: 50%;
+      border-top: 8px solid #3498db;
+      width: 30px;
+      height: 30px;
+      -webkit-animation: spin 1s linear infinite; /* Safari */
+      animation: spin 1s linear infinite;
+    }
+  }
+  @media only screen and (min-height: 720px) {
     .wrapper {
       height: 775px;
     }
@@ -488,7 +488,13 @@ table.floatThead-table {
     .wrapper-device {
       height: 250px;
       }
+    .wrapper-device-1{
+      height: 250px;
+    }
     .wrapper-node {
+      height: 190px;
+    }
+    .wrapper-node-1{
       height: 190px;
     }
     .wrapper-log {
@@ -497,8 +503,40 @@ table.floatThead-table {
     }
     .wrapper-log-1 {
       height: 546px;
+    }
+  .loader{
+    margin-top: 7%;
+    position: absolute;
+    margin-left: 45%;
+    width: 0px;
+    padding: 0px;
+    height: 0px;
+  }
+  .loader .content {
+    z-index: 1000;
+    border: 8px solid #b6b1b1;
+    border-radius: 50%;
+    border-top: 8px solid #3498db;
+    width: 40px;
+    height: 40px;
+    -webkit-animation: spin 1s linear infinite; /* Safari */
+    animation: spin 1s linear infinite;
     }}
   @media only screen and (min-width: 425px) {
+   body{
+      font-size:10.5px;
+    }
+  .progress{
+      height: 14px;
+      margin-top: 1px;
+    }
+    .progress p {
+    margin: -14px 0 10px;
+    font-size: 9px;
+  }
+    .show-text {
+      display: none;
+    }
     #txtTime {
       display: none; }
 
@@ -514,7 +552,59 @@ table.floatThead-table {
       /*margin-top:10px;*/
       /*color:#fff;*/
       /*font-size: 16px;*/ } }
-  @media only screen and (min-width: 1080px) {
+  @media only screen and (min-width: 960px){
+    body{
+      font-size:10.5px;
+    }
+    .show-text{
+      display: none;
+    }}
+  @media only screen and(min-width: 1280px){
+    body {
+      font-size: 11.5px;
+    }
+    .progress {
+      text-align: right;
+      height: 15px;
+      margin-bottom: 0px;
+      margin-top: 3px;
+      position: relative;
+      display: inline-flex;
+      width: 100%; }
+      .progress div {
+        height: 100%;
+        padding: 0px;
+        color: #333; }
+      .progress p {
+        margin: -16px 0 10px;
+        font-size: 11px;
+    }
+   .show-text{
+      display: inline-table;
+    }}
+  @media only screen and (min-width: 1920px) {
+    body {
+      font-size: 11.5px;
+    }
+    .progress {
+      text-align: right;
+      height: 15px;
+      margin-bottom: 0px;
+      margin-top: 3px;
+      position: relative;
+      display: inline-flex;
+      width: 100%; }
+      .progress div {
+        height: 100%;
+        padding: 0px;
+        color: #333; }
+      .progress p {
+        margin: -16px 0 10px;
+        font-size: 11px;
+    }
+    .show-text{
+      display: inline-table;
+    }
     #txtTime {
       display: none; }
 
@@ -528,9 +618,11 @@ table.floatThead-table {
     left: 45%;
     /*margin-top:10px;*/
     /*color:#fff;*/
-    /*font-size: 16px;*/ }
-    }
+    /*font-size: 16px;*/ }}
 @media only screen and (min-width: 1120px) {
+/*  .show-text{
+      display: none;
+    }*/
   #txtTime {
     display: inline; }
 

@@ -30,18 +30,34 @@
               <li><a href="/log/open/">Open log</a></li>
             </ul> -->
           <!-- </li> -->
-          <!-- <li class="nav-menu"> -->
-            <!-- <a href="/job/">Job</a> -->
-           <!--  <ul class="dropdown-menu">
-              <li><a href="/job/">All Job</a></li>
-              <li><a href="/job/waiting/">Waiting</a></li>
-              <li><a href="/job/running/">Running</a></li>
-              <li><a href="/job/paused/">Paused</a></li>
-              <li><a href="/job/completed/">Completed</a></li>
-              <li><a href="/job/aborted/">Aborted</a></li>
-            </ul> -->
-          <!-- </li> -->
-          <!-- <li class="nav-menu"><a href="/workflow/">Workflow</a></li> -->
+          <li class="nav-menu">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Job manager<span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li><a href="/job/thomson-hcm/">Ho Chi Minh</a></li>
+              <li><a href="/job/thomson-lab/">Lab</a></li>
+            </ul>
+          </li>
+          <li class="nav-menu">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Workflow manager<span class="caret"></span></a>
+            <ul class="dropdown-menu nav">
+              <li><a href="/workflow/thomson-hcm/">Ho Chi Minh</a></li>
+              <li><a href="/workflow/thomson-lab/">Lab</a></li>
+            </ul>
+          </li>
+          <li class="nav-menu">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Log manager<span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li><a href="/log/thomson-hcm/">Ho Chi Minh</a></li>
+              <li><a href="/log/thomson-lab/">Lab</a></li>
+            </ul>
+          </li>
+          <li class="nav-menu">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">System manager<span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li><a href="/system/thomson-hcm/">Ho Chi Minh</a></li>
+              <li><a href="/system/thomson-lab/">Lab</a></li>
+            </ul>
+          </li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
           {% if email %}
