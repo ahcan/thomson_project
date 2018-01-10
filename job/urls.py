@@ -16,7 +16,7 @@ urlpatterns = [
     url(r'^api/(?P<thomson_name>\w+\-+\w+)/(?P<jid>\d+)/restart/$', views.restart_job, name='abort_job'),
 
     #link response template show all job data: /job/
-    url(r'^$', views.get_job, name='job'),
+    url(r'^(?P<thomson_name>\w+\-+\w+)/$', views.get_job, name='job'),
     #link api get name and id job
     url(r'^api/(?P<thomson_name>\w+\-+\w+)/job-name/$', views.get_job_name, name='job_name'),
     #link api check backup job
