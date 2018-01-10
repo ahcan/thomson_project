@@ -162,12 +162,14 @@ app.controller('ctrl-thomson-HNI',function($scope, $http, $timeout, $window, $in
         }
     };
     $scope.checkBackup = function(job_id, node_id){
+        $scope.job_id = job_id;
+        $scope.node_id = node_id;
+        $scope.txtHeader='Restart Job:&nbsp;'+job_id;
         $http({
             method: 'GET',
             url: '/job/api/' + $scope.host + '/' + job_id + '/check-backup/',
         }).then(function(response){
             if(response.status ==202){
-                $scope.txtHeader='Restart Job:&nbsp;'+job_id;
                 // if ($window.confirm('job ID: '+job_id+'is backuped:'+response.data[0]['backup']+'\nIP backup:'+response.data[0]['ip'])){
                     // $scope.restartJob(job_id, node_id);
                 // }
@@ -179,6 +181,28 @@ app.controller('ctrl-thomson-HNI',function($scope, $http, $timeout, $window, $in
                 $scope.txtBody = strbackup+ strip;
             }
         });
+    };
+    $scope.dataModal = function(job_id, node_id){
+        $scope.job_id = job_id;
+        $scope.node_id = node_id;
+        $scope.txtHeader = 'Stop Job:&nbsp;'+job_id;
+        $http({
+            method: 'GET',
+            url: '/job/api/' + $scope.host + '/' + job_id + '/check-backup/',
+        }).then(function(response){
+            if(response.status ==202){
+                // if ($window.confirm('job ID: '+job_id+'is backuped:'+response.data[0]['backup']+'\nIP backup:'+response.data[0]['ip'])){
+                    // $scope.restartJob(job_id, node_id);
+                // }
+                if( response.data[0]['backup']){
+                    var tmp= "glyphicon glyphicon-ok";
+                }else{ var tmp = "glyphicon glyphicon-remove";}
+                var strbackup="<p>Define backup input:&nbsp;<i class=\""+tmp+"\"></i></p></br>";
+                var strip = "<p>IP address:&nbsp;"+response.data[0]['ip']+"</p>";
+                $scope.txtBody = strbackup+ strip;
+            }
+        });
+
     };
     $scope.reverseSort = false;
     $scope.reloadDevice();

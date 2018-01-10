@@ -3,13 +3,13 @@
 <!-- <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-app="System" ng-controller="systemCtrl"> -->
 
 <div ng-app="System" ng-controller="systemCtrl">
-    {%include="system/template.html"%}
+   {% include "system/template.html" %}
 </div>
 <script type="text/javascript">
     var app =angular.module('System', []);
-    $scope.host = "thomson-hcm";
     app.controller('systemCtrl', function($scope, $http, $timeout, $window) {
     // body...
+    $scope.host = "thomson-hcm";
     $scope.reloadJobStatus=function(){
         $http.get("/system/api/"+$scope.host+"/jobstatus/").then(function(reponse){
             $scope.jobStatus = reponse.data;
@@ -27,7 +27,7 @@
         }, 6000000);
     }
     $scope.reloadLicense = function(){
-        $http.get("/system/api/license/").then(function(reponse){
+        $http.get("/system/api/"+$scope.host+"/license/").then(function(reponse){
             $scope.lstLicenses = reponse.data[0].license_list;
             $scope.version = reponse.data[0].version;
             // console.log($scope.lstStatus[0].cpu);

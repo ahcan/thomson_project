@@ -24,9 +24,9 @@ urlpatterns = [
     url(r'^monitor/$', views.monitor, name='monitor'),
     url(r'^test/$', views.test, name='test'),
     #Link get thomson info CPU, RAAM: /system/api/<node_id>/
-    url(r'^api/license/$', views.get_license_json, name='license_json'),
+    url(r'^api/(?P<thomson_name>\w+\-+\w+)/license/$', views.get_license_json, name='license_json'),
     
     url(r'^api/(?P<thomson_name>\w+\-+\w+)/db_node/$', views.get_db_node, name='db_node'),
     #Main template dashboard
-    url(r'^$', views.get_system, name="system"),
+    url(r'^(?P<thomson_name>\w+\-+\w+)/$', views.get_system, name="system"),
 ]

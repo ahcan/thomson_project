@@ -20,11 +20,11 @@ from system.utils import DatabaseNode as NodeDB
 #######################################################################
 
 #Main template dashboard /system
-def get_system(request):
+def get_system(request, thomson_name):
     if not request.user.is_authenticated():
         return HttpResponseRedirect('/accounts/login')
     user = user_info(request)
-    return render_to_response('system/system.html', user)
+    return render_to_response('system/'+thomson_name+'.html', user)
 
 #Link get thomson datetime: /system/api/datetime
 @require_http_methods(['GET'])
@@ -99,8 +99,8 @@ def test(request):
     return render_to_response('system/monitor.html', user)    
 
 @login_required()
-def get_license_json(request):
-    license_status = Thomson('thomson-hcm').get_license()
+def get_license_json(request, thomson_name):
+    license_status = Thomson(thomson_name).get_license()
     return HttpResponse(license_status, content_type='application/json', status=200)
 
 @require_http_methods(['GET'])
