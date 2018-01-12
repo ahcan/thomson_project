@@ -17,19 +17,119 @@
           <div class="sk-circle11 sk-circle"></div>
           <div class="sk-circle12 sk-circle"></div>
         </div>
-    <div class="colpadding col-md-6" ng-class="{'main-loader':isLoad,'colpadding':!isLoad}" ng-controller="ctrl-thomson-HNI">
-        {% include "system/template-monitor.html" %}
-    </div>
-    <div class="colpadding col-md-6" ng-class="{'main-loader':isLoad, 'colpadding':!isLoad}" ng-controller="ctrl-thomson-HCM">
-        {% include "system/template-monitor.html" %}
-    </div>
+      <div class="colpadding col-md-6" ng-class="{'main-loader':isLoad, 'colpadding':!isLoad}" ng-controller="ctrl-thomson-HNI">
+          {% include "system/template-monitor.html" %}
+          <!-- Modal Stop-->
+          <div class="modal fade" id="modal-stop-thomson-lab" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title" style="color:red;" ng-bind-html="txtHeader"></h4>
+                    </div>
+                    <form method="post" id="frm-modal-stop-thomson-lab" ng-submit="stopJob(job_id,node_id)">
+                        <div class="modal-body">
+                            <div class="form-group" style="text-align: center; font-size: 15px;" ng-bind-html='txtBody'>
+                            </div>
+                            <div class="g-recaptcha" id="widgetStop"></div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-primary" type="submit" name="Continue">Continue</button>
+                            <input class="btn btn-primary" type="button" data-dismiss="modal" value="Cancel">
+                        </div>
+                    </form>
+                </div>
+            </div>
+          </div>
+          <!-- End Modal -->
+          <!-- Modal Reset-->
+          <div class="modal fade" id="modal-restart-thomson-lab" role="dialog">
+              <div class="modal-dialog">
+                  <!-- Modal content-->
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <button type="button" class="close" data-dismiss="modal">&times;</button>
+                          <h4 class="modal-title" style="color:red;" ng-bind-html="txtHeader"></h4>
+                      </div>
+                      <form method="post" id="frm-modal-restart-thomson-lab" ng-submit="restartJob(job_id, node_id)">
+                        <div class="modal-body">
+                            <div class="form-group" style="text-align: center; font-size: 15px;" ng-bind-html='txtBody'>
+                            </div>
+                            <div class="g-recaptcha" id="widgetRestart"></div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-primary" type="submit" name="resetart" value="Continue">Continue </button>
+                            <input class="btn btn-primary" type="button" data-dismiss="modal" value="Cancel">
+                        </div>
+                      </form>
+                  </div>
+              </div>
+          </div>
+          <!-- End Modal -->
+      </div>
+      <div class="colpadding col-md-6" ng-class="{'main-loader':isLoad, 'colpadding':!isLoad}" ng-controller="ctrl-thomson-HCM">
+          {% include "system/template-monitor.html" %}
+          <!-- Modal Stop-->
+          <div class="modal fade" id="modal-stop-thomson-hcm" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title" style="color:red;" ng-bind-html="txtHeader"></h4>
+                    </div>
+                    <form method="post" id="frm-modal-stop-thomson-hcm" ng-submit="stopJob(job_id,node_id)">
+                        <div class="modal-body">
+                            <div class="form-group" style="text-align: center; font-size: 15px;" ng-bind-html='txtBody'>
+                            </div>
+                            <!-- <div class="g-recaptcha" id='captchaStop' data-callback="onloadCallback();"></div> -->
+                            <div class="g-recaptcha" id="widgetStop1"></div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-primary" type="submit" name="Continue">Continue</button>
+                            <input class="btn btn-primary" type="button" data-dismiss="modal" value="Cancel">
+                        </div>
+                    </form>
+                </div>
+            </div>
+          </div>
+          <!-- End Modal -->
+          <!-- Modal Reset-->
+          <div class="modal fade" id="modal-restart-thomson-hcm" role="dialog">
+              <div class="modal-dialog">
+                  <!-- Modal content-->
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <button type="button" class="close" data-dismiss="modal">&times;</button>
+                          <h4 class="modal-title" style="color:red;" ng-bind-html="txtHeader"></h4>
+                      </div>
+                      <form method="post" id="frm-modal-restart-thomson-hcm" ng-submit="restartJob(job_id, node_id)">
+                        <div class="modal-body">
+                            <div class="form-group" style="text-align: center; font-size: 15px;" ng-bind-html='txtBody'>
+                            </div>
+                            <div class="g-recaptcha" id="widgetRestart1"></div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-primary" type="submit" name="resetart" value="Continue">Continue </button>
+                            <input class="btn btn-primary" type="button" data-dismiss="modal" value="Cancel">
+                        </div>
+                      </form>
+                  </div>
+              </div>
+          </div>
+      </div>
     </div>
 </div>
 <script type="text/javascript">
+  var captchaRestart="";
+  var captchaRestart1="";
+  var captchaStop="";
+  var captchaStop1="";
     var app =angular.module('System',['ngSanitize']);
 </script>
-<script type="text/javascript" src="/static/ajax/libs/jsMonitor/ctrl-HCM.js"></script>
 <script type="text/javascript" src="/static/ajax/libs/jsMonitor/ctrl-HNI.js"></script>
+<script type="text/javascript" src="/static/ajax/libs/jsMonitor/ctrl-HCM.js"></script>
 <script type="text/javascript" src="/static/ajax/libs/jsMonitor/ctrl-load.js"></script>
 <script type="text/javascript">
     var $scroll = $('table.scrollTable');

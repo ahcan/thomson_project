@@ -2,73 +2,7 @@
 {% block content %}
 <script type="text/javascript" src="/static/assets/js/jquery.floatThead.min.js"></script>
 <div ng-app="Workflow" ng-controller="workflowCtrl">
-    <div class="col-md-6 table-responsive" >
-        <div>
-            <div class="col-md-6">
-                <h2 class="sub-header">Workflows <span style="font-size: 15px;">(Total: {{'{{total}'}}})</span></h2>
-            </div>
-            <div class="col-md-6">
-                <div class="input-group" style="margin-bottom:10px;" >
-                        <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
-                        <input type="text" class="form-control" placeholder="Search..." ng-model="search">
-                </div>            
-            </div>
-        </div>
-
-        <div class="wrapper" style="overflow-y: scroll;" >
-            <table class="table table-bordered table-hover table-striped scrollTable">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Workflow ID</th>
-                        <th>Name</th>
-                    </tr>
-                </thead>
-                <tbody class="rowlink">
-                    <tr ng-repeat="workflow in workflow_list | filter: search" ng-click="showinfo(workflow.wid)">
-                        <td>{{'{{$index + 1}'}}}</td>
-                        <td><p>{{'{{workflow.wid}'}}}</p></td>
-                        <td>{{'{{workflow.name}'}}}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="col-md-6 col-sm-6 table-responsive">
-        <div class="panel panel-default" ng-show="isOpen">
-            <div class="panel-heading">
-            <h4>{{'{{selectedWorkf.name}'}}}</h4>
-            </div>
-            <div class="panel-body">
-                <div class="content wrapper" style="overflow-y: scroll;">
-                    <table class="table table-panel table-bordered table-hover table-striped scrollTable">
-                        <tbody>
-                            <tr>
-                                <td><span><label>ID</label></span></td>
-                                <td>{{'{{selectedWorkf.id}'}}}</td>
-                            </tr>
-                            <tr>
-                                <td><span><label>Category</label></span></td>
-                                <td>{{'{{selectedWorkf.category}'}}}</td>
-                            </tr>
-                            <tr>
-                                <td><span><label>Color</label></span></td>
-                                <td>{{'{{selectedWorkf.color}'}}}</td>
-                            </tr>
-                            <tr>
-                                <td><span><label>Priority</label></span></td>
-                                <td>{{'{{selectedWorkf.priority}'}}}</td>
-                            </tr>
-                            <tr ng-repeat="param in selectedWorkf.params">
-                                <td><span><label>{{'{{param.name}'}}}</label></span></td>
-                                <td><i ng-class="{'glyphicon glyphicon-ok': param.value ==  'true', 'glyphicon glyphicon-remove': param.value =='false'}"></i><span ng-hide="param.value ==  'true' || param.value == 'false'"><label>{{'{{param.value}'}}}</label></span></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
+    {%include "workflow/tempalte.html" %}
 </div>
 <script>
     var app = angular.module('Workflow',[]);

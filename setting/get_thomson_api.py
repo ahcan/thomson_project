@@ -762,7 +762,7 @@ class JobDetail:
         # response_xml = Thomson(self.name).get_response(headers, body)
         History().create_log(thomson_name=self.name, user=user, action='abort', jid=self.jid, datetime=DateTime().get_now())
         # return self.parse_status(response_xml)
-        return "Oke" + self.name
+        return "OK"
 
     def delete(self):
         from setting.xmlReq.JobDetailReq import DELETE_HEADERS, DELETE_BODY

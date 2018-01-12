@@ -277,6 +277,10 @@ job/api/125/abort/
 def abort_job(request, jid, thomson_name):
     result = JobDetail(jid, thomson_name).abort(request.user.username)
     arg = {}
+    if result =='OK':
+        result = "Job"+jid+" on "+thomson_name+" just be stoped"
+    elif request =='NotOK':
+        result = "Job"+jid+" on "+thomson_name+" cant not stop"
     arg["message"] = result
     message = json.dumps(arg)
     print "stop"

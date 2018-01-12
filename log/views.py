@@ -108,3 +108,16 @@ def get_system_log(request):
         return HttpResponseRedirect('/accounts/login')
     user = user_info(request)
     return render_to_response('log/log_system.html',user)
+
+@require_http_methods(['GET'])
+# @require_http_methods(['POST'])
+def test_captcha(request):
+    return render_to_response('log/testcaptcha.html')
+
+@require_http_methods(['POST'])
+@csrf_exempt
+def get_captcha(request):
+    print'#############'
+    print str(request.body)
+    return HttpResponse('sdfsdfds', status=200)
+    

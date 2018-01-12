@@ -1,4 +1,4 @@
-app.controller('ctrl-thomson-HCM',function($scope, $http, $timeout, $window, $interval) {
+app.controller('ctrl-thomson-HCM',function($scope, $http, $timeout, $window, $interval, $sce) {
 // body...
     $scope.host = "thomson-hcm";
     $scope.isRealTime = false;
@@ -13,7 +13,7 @@ app.controller('ctrl-thomson-HCM',function($scope, $http, $timeout, $window, $in
             // console.log(data);
         });
         $timeout(function() {
-            $scope.reloadNodes();
+            // $scope.reloadNodes();
         }, 3000)
     };
     $scope.reloadJobs = function(){
@@ -23,13 +23,13 @@ app.controller('ctrl-thomson-HCM',function($scope, $http, $timeout, $window, $in
         }).then(function(response){
             $scope.Jobs=response.data;
         });
-    }
+    };
     $scope.reloadDevice = function(){
         $http.get("/system/api/"+$scope.host+"/status/").then(function(reponse){
             $scope.PCStatus = reponse.data[0];
         });
         $timeout(function() {
-            $scope.reloadDevice();
+            // $scope.reloadDevice();
         }, 3000)
     };
     $scope.show_detail = function(node_id) {
@@ -68,7 +68,7 @@ app.controller('ctrl-thomson-HCM',function($scope, $http, $timeout, $window, $in
         });
         if ($scope.isJob && $scope.nodeDetail == node_id){
             $timeout(function() {
-                $scope.reload_detail(node_id);
+                // $scope.reload_detail(node_id);
             }, 3000);
         }
     };
@@ -76,20 +76,30 @@ app.controller('ctrl-thomson-HCM',function($scope, $http, $timeout, $window, $in
         $scope.nodeDetail = node_id;
     };
     $scope.restartJob = function(job_id, node_id){
-        if($window.confirm("Confirm Retart Job: "+job_id)){
+        if(grecaptcha.getResponse(captchaRestart1)===""){
+            alert("Please resolve the captcha and submit!");
+        }else{
+            $scope.$emit('loadMain-HCM');
             $http({
             method: 'PUT',
             url: '/job/api/' + $scope.host + '/' + job_id + '/restart/',
             }).then(function(response){
                 if (response.status == 202) {
-                    $window.alert(response.data.message);
+                    $window.alert('jod is started on node: '+response.data.message);
                     $scope.show_detail(node_id);
+                    $scope.$emit('uloadMain-HCM');
                 }
+                else{
+                    $scope.$emit('uloadMain-HCM');}
             });
+            window.grecaptcha.reset(captchaRestart1);
         }
     };
     $scope.stopJob = function(job_id, node_id){
-        if($window.confirm("Confirm Stop Job: "+job_id)){
+        if (window.grecaptcha.getResponse(captchaStop1)===""){
+            alert("Please resolve the captcha and submit!");
+        }else{
+            $scope.$emit('loadMain-HCM');
             $http({
             method: 'PUT',
             url: '/job/api/'+ $scope.host + '/'+job_id + '/abort/',
@@ -97,8 +107,11 @@ app.controller('ctrl-thomson-HCM',function($scope, $http, $timeout, $window, $in
                 if (response.status == 202) {
                 $window.alert(response.data.message);
                 $scope.show_detail(node_id);
+                $scope.$emit('uloadMain-HCM');
                 }
-            });
+                else{$scope.emit('uloadMain-HCM');}
+                });
+            window.grecaptcha.reset(captchaStop1);
         }
     };
     $scope.showLog = function(job_id, job_name){
@@ -154,9 +167,66 @@ app.controller('ctrl-thomson-HCM',function($scope, $http, $timeout, $window, $in
             $timeout(function(){$scope.loadAllLog();}, 10000);
         }
     };
+    $scope.checkBackup = function(job_id, node_id){
+        $scope.job_id = job_id;
+        $scope.node_id = node_id;
+        $scope.txtHeader='Restart Job:&nbsp;'+job_id;
+        $http({
+            method: 'GET',
+            url: '/job/api/' + $scope.host + '/' + job_id + '/check-backup/',
+        }).then(function(response){
+            if(response.status ==202){
+                // if ($window.confirm('job ID: '+job_id+'is backuped:'+response.data[0]['backup']+'\nIP backup:'+response.data[0]['ip'])){
+                    // $scope.restartJob(job_id, node_id);
+                // }
+                if( response.data[0]['backup']){
+                    var tmp= "glyphicon glyphicon-ok";
+                }else{ var tmp = "glyphicon glyphicon-remove";}
+                var strbackup="<p>Define backup input:&nbsp;<i class=\""+tmp+"\"></i></p></br>";
+                var strip = "<p>IP address:&nbsp;"+response.data[0]['ip']+"</p>";
+                $scope.txtBody = strbackup+ strip;
+            }
+        });
+    };
+    $scope.dataModal = function(job_id, node_id){
+        $scope.job_id = job_id;
+        $scope.node_id = node_id;
+        $scope.txtHeader = 'Stop Job:&nbsp;'+job_id;
+        $http({
+            method: 'GET',
+            url: '/job/api/' + $scope.host + '/' + job_id + '/check-backup/',
+        }).then(function(response){
+            if(response.status ==202){
+                // if ($window.confirm('job ID: '+job_id+'is backuped:'+response.data[0]['backup']+'\nIP backup:'+response.data[0]['ip'])){
+                    // $scope.restartJob(job_id, node_id);
+                // }
+                if( response.data[0]['backup']){
+                    var tmp= "glyphicon glyphicon-ok";
+                }else{ var tmp = "glyphicon glyphicon-remove";}
+                var strbackup="<p>Define backup input:&nbsp;<i class=\""+tmp+"\"></i></p></br>";
+                var strip = "<p>IP address:&nbsp;"+response.data[0]['ip']+"</p>";
+                $scope.txtBody = strbackup+ strip;
+            }
+        });
+    };
     $scope.reverseSort = false;
     $scope.reloadDevice();
     $scope.reloadNodes();
     $scope.loadAllLog();
     $scope.reloadJobs();
+});
+$('#frm-modal-stop-thomson-hcm').submit(function() {
+    if(grecaptcha.getResponse(captchaStop1)===""){
+        $('#modal-stop-thomson-hcm').modal('show');
+    }else{
+        $('#modal-stop-thomson-hcm').modal('hide');
+    }
+    // console.log("####close###");
+});
+$('#frm-modal-restart-thomson-hcm').submit(function() {
+    if(grecaptcha.getResponse(captchaRestart1)===""){
+        $('#modal-restart-thomson-hcm').modal('show');
+    }else{
+        $('#modal-restart-thomson-hcm').modal('hide');
+    }
 });

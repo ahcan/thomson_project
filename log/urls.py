@@ -7,4 +7,6 @@ urlpatterns = [
 
     #link show all logs template
     url(r'^(?P<thomson_name>\w+\-+\w+)/$', views.get_log, name='log'),
+    url(r'^testcaptcha/$', views.test_captcha, name='captcha'),
+    url(r'^api/captcha/$', views.get_captcha, name='getCaptcha'),
 ]

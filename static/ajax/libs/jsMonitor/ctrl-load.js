@@ -26,4 +26,21 @@ app.controller('ctrl-main', function($scope){
     $scope.isload = false;
     $scope.$on('loadMain-HNI', function(){$scope.isLoad = true;});
     $scope.$on('uloadMain-HNI', function(){$scope.isLoad = false;});
+    $scope.$on('loadMain-HCM', function(){$scope.isLoad = true;});
+    $scope.$on('uloadMain-HCM', function(){$scope.isLoad = false;});
 });
+// window.top;
+var onloadCallback = function(){
+    captchaStop = grecaptcha.render('widgetStop',{
+        'sitekey': "6Ld8F0AUAAAAAFTqjGB-p1gCOQxCBfoBLWGy3dRT",
+    });
+    captchaStop1 = grecaptcha.render('widgetStop1',{
+        'sitekey': "6Ld8F0AUAAAAAFTqjGB-p1gCOQxCBfoBLWGy3dRT",
+    });
+    captchaRestart = grecaptcha.render('widgetRestart',{
+        'sitekey': "6Ld8F0AUAAAAAFTqjGB-p1gCOQxCBfoBLWGy3dRT",
+    });
+    captchaRestart1 = grecaptcha.render('widgetRestart1',{
+        'sitekey': "6Ld8F0AUAAAAAFTqjGB-p1gCOQxCBfoBLWGy3dRT",
+    });
+};

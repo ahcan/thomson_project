@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'schedule',
     'job',
     'workflow',
+    'captcha',
 ]
 
 MIDDLEWARE = [
@@ -147,3 +148,6 @@ THOMSON_HOST={
 # login redirect
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/'
+
+#captcha key
+GOOGLE_RECAPTCHA_SECRET_KEY = '6Ld8F0AUAAAAADnYnvbykAO1s75uw8tUDPW_lKRv'
