@@ -4,7 +4,6 @@ app.controller('ctrl-thomson-HCM',function($scope, $http, $timeout, $window, $in
     $scope.isRealTime = false;
     $scope.isJob = false;
     $scope.node_id = 0;
-    // $scope.isLoad = true;
     $scope.reloadNodes = function(){
         $timeout(function() { $scope.$broadcast('loadNode-HCM');}, 0);
         $http.get("/system/api/"+$scope.host+"/nstatus/").then(function(reponse){
@@ -13,7 +12,7 @@ app.controller('ctrl-thomson-HCM',function($scope, $http, $timeout, $window, $in
             // console.log(data);
         });
         $timeout(function() {
-            // $scope.reloadNodes();
+            $scope.reloadNodes();
         }, 3000)
     };
     $scope.reloadJobs = function(){
@@ -29,7 +28,7 @@ app.controller('ctrl-thomson-HCM',function($scope, $http, $timeout, $window, $in
             $scope.PCStatus = reponse.data[0];
         });
         $timeout(function() {
-            // $scope.reloadDevice();
+            $scope.reloadDevice();
         }, 3000)
     };
     $scope.show_detail = function(node_id) {
@@ -68,7 +67,7 @@ app.controller('ctrl-thomson-HCM',function($scope, $http, $timeout, $window, $in
         });
         if ($scope.isJob && $scope.nodeDetail == node_id){
             $timeout(function() {
-                // $scope.reload_detail(node_id);
+                $scope.reload_detail(node_id);
             }, 3000);
         }
     };
@@ -176,9 +175,6 @@ app.controller('ctrl-thomson-HCM',function($scope, $http, $timeout, $window, $in
             url: '/job/api/' + $scope.host + '/' + job_id + '/check-backup/',
         }).then(function(response){
             if(response.status ==202){
-                // if ($window.confirm('job ID: '+job_id+'is backuped:'+response.data[0]['backup']+'\nIP backup:'+response.data[0]['ip'])){
-                    // $scope.restartJob(job_id, node_id);
-                // }
                 if( response.data[0]['backup']){
                     var tmp= "glyphicon glyphicon-ok";
                 }else{ var tmp = "glyphicon glyphicon-remove";}
@@ -197,9 +193,6 @@ app.controller('ctrl-thomson-HCM',function($scope, $http, $timeout, $window, $in
             url: '/job/api/' + $scope.host + '/' + job_id + '/check-backup/',
         }).then(function(response){
             if(response.status ==202){
-                // if ($window.confirm('job ID: '+job_id+'is backuped:'+response.data[0]['backup']+'\nIP backup:'+response.data[0]['ip'])){
-                    // $scope.restartJob(job_id, node_id);
-                // }
                 if( response.data[0]['backup']){
                     var tmp= "glyphicon glyphicon-ok";
                 }else{ var tmp = "glyphicon glyphicon-remove";}
