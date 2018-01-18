@@ -130,10 +130,17 @@ AUTO_LOGOUT_DELAY = 1440
 THOMSON_HOST={
     'thomson-hcm':
     {
-        'user' : 'nguyennt9',
+        'user' : 'iptv_tool',
         'passwd' : '123456',
         'host'  :   '172.29.3.189',
         'url' : 'http://%s/services/Maltese' % ('172.29.3.189'),
+    },
+    'thomson-hni':
+    {
+        'user' : 'iptv_tool',
+        'passwd' : '123456',
+        'host'  :   '172.29.70.189',
+        'url' : 'http://%s/services/Maltese' % ('172.29.70.189'),
     },
     'thomson-lab':
     {
@@ -143,7 +150,6 @@ THOMSON_HOST={
         'url' : 'http://%s/services/Maltese' % ('172.17.5.110'),
     }
 }
-
 
 # login redirect
 LOGIN_URL = '/accounts/login/'
