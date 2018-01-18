@@ -30,17 +30,18 @@ app.controller('ctrl-main', function($scope){
     $scope.$on('uloadMain-HCM', function(){$scope.isLoad = false;});
 });
 // window.top;
+var sitekey = "6Ld8F0AUAAAAAFTqjGB-p1gCOQxCBfoBLWGy3dRT";
 var onloadCallback = function(){
     captchaStop = grecaptcha.render('widgetStop',{
-        'sitekey': "6Ld8F0AUAAAAAFTqjGB-p1gCOQxCBfoBLWGy3dRT",
+        'sitekey': sitekey,
     });
     captchaStop1 = grecaptcha.render('widgetStop1',{
-        'sitekey': "6Ld8F0AUAAAAAFTqjGB-p1gCOQxCBfoBLWGy3dRT",
+        'sitekey': sitekey,
     });
     captchaRestart = grecaptcha.render('widgetRestart',{
-        'sitekey': "6Ld8F0AUAAAAAFTqjGB-p1gCOQxCBfoBLWGy3dRT",
+        'sitekey': sitekey,
     });
     captchaRestart1 = grecaptcha.render('widgetRestart1',{
-        'sitekey': "6Ld8F0AUAAAAAFTqjGB-p1gCOQxCBfoBLWGy3dRT",
+        'sitekey': sitekey,
     });
 };

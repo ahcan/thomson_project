@@ -1,6 +1,6 @@
 app.controller('ctrl-thomson-HNI',function($scope, $http, $timeout, $window, $interval, $sce) {
 // body...
-    $scope.host = "thomson-lab";
+    $scope.host = "thomson-hni";
     $scope.isRealTime = false;
     $scope.isJob = false;
     $scope.node_id = 0;
@@ -208,18 +208,18 @@ app.controller('ctrl-thomson-HNI',function($scope, $http, $timeout, $window, $in
     $scope.loadAllLog();
     $scope.reloadJobs();
 });
-$('#frm-modal-stop-thomson-lab').submit(function() {
+$('#frm-modal-stop-thomson-hni').submit(function() {
     if(grecaptcha.getResponse(captchaStop)===""){
-        $('#modal-stop-thomson-lab').modal('show');
+        $('#modal-stop-thomson-hni').modal('show');
     }else{
-        $('#modal-stop-thomson-lab').modal('hide');
+        $('#modal-stop-thomson-hni').modal('hide');
     }
     // console.log("####close###");
 });
-$('#frm-modal-restart-thomson-lab').submit(function() {
+$('#frm-modal-restart-thomson-hni').submit(function() {
     if(grecaptcha.getResponse(captchaRestart)===""){
-        $('#modal-restart-thomson-lab').modal('show');
+        $('#modal-restart-thomson-hni').modal('show');
     }else{
-        $('#modal-restart-thomson-lab').modal('hide');
+        $('#modal-restart-thomson-hni').modal('hide');
     }
 });

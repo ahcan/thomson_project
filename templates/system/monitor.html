@@ -20,7 +20,7 @@
       <div class="colpadding col-md-6" ng-class="{'main-loader':isLoad, 'colpadding':!isLoad}" ng-controller="ctrl-thomson-HNI">
           {% include "system/template-monitor.html" %}
           <!-- Modal Stop-->
-          <div class="modal fade" id="modal-stop-thomson-lab" role="dialog">
+          <div class="modal fade" id="modal-stop-thomson-hni" role="dialog">
             <div class="modal-dialog">
                 <!-- Modal content-->
                 <div class="modal-content">
@@ -28,7 +28,7 @@
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                         <h4 class="modal-title" style="color:red;" ng-bind-html="txtHeader"></h4>
                     </div>
-                    <form method="post" id="frm-modal-stop-thomson-lab" ng-submit="stopJob(job_id,node_id)">
+                    <form method="post" id="frm-modal-stop-thomson-hni" ng-submit="stopJob(job_id,node_id)">
                         <div class="modal-body">
                             <div class="form-group" style="text-align: center; font-size: 15px;" ng-bind-html='txtBody'>
                             </div>
@@ -44,7 +44,7 @@
           </div>
           <!-- End Modal -->
           <!-- Modal Reset-->
-          <div class="modal fade" id="modal-restart-thomson-lab" role="dialog">
+          <div class="modal fade" id="modal-restart-thomson-hni" role="dialog">
               <div class="modal-dialog">
                   <!-- Modal content-->
                   <div class="modal-content">
@@ -52,7 +52,7 @@
                           <button type="button" class="close" data-dismiss="modal">&times;</button>
                           <h4 class="modal-title" style="color:red;" ng-bind-html="txtHeader"></h4>
                       </div>
-                      <form method="post" id="frm-modal-restart-thomson-lab" ng-submit="restartJob(job_id, node_id)">
+                      <form method="post" id="frm-modal-restart-thomson-hni" ng-submit="restartJob(job_id, node_id)">
                         <div class="modal-body">
                             <div class="form-group" style="text-align: center; font-size: 15px;" ng-bind-html='txtBody'>
                             </div>
