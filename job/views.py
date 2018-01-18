@@ -294,6 +294,8 @@ def abort_job(request, jid, thomson_name):
 def check_bckJob(request, jid, thomson_name):
     lstparam = json.loads(JobDetail(jid, thomson_name).get_param())
     lstparam = lstparam[0]['params']
+    backup = 'false'
+    ip = 0
     for param in lstparam:
         print param
         if param['name'] == 'Define backup input':
