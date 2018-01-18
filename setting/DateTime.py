@@ -32,3 +32,7 @@ class DateTime:
 
     def get_now_as_human_creadeble(self):
         return (time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
+
+    def get_year(self):
+        now =  datetime.now()
+        return str(now.year)
