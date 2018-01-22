@@ -67,7 +67,7 @@ app.controller('ctrl-thomson-HNI',function($scope, $http, $timeout, $window, $in
         });
         if ($scope.isJob && $scope.nodeDetail == node_id){
             $timeout(function() {
-                // $scope.reload_detail(node_id);
+                $scope.reload_detail(node_id);
             }, 3000);
         }
     };
@@ -116,6 +116,7 @@ app.controller('ctrl-thomson-HNI',function($scope, $http, $timeout, $window, $in
     $scope.showLog = function(job_id, job_name){
         $scope.job_name = job_name;
         $scope.isRealTime = true;
+        $scope.job_id = job_id;
         $timeout(function() { $scope.$broadcast('loadLog-HNI');}, 0);
         $http({
             method: 'GET',
@@ -148,7 +149,7 @@ app.controller('ctrl-thomson-HNI',function($scope, $http, $timeout, $window, $in
                 $scope.$broadcast('loadLog-HNI');
             } 
         });
-        if($scope.isJob && $scope.isRealTime){
+        if($scope.isJob && $scope.isRealTime && $scope.job_id == job_id){
             $timeout(function(){$scope.reload_log(job_id, job_name);}, 10000);
         }
     };
