@@ -140,7 +140,7 @@ app.controller('ctrl-thomson-HCM',function($scope, $http, $timeout, $window, $in
             method: 'GET',
             url: '/log/api/'+ $scope.host +'/'+ job_id +'/',
         }).then(function(response){
-           if (response.status == 200){
+           if (response.status == 200 && $scope.job_id == job_id){
                 $scope.lstLogJob = response.data;
                 // console.log(response.data);
                 $scope.$broadcast('uloadLog-HCM');
