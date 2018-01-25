@@ -24,7 +24,7 @@ class DatabaseNode():
             time.sleep(1)
             lstnodes = self.get_all_node()
         for node in lstnodes:
-            jerror, jcounter = self.count_job_error(node.host, node.nid)
+            jerror, jcounter, jobs_error= self.count_job_error(node.host, node.nid)
             args.append({'status'        :node.status,
                         'cpu'           :node.cpu,
                         'alloccpu'      :node.alloccpu,
@@ -34,21 +34,27 @@ class DatabaseNode():
                         'uncreahable'   :node.uncreachable,
                         'state'         :node.state,
                         'jerror'        :jerror,
-                        'jcounter'      :jcounter})
+                        'jcounter'      :jcounter,
+                        'jobs'          :jobs_error})
         return json.dumps(args)
 
     # count job error
     def count_job_error(self, host, nid):
         # print self.host
+        # get all job error
         job_list = Job.objects.all().filter(host=host).exclude(status='Ok')
+        jobs_error = []
+        # print job_list[0].status
+        # print len(job_list)
         job_node = NodeDetail.objects.all().filter(host=host, nid=nid)
         error=0
         for item in job_node:
             for job in job_list:
-                if job.status != 'Ok' and item.jid == job.jid:
+                if item.jid == job.jid:
                     error += 1
+                    jobs_error.append(job.jid)
                     break
-        return error, len(job_node)
+        return error, len(job_node), jobs_error
 
     def get_node_by_job(self, jid):
         tmp = NodeDetail.objects.filter(host= self.host, jid=jid)

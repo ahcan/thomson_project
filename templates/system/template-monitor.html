@@ -57,13 +57,13 @@
                     <th class="col-md-1 sortting">
                         <a role="button" ng-click="orderByField='!jerror'; reverseSort=ture;">Error/Job</a>
                     </th>
-                    <!-- <th class="col-md-1">Counter</th> -->
-                    <th class="col-md-3 sortting">
+                    <th class="col-md-4">Job</th>
+                    <th class="col-md-2 sortting">
                         <a role="button" ng-click="orderByField = 'alloccpu'; reverseSort = !reverseSort;">Cpu
                             <i class="glyphicon" ng-show="orderByField=='alloccpu'" ng-class="{'glyphicon-chevron-up': !reverseSort, 'glyphicon-chevron-down': reverseSort}"></i>
                         </a>
                     </th>
-                    <th class="col-md-3 sortting">
+                    <th class="col-md-2 sortting">
                         <a role="button" ng-click="orderByField = 'allocmem'; reverseSort = !reverseSort">Mem
                             <i class="glyphicon" ng-show="orderByField=='allocmem'" ng-class="{'glyphicon-chevron-up': !reverseSort, 'glyphicon-chevron-down': reverseSort}"></i>
                         </a>
@@ -78,7 +78,8 @@
                     </td>
                     <td class="col-md-1" ng-class="{'alarm': node.jerror >0}">{{'{{node.state}'}}}</td>
                     <td class="col-md-1" ng-class="{'alarm': node.jerror >0}">{{'{{node.jerror}'}}}/{{'{{node.jcounter}'}}}</td>
-                    <td class="col-md-3" ng-class="{'alarm': node.jerror >0}">
+                    <td class="col-md-4" ng-class="{'alarm': node.jerror > 0}"><span ng-repeat="job in node.jobs">{{'{{job}'}}}&#44;&nbsp;</span></td>
+                    <td class="col-md-2" ng-class="{'alarm': node.jerror >0}">
                         <div class="progress">
                             <div class="progressbar progress-bar-info" role="progressbar" aria-valuemax='100' style="width: {{'{{node.alloccpu}'}}}%;">
                                 <div class="progressbar progress-bar-real" role="progressbar" aria-valuenow="{{'{{node.cpu}'}}}" aria-valuemin="0" aria-valuemax="100"
@@ -87,7 +88,7 @@
                             </div>
                         </div>
                     </td>
-                    <td class="col-md-3" ng-class="{'alarm': node.jerror >0}">
+                    <td class="col-md-2" ng-class="{'alarm': node.jerror >0}">
                         <div class="progress">
                             <div class="progressbar progress-bar-info" role="progressbar" aria-valuemax='100' style="width: {{'{{node.allocmem}'}}}%;">
                                 <div class="progressbar progress-bar-real" role="progressbar" aria-valuenow="{{'{{node.mem}'}}}" aria-valuemin="0" aria-valuemax="100"
@@ -155,7 +156,13 @@
 <!-- end table Job -->
 <!-- table Real Time -->
 <div class="col-md-12 table-responsive colpadding panel panel-info" ng-hide="isRealTime">
-    <div class="panel-heading"><h4 class="node-h4">Real Time</h4></div>
+    <div class="panel-heading">
+        <div class="col-md-4">
+            <h4 class="node-h4">Real Time</h4>
+        </div>
+        <div class="input-group col-md-8" ><span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span><input type="text" class="form-control" placeholder="Search..." ng-model="search">
+        </div>
+    </div>
     <div ng-controller="ctrload-realtime" class="loader panel-body"><div class="content" ng-show="isLoadRealtime"></div></div>
     <div class="wrapper" ng-class="{'wrapper-log': isJob, 'wrapper-log-1': !isJob}" style="overflow-y: scroll;">
         <table class="table table-bordered table-hover table-striped scrollTable">
@@ -178,7 +185,7 @@
                         <span>{{'{{$index + 1}'}}}</span>
                     </td>
                     <td style="width: 2%;">
-                        <span>{{'{{log.sev}'}}}</span>
+                        <div class="serverily {{'{{log.sev}'}}}"></div>
                     </td>
                     <td style="width: 2%;">
                         <span>{{'{{log.nid}'}}}</span>
@@ -258,7 +265,7 @@
             <tbody>
                 <tr ng-repeat="log in lstLogJob | orderBy: '-opdate'">
                     <td style="width: 5%;">
-                        <span>{{'{{log.sev}'}}}</span>
+                        <div class="serverily {{'{{log.sev}'}}}"></div>
                     </td>
                     <td style="width: 10%;">
                         <span>{{'{{log.cat}'}}}</span>

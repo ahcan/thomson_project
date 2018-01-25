@@ -17,6 +17,34 @@ table {
     width: 6%; }
   table .width-col-default td {
     width: 6%; }
+table .serverily.Major{
+  height:17px;
+  width:17px;
+  background-image: url('/static/image/major.JPG');
+  background-repeat:  no-repeat;
+  margin:auto;
+}
+table .serverily.Minor{
+  height: 17px;
+  width:17px;
+  background-image: url('/static/image/minor.JPG');
+  background-repeat:  no-repeat;
+  margin:auto;
+}
+table .serverily.Info{
+  height: 17px;
+  width:17px;
+  background-image: url('/static/image/info.JPG');
+  background-repeat:  no-repeat;
+  margin:auto;
+}
+table .serverily.Critical{
+  height: 17px;
+  width:17px;
+  background-image: url('/static/image/critical.JPG');
+  background-repeat:  no-repeat;
+  margin:auto;
+}
 
 .table-bordered {
   border: 1px solid #a8a1a1; }
@@ -39,16 +67,6 @@ table {
 .table-panel {
   margin-bottom: 0px; }
 
-/*sroll table*/
-/*@column_1_width: 2%;
-@column_2_width: 20%;
-@column_3_width: 20%;
-@column_4_width: 20%;
-@column_5_width: 20%;
-@column_6_width: 20%;
-@column_7_width: 20%;
-@column_8_width: 20%;
-@column_9_width: 20%;*/
 div .tableContainer {
   clear: both;
   /*border: 1px solid #963;*/
@@ -499,10 +517,10 @@ table.floatThead-table {
     }
     .wrapper-log {
       /*329*/
-      height: 310px;
+      height: 296px;
     }
     .wrapper-log-1 {
-      height: 546px;
+      height: 515px;
     }
   .loader{
     margin-top: 7%;
