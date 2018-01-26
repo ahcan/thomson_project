@@ -478,12 +478,23 @@ table.floatThead-table {
     .wrapper-log-1 {
       height: 290px;
     }
-    .loader{
+/*  .loader{
       position: absolute;
       width: 98%;
       height: 75%;
       padding: 6%;
-    }
+      z-index: 1000;
+    }*/
+    .loader{
+    margin-top: 7%;
+    position: absolute;
+    margin-left: 45%;
+    width: 0px;
+    padding: 0px;
+    height: 0px;
+    z-index: 1000;
+  }
+
     .loader .content {
       margin-left: 45%;
       z-index: 1000;
@@ -529,6 +540,7 @@ table.floatThead-table {
     width: 0px;
     padding: 0px;
     height: 0px;
+    z-index: 1000;
   }
   .loader .content {
     z-index: 1000;
@@ -637,24 +649,24 @@ table.floatThead-table {
     /*margin-top:10px;*/
     /*color:#fff;*/
     /*font-size: 16px;*/ }}
-@media only screen and (min-width: 1120px) {
-/*  .show-text{
-      display: none;
-    }*/
-  #txtTime {
-    display: inline; }
+  @media only screen and (min-width: 1120px) {
+  /*  .show-text{
+        display: none;
+      }*/
+    #txtTime {
+      display: inline; }
 
-  #txtZone {
-    display: inline; }
+    #txtZone {
+      display: inline; }
 
-  #lblZone {
-    display: inline; }
-div#systemTime {
-  /*position: fixed;*/
-  left: 26%;
-  /*margin-top:10px;*/
-  /*color:#fff;*/
-  /*font-size: 16px;*/ } }
+    #lblZone {
+      display: inline; }
+  div#systemTime {
+    /*position: fixed;*/
+    left: 26%;
+    /*margin-top:10px;*/
+    /*color:#fff;*/
+    /*font-size: 16px;*/ } }
 @media only screen and (min-width: 1200px) {
   .header-device {
     width: 100%;
