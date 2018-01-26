@@ -22,7 +22,7 @@ from system.utils import DatabaseNode as NodeDB
 #Main template dashboard /system
 def get_system(request, thomson_name):
     if not request.user.is_authenticated():
-        return HttpResponseRedirect('/accounts/login')
+        return HttpResponse(status=401)
     user = user_info(request)
     return render_to_response('system/'+thomson_name+'.html', user)
 
@@ -65,10 +65,12 @@ def get_job_status_json(request, thomson_name):
 #Link get info CPU, RAM... each node: /system/api/status
 @require_http_methods(['GET'])
 @csrf_exempt
-@login_required()
+# @login_required()
 
 def get_nodes_status_json(request, thomson_name):
     # nodes_status = Node(thomson_name).get_info()
+    if not request.user.is_authenticated():
+        return HttpResponse(status = 401)
     nodes_status = NodeDB(thomson_name).get_all_node_json()
     return HttpResponse(nodes_status, content_type='application/json', status=200)
 

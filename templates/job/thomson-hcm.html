@@ -21,10 +21,10 @@
                     $scope.total = $scope.job_list.length
                     console.log($scope.job_list);
                 }
-            });
+            }, function(response){if (response.status == 401) {$window.location.href='/accounts/login/'}});
             $timeout(function(){
                 $scope.reload();
-            },10000)
+            },1000)
         };
         // Fiter By State checkbox
         $scope.filters = {};
