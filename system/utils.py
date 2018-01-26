@@ -21,7 +21,7 @@ class DatabaseNode():
         job_list = Job.objects.all().filter(host=self.host).exclude(status='Ok')
         # print self.host
         if not lstnodes:
-            time.sleep(1)
+            time.sleep(0.5)
             lstnodes = self.get_all_node()
         for node in lstnodes:
             jerror, jcounter, jobs_error= self.count_job_error(node.host, node.nid)

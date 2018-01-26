@@ -21,8 +21,10 @@ from utils import DatabaseJob as JobDB
 #Link get all job: /job/api/job
 @require_http_methods(['GET'])
 @csrf_exempt
-@login_required()
+# @login_required()
 def get_job_json(request, thomson_name):
+    if not request.user.is_authenticated():
+        return HttpResponse(status=401)
     job_list = JobDB().json_job_host(thomson_name)
     # job_list = Job().get_job()
     return HttpResponse(job_list, content_type='application/json', status=200)

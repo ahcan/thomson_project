@@ -60,7 +60,7 @@ class Thomson:
         headers = DateAndTimeReq.HEADERS
         body = DateAndTimeReq.BODY
         print body
-        response_xml = self.get_response(headers, body)
+        #response_xml = self.get_response(headers, body)
         response_xml = File().get_response('GetDateAndTimeRsp.xml')
         print response_xml
         xmldoc = minidom.parseString(response_xml)
@@ -81,7 +81,7 @@ class Thomson:
         from setting.xmlReq import MountPointReq
         headers = MountPointReq.HEADERS
         body = MountPointReq.BODY
-        response_xml = self.get_response(headers, body)
+        #response_xml = self.get_response(headers, body)
         response_xml = File().get_response('GetMountPointsRsp.xml')
         xmldoc = minidom.parseString(response_xml)
         itemlist = xmldoc.getElementsByTagName('GetMountPoints:MountPoint')
@@ -97,7 +97,7 @@ class Thomson:
         from setting.xmlReq import SystemReq
         headers = SystemReq.HEADERS
         body = SystemReq.BODY
-        response_xml = self.get_response(headers, body)
+        ##response_xml = self.get_response(headers, body)
         response_xml = File().get_response('SystemGetStatusRsp.xml')
         xmldoc = minidom.parseString(response_xml)
         itemlist = xmldoc.getElementsByTagName('sGetStatus:RspOkSGS')
@@ -138,7 +138,7 @@ class Thomson:
         from setting.xmlReq.SystemReq import LICENSE_HEADERS, LICENSE_BODY
         headers = LICENSE_HEADERS
         body = LICENSE_BODY
-        response_xml = self.get_response(headers, body)
+        #response_xml = self.get_response(headers, body)
         response_xml = File().get_response('SystemGetVersionsRsp.xml')
         return response_xml
 
@@ -541,7 +541,7 @@ class Job:
         return response_xml
 
     def get_jobid_list(self):
-        response_xml = self.get_job_xml()
+        #response_xml = self.get_job_xml()
         xmldoc = minidom.parseString(response_xml)
         itemlist = xmldoc.getElementsByTagName('jGetList:JItem')
         args=[]
@@ -552,15 +552,15 @@ class Job:
         return args
 
     def get_job(self):
-        response_xml = self.get_job_xml()
+        #response_xml = self.get_job_xml()
         return self.parse_xml(response_xml)
 
     def get_job_name(self): # get name id job
-        response_xml = self.get_job_xml()
+        #response_xml = self.get_job_xml()
         return self.parse_xml_name(response_xml)
 
     def count_job(self):
-        response_xml = self.get_job_xml()
+        #response_xml = self.get_job_xml()
         return self.count_object(response_xml)
 
     def get_Waiting_xml(self):
@@ -571,11 +571,11 @@ class Job:
         return response_xml
 
     def get_Waiting(self):
-        response_xml = self.get_Waiting_xml()
+        #response_xml = self.get_Waiting_xml()
         return self.parse_xml(response_xml)
 
     def count_Waiting(self):
-        response_xml = self.get_Waiting_xml()
+        #response_xml = self.get_Waiting_xml()
         return self.count_object(response_xml)
 
     def get_Running_xml(self):
@@ -590,7 +590,7 @@ class Job:
         return self.parse_xml(xml)
 
     def count_Running(self):
-        response_xml = self.get_Running_xml()
+        #response_xml = self.get_Running_xml()
         return self.count_object(response_xml)
 
     def get_Paused_xml(self):
@@ -601,11 +601,11 @@ class Job:
         return response_xml
 
     def get_Paused(self):
-        response_xml = self.get_Paused_xml()
+        #response_xml = self.get_Paused_xml()
         return self.parse_xml(response_xml)
 
     def count_Paused(self):
-        response_xml = self.get_Paused_xml()
+        #response_xml = self.get_Paused_xml()
         return self.count_object(response_xml)
 
     def get_Completed_xml(self):
@@ -616,11 +616,11 @@ class Job:
         return response_xml
 
     def get_Completed(self):
-        response_xml = self.get_Completed_xml()
+        #response_xml = self.get_Completed_xml()
         return self.parse_xml(response_xml)
 
     def count_Completed(self):
-        response_xml = self.get_Completed_xml()
+        #response_xml = self.get_Completed_xml()
         return self.count_object(response_xml)
 
     def get_Aborted_xml(self):
@@ -631,11 +631,11 @@ class Job:
         return response_xml
 
     def get_Aborted(self):
-        response_xml = self.get_Aborted_xml()
+        #response_xml = self.get_Aborted_xml()
         return self.parse_xml(response_xml)
 
     def count_Aborted(self):
-        response_xml = self.get_Aborted_xml()
+        #response_xml = self.get_Aborted_xml()
         return self.count_object(response_xml)
 
     def get_job_detail_by_job_id(self, arr_job_id):
@@ -709,7 +709,7 @@ class JobDetail:
 
 
     def get_job_name(self):
-        response_xml = self.get_param_xml()
+        #response_xml = self.get_param_xml()
         response_xml = File().get_response('JobGetParamsRsp.xml')
         xmldoc = minidom.parseString(response_xml)
         joblist = xmldoc.getElementsByTagName('wd:Job')
