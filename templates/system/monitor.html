@@ -28,11 +28,11 @@
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                         <h4 class="modal-title" style="color:red;" ng-bind-html="txtHeader"></h4>
                     </div>
-                    <form method="post" id="frm-modal-stop-thomson-hni" ng-submit="stopJob(job_id,node_id)">
+                    <form method="post" id="frm-modal-stop-thomson-hni" onsubmit="return valiCaptcha('widgetStop')" ng-submit="stopJob(job_id,node_id)">
                         <div class="modal-body">
                             <div class="form-group" style="text-align: center; font-size: 15px;" ng-bind-html='txtBody'>
                             </div>
-                            <div class="g-recaptcha" id="widgetStop"></div>
+                            <div class="simple-captcha" id="widgetStop"></div>
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-primary" type="submit" name="Continue">Continue</button>
@@ -52,11 +52,12 @@
                           <button type="button" class="close" data-dismiss="modal">&times;</button>
                           <h4 class="modal-title" style="color:red;" ng-bind-html="txtHeader"></h4>
                       </div>
-                      <form method="post" id="frm-modal-restart-thomson-hni" ng-submit="restartJob(job_id, node_id)">
+                      <form method="post" id="frm-modal-restart-thomson-hni" onsubmit="return valiCaptcha('widgetRestart')" ng-submit="restartJob(job_id, node_id)">
                         <div class="modal-body">
                             <div class="form-group" style="text-align: center; font-size: 15px;" ng-bind-html='txtBody'>
                             </div>
-                            <div class="g-recaptcha" id="widgetRestart"></div>
+                            <div class="simple-captcha" id="widgetRestart">
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-primary" type="submit" name="resetart" value="Continue">Continue </button>
@@ -79,12 +80,12 @@
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                         <h4 class="modal-title" style="color:red;" ng-bind-html="txtHeader"></h4>
                     </div>
-                    <form method="post" id="frm-modal-stop-thomson-hcm" ng-submit="stopJob(job_id,node_id)">
+                    <form method="post" id="frm-modal-stop-thomson-hcm" onsubmit="return valiCaptcha('widgetStop1')" ng-submit="stopJob(job_id,node_id)">
                         <div class="modal-body">
                             <div class="form-group" style="text-align: center; font-size: 15px;" ng-bind-html='txtBody'>
                             </div>
-                            <!-- <div class="g-recaptcha" id='captchaStop' data-callback="onloadCallback();"></div> -->
-                            <div class="g-recaptcha" id="widgetStop1"></div>
+                            <!-- <div class="" id='captchaStop' data-callback="onloadCallback();"></div> -->
+                            <div class="simple-captcha" id="widgetStop1"></div>
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-primary" type="submit" name="Continue">Continue</button>
@@ -104,11 +105,11 @@
                           <button type="button" class="close" data-dismiss="modal">&times;</button>
                           <h4 class="modal-title" style="color:red;" ng-bind-html="txtHeader"></h4>
                       </div>
-                      <form method="post" id="frm-modal-restart-thomson-hcm" ng-submit="restartJob(job_id, node_id)">
+                      <form method="post" id="frm-modal-restart-thomson-hcm" onsubmit="return valiCaptcha('widgetRestart1')" ng-submit="restartJob(job_id, node_id)">
                         <div class="modal-body">
                             <div class="form-group" style="text-align: center; font-size: 15px;" ng-bind-html='txtBody'>
                             </div>
-                            <div class="g-recaptcha" id="widgetRestart1"></div>
+                            <div class="simple-captcha" id="widgetRestart1"></div>
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-primary" type="submit" name="resetart" value="Continue">Continue </button>
@@ -122,15 +123,16 @@
     </div>
 </div>
 <script type="text/javascript">
-  var captchaRestart="";
-  var captchaRestart1="";
-  var captchaStop="";
-  var captchaStop1="";
-    var app =angular.module('System',['ngSanitize']);
+  // var captchaRestart="";
+  // var captchaRestart1="";
+  // var captchaStop="";
+  // var captchaStop1="";
+  var app =angular.module('System',['ngSanitize']);
 </script>
-<script type="text/javascript" src="/static/ajax/libs/jsMonitor/ctrl-load.js"></script>
-<script type="text/javascript" src="/static/ajax/libs/jsMonitor/ctrl-HNI.js"></script>
-<script type="text/javascript" src="/static/ajax/libs/jsMonitor/ctrl-HCM.js"></script>
+<script type="text/javascript" src="/static/assets/js/captcha/simple-captcha.min.js"></script>
+<script type="text/javascript" src="/static/ajax/libs/jsMonitor/ctrl-load.min.js"></script>
+<script type="text/javascript" src="/static/ajax/libs/jsMonitor/ctrl-HNI.min.js"></script>
+<script type="text/javascript" src="/static/ajax/libs/jsMonitor/ctrl-HCM.min.js"></script>
 <script type="text/javascript">
     var $scroll = $('table.scrollTable');
     $scroll.floatThead({

@@ -11,4 +11,5 @@ urlpatterns = [
     url(r'^job/', include('job.urls')),
     url(r'^schedule/', include('schedule.urls')),
     url(r'^$', monitor, name='home'),
+    url(r'^captcha/', include('captcha.urls')),
 ]

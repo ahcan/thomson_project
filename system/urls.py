@@ -22,6 +22,9 @@ urlpatterns = [
 
     #Link monitor
     url(r'^monitor/$', views.monitor, name='monitor'),
+    #Link get captcha
+    url(r'^captcha/$',views.captcha, name='captcha'),
+    # url(r'^check_captcha/$', views.check_captcha, name='check_captcha'),
     url(r'^test/$', views.test, name='test'),
     #Link get thomson info CPU, RAAM: /system/api/<node_id>/
     url(r'^api/(?P<thomson_name>\w+\-+\w+)/license/$', views.get_license_json, name='license_json'),

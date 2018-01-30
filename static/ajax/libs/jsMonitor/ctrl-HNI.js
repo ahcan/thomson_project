@@ -1,4 +1,4 @@
-app.controller('ctrl-thomson-HNI',function($scope, $http, $timeout, $window, $interval, $sce) {
+app.controller('ctrl-thomson-HNI',function($scope, $http, $timeout, $window, $interval) {
 // body...
     $scope.host = "thomson-hni";
     $scope.isRealTime = false;
@@ -7,7 +7,7 @@ app.controller('ctrl-thomson-HNI',function($scope, $http, $timeout, $window, $in
     var tick = false;
     var tickAllLog = false;
     $scope.reloadNodes = function(){
-        tick = false
+        tick = false;
         $scope.$broadcast('loadNode-HNI');
         $http({
             method:"GET",
@@ -89,10 +89,11 @@ app.controller('ctrl-thomson-HNI',function($scope, $http, $timeout, $window, $in
         $scope.nodeDetail = node_id;
     };
     $scope.restartJob = function(job_id, node_id){
-        if(grecaptcha.getResponse(captchaRestart)===""){
-            alert("Please resolve the captcha and submit!");
-        }else{
+        if (angular.element(document.getElementById('cpt-value-widgetRestart')).val()===""){
+            alert("Please resolve the captcha and submit!");}
+        else{            
             $scope.$emit('loadMain-HNI');
+            console.log("restart");
             $http({
             method: 'PUT',
             url: '/job/api/' + $scope.host + '/' + job_id + '/restart/',
@@ -104,12 +105,11 @@ app.controller('ctrl-thomson-HNI',function($scope, $http, $timeout, $window, $in
                 }
                 else{
                     $scope.$emit('uloadMain-HNI');}
-            });
-            window.grecaptcha.reset(captchaRestart);
-        }
+        });}
     };
     $scope.stopJob = function(job_id, node_id){
-        if (window.grecaptcha.getResponse(captchaStop)===""){
+        if (angular.element(document.getElementById('cpt-value-widgetStop')).val()===""){ 
+        //get val byid
             alert("Please resolve the captcha and submit!");
         }else{
             $scope.$emit('loadMain-HNI');
@@ -124,7 +124,6 @@ app.controller('ctrl-thomson-HNI',function($scope, $http, $timeout, $window, $in
                 }
                 else{$scope.emit('uloadMain-HNI');}
                 });
-            window.grecaptcha.reset(captchaStop);
         }
     };
     $scope.showLog = function(job_id, job_name){
@@ -227,7 +226,8 @@ app.controller('ctrl-thomson-HNI',function($scope, $http, $timeout, $window, $in
     $scope.reloadJobs();
 });
 $('#frm-modal-stop-thomson-hni').submit(function() {
-    if(grecaptcha.getResponse(captchaStop)===""){
+    console.log($('#cpt-value-widgetStop').val());
+    if($('#cpt-value-widgetStop').val()===""){
         $('#modal-stop-thomson-hni').modal('show');
     }else{
         $('#modal-stop-thomson-hni').modal('hide');
@@ -235,7 +235,7 @@ $('#frm-modal-stop-thomson-hni').submit(function() {
     // console.log("####close###");
 });
 $('#frm-modal-restart-thomson-hni').submit(function() {
-    if(grecaptcha.getResponse(captchaRestart)===""){
+    if($('#cpt-value-widgetRestart').val()===""){
         $('#modal-restart-thomson-hni').modal('show');
     }else{
         $('#modal-restart-thomson-hni').modal('hide');

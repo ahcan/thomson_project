@@ -95,11 +95,27 @@ def monitor(request):
     user = user_info(request)
     return render_to_response('system/monitor.html', user)
 
+# link test captcha
 @login_required()
+@csrf_exempt
 def test(request):
     user = user_info(request)
-    return render_to_response('system/monitor.html', user)    
-
+    return render_to_response('system/testcaptcha.html',locals())
+    # return render_to_response('system/monitor.html', user)    
+from models import AjaxCaptcha
+@csrf_exempt
+@require_http_methods(['GET', 'POST'])
+def captcha(request):
+    if request.method == 'POST':
+        try:
+            result = json.loads(request.body)
+        except Exception as e:
+            result = dict()
+        json_response = AjaxCaptcha().validateCaptcha(result)
+        return HttpResponse(json.dumps(json_response), content_type='application/json', status=200)
+    else:
+        json_response = AjaxCaptcha().getCaptcha()
+        return HttpResponse(json.dumps(json_response), content_type='application/json', status=200)
 @login_required()
 def get_license_json(request, thomson_name):
     license_status = Thomson(thomson_name).get_license()

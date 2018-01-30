@@ -1,4 +1,4 @@
-app.controller('ctrl-thomson-HCM',function($scope, $http, $timeout, $window, $interval, $sce) {
+app.controller('ctrl-thomson-HCM',function($scope, $http, $timeout, $window, $interval) {
 // body...
     $scope.host = "thomson-hcm";
     $scope.isRealTime = false;
@@ -7,7 +7,7 @@ app.controller('ctrl-thomson-HCM',function($scope, $http, $timeout, $window, $in
     var tick = false;
     var tickAllLog = false;
     $scope.reloadNodes = function(){
-        tick = false
+        tick = false;
         $scope.$broadcast('loadNode-HCM');
         $http({
             method:"GET",
@@ -89,7 +89,7 @@ app.controller('ctrl-thomson-HCM',function($scope, $http, $timeout, $window, $in
         $scope.nodeDetail = node_id;
     };
     $scope.restartJob = function(job_id, node_id){
-        if(grecaptcha.getResponse(captchaRestart)===""){
+        if(angular.element(document.getElementById('cpt-value-widgetRestart1')).val()===""){
             alert("Please resolve the captcha and submit!");
         }else{
             $scope.$emit('loadMain-HCM');
@@ -105,11 +105,10 @@ app.controller('ctrl-thomson-HCM',function($scope, $http, $timeout, $window, $in
                 else{
                     $scope.$emit('uloadMain-HCM');}
             });
-            window.grecaptcha.reset(captchaRestart);
         }
     };
     $scope.stopJob = function(job_id, node_id){
-        if (window.grecaptcha.getResponse(captchaStop)===""){
+        if (angular.element(document.getElementById('cpt-value-widgetStop1')).val()===""){
             alert("Please resolve the captcha and submit!");
         }else{
             $scope.$emit('loadMain-HCM');
@@ -124,7 +123,6 @@ app.controller('ctrl-thomson-HCM',function($scope, $http, $timeout, $window, $in
                 }
                 else{$scope.emit('uloadMain-HCM');}
                 });
-            window.grecaptcha.reset(captchaStop);
         }
     };
     $scope.showLog = function(job_id, job_name){
@@ -227,7 +225,7 @@ app.controller('ctrl-thomson-HCM',function($scope, $http, $timeout, $window, $in
     $scope.reloadJobs();
 });
 $('#frm-modal-stop-thomson-hcm').submit(function() {
-    if(grecaptcha.getResponse(captchaStop)===""){
+    if($('#cpt-value-widgetStop1').val()===""){
         $('#modal-stop-thomson-hcm').modal('show');
     }else{
         $('#modal-stop-thomson-hcm').modal('hide');
@@ -235,7 +233,7 @@ $('#frm-modal-stop-thomson-hcm').submit(function() {
     // console.log("####close###");
 });
 $('#frm-modal-restart-thomson-hcm').submit(function() {
-    if(grecaptcha.getResponse(captchaRestart)===""){
+    if($('#cpt-value-widgetRestart1').val()===""){
         $('#modal-restart-thomson-hcm').modal('show');
     }else{
         $('#modal-restart-thomson-hcm').modal('hide');

@@ -297,6 +297,12 @@ table.floatThead-table {
 .panel-heading{
   padding: 5px 15px;
 }
+
+/*style captcah*/
+.simple-captcha{
+  width: 200px;
+  display: table;
+}
 /*skin loading*/
   .sk-fading-circle {
     margin: 20% 47.6%;

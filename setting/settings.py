@@ -155,5 +155,8 @@ THOMSON_HOST={
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/'
 
-#captcha key
-GOOGLE_RECAPTCHA_SECRET_KEY = '6Ld8F0AUAAAAADnYnvbykAO1s75uw8tUDPW_lKRv'
+# config captcha
+CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.math_challenge'
+CAPTCHA_TIMEOUT = 2 #minutes
+# CAPTCHA_MATH_CHALLENGE_OPERATOR = ('+',)
+CAPTCHA_NOISE_FUNCTIONS = ('captcha.helpers.noise_null',)
