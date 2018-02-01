@@ -4,35 +4,49 @@ app.controller('ctrl-thomson-HNI',function($scope, $http, $timeout, $window, $in
     $scope.isRealTime = false;
     $scope.isJob = false;
     $scope.node_id = 0;
-    var tick = false;
+    var tickNode = false;
     var tickAllLog = false;
+    var tickCountJob = false;
+    var tickDetail = false;
     $scope.reloadNodes = function(){
-        tick = false;
+        tickNode = false;
         $scope.$broadcast('loadNode-HNI');
         $http({
             method:"GET",
             url:"/system/api/"+$scope.host+"/nstatus/",
             timeout:2000,
         }).then(function(response){
-            if(response.status == 200){
+            if(response.status == 200 && response.data.length){
                 $scope.lstNodes = response.data;
-                tick = true;
-            }
+                tickNode = true;
+            }else tickNode = true;
             $scope.$broadcast('uloadNode-HNI');
-        }, function(response){tick = true; if (response.status == 401) {$window.location.href= '/accounts/login/';}});
+        }, function(response){tickNode = true; if (response.status == 401) {$window.location.href= '/accounts/login/';}});
     };
     //reload nodes
     $timeout(function() {$interval(function() {
-        if(tick){$scope.reloadNodes();}
+        if(tickNode){$scope.reloadNodes();}
     }, 3000);}, 100);
+    //load count job
     $scope.reloadJobs = function(){
+        tickCountJob = false;
         $http({
             method:'GET',
             url:"/job/api/"+$scope.host+"/count-job/",
+            timeout:2000,
         }).then(function(response){
-            $scope.Jobs=response.data;
+            if (response.status == 200 && response.data[0]['total']) {
+                $scope.Jobs=response.data;
+                tickCountJob = true;
+
+            }else{
+                $timeout(function(){ $scope.reloadJobs();}, 1000);
+            }
         });
     };
+    //reload count job
+    $interval(function(){if (tickCountJob) {$scope.reloadJobs();}},10000);
+    
     $scope.reloadDevice = function(){
         $http({
             method:"GET",
@@ -49,7 +63,7 @@ app.controller('ctrl-thomson-HNI',function($scope, $http, $timeout, $window, $in
         $scope.lstLogJob = '';
         $scope.isRealTime = false;
         $scope.isJob = true;
-        $timeout(function(){$scope.$broadcast('loadJob-HNI');},0);
+        $scope.$broadcast('loadJob-HNI');
         $http({
             method:'GET',
             url:'/system/api/'+$scope.host+'/'+node_id+'/',
@@ -67,21 +81,24 @@ app.controller('ctrl-thomson-HNI',function($scope, $http, $timeout, $window, $in
         // console.log($scope.nodeDetail);
     };
     $scope.reload_detail = function(node_id){
+        tickDetail = false;
         $scope.$broadcast('loadJob-HNI');
         $http({
             method:'GET',
             url:'/system/api/'+$scope.host+'/'+node_id+'/',
-            timeou:700,
+            timeout:3000,
         }).then(function(response){
-            if($scope.nodeDetail == node_id && response.status == 200){
+            if($scope.nodeDetail == node_id && response.status == 200 && response.data.length){
                 $scope.node = response.data[0];
+                // console.log(response.data);
                 $scope.$broadcast('uloadJob-HNI');
+                tickDetail = true;
                 // $scope.job_list = response.data[0].job_list;
-            }
-        });
+            }else{tickDetail = true;}
+        }, function(response){tickDetail = true;});
         if ($scope.isJob && $scope.nodeDetail == node_id){
             $timeout(function() {
-                $scope.reload_detail(node_id);
+                if(tickDetail){$scope.reload_detail(node_id);}
             }, 3000);
         }
     };
@@ -130,12 +147,12 @@ app.controller('ctrl-thomson-HNI',function($scope, $http, $timeout, $window, $in
         $scope.job_name = job_name;
         $scope.isRealTime = true;
         $scope.job_id = job_id;
-        $timeout(function() { $scope.$broadcast('loadLog-HNI');}, 0);
+        $scope.$broadcast('loadLog-HNI');
         $http({
             method: 'GET',
             url: '/log/api/'+ $scope.host +'/'+ job_id +'/',
         }).then(function(response){
-            if (response.status == 200){
+            if (response.status == 200 ){
                 $scope.lstLogJob = response.data;
                 // console.log(response.data);
                 $scope.$broadcast('uloadLog-HNI');
@@ -153,7 +170,7 @@ app.controller('ctrl-thomson-HNI',function($scope, $http, $timeout, $window, $in
             method: 'GET',
             url: '/log/api/'+ $scope.host +'/'+ job_id +'/',
         }).then(function(response){
-           if (response.status == 200 && $scope.job_id == job_id){
+           if (response.status == 200 && $scope.job_id == job_id && response.data.length){
                 $scope.lstLogJob = response.data;
                 // console.log(response.data);
                 $scope.$broadcast('uloadLog-HNI');
@@ -175,10 +192,12 @@ app.controller('ctrl-thomson-HNI',function($scope, $http, $timeout, $window, $in
             url: '/log/api/'+$scope.host+'/log/',
             timeout:2000,
         }).then(function (response){
-           if (response.status == 200) {
+           if (response.status == 200 && response.data.length) {
+            // console.log(response.data);
             tickAllLog = true;
             $scope.log_list = response.data;
             $scope.$broadcast('uloadRealtime-HNI');}
+            else {tickAllLog = true;}
         }, function(response){tickAllLog = true;});
     };
     // reload All Log
@@ -226,7 +245,6 @@ app.controller('ctrl-thomson-HNI',function($scope, $http, $timeout, $window, $in
     $scope.reloadJobs();
 });
 $('#frm-modal-stop-thomson-hni').submit(function() {
-    console.log($('#cpt-value-widgetStop').val());
     if($('#cpt-value-widgetStop').val()===""){
         $('#modal-stop-thomson-hni').modal('show');
     }else{

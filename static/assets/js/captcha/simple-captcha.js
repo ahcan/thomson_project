@@ -43,7 +43,7 @@ function resetCaptcha(ele_id){
 }
 function valiCaptcha(ele_id){
     var str_error ='';
-    console.log(ele_id);
+    // console.log(ele_id);
     var datasent = {'cpt_value':$('#cpt-value-'+ele_id).val(),'cpt_key':$('#cpt-key-'+ele_id).val()};
     if($.trim($('#cpt-value-'+ele_id).val()) == ''){
         str_error = "Input can not be left blank";
@@ -51,7 +51,7 @@ function valiCaptcha(ele_id){
         $('#error-captcha-'+ele_id).show();
         return false;
     }else{
-        console.log(datasent);
+        // console.log(datasent);
         $.ajax({url:"/system/captcha/",
             async: false,
             type:"POST", dataType:"json",
