@@ -61,8 +61,8 @@ class DatabaseNode():
         if not tmp:
             time.sleep(1)
             tmp = NodeDetail.objects.filter(host= self.host, jid=jid)
-        try:
+            # print tmp[0].nid
             result = tmp[0].nid
-        except Exception as e:
-            result = e
+        else:
+            result = tmp[0].nid
         return result
