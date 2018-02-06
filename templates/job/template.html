@@ -18,7 +18,7 @@
 <div class="content colpadding" ng-class="{'main-loader':isLoad, 'colpadding':!isLoad}" ng-controller="jobCtrl">
     <!-- job manager -->
     <div class="table-responsive colpadding col-md-4">
-        <h2 class="sub-header">Jobs &nbsp;&nbsp; {{'{{host}'}}}</h2>
+        <h2 class="sub-header">Jobs &nbsp;&nbsp; {{'{{host}'}}} <span style="font-size: 20px;">Total jobs: {{'{{total}'}}}</span></h2>
         <div class="panel-body">
             <div class="col-md-8">
                 <label class="checkbox-inline" ng-repeat="state in getStates()">

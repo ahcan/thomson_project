@@ -8,6 +8,7 @@
     app.controller("jobCtrl", function ($scope,$http,$timeout,$window, $interval){
         $scope.host = 'thomson-lab';
         var tickReload = false;
+        $scope.total = 0;
         $scope.reload = function () {
             $scope.total = 0;
             $http({method: 'GET',
@@ -16,6 +17,7 @@
             then(function (response) {
                 if(response.status == 200 && response.data.length){
                     $scope.job_list = response.data;
+                    $scope.total = response.data.length;
                     tickReload = true;
                 }else{tickReload = true;}
             }, function(response){if (response.status == 401) {$window.location.href='/accounts/login/'}; tickReload = true;});
