@@ -541,7 +541,7 @@ class Job:
         return response_xml
 
     def get_jobid_list(self):
-        #response_xml = self.get_job_xml()
+        response_xml = self.get_job_xml()
         xmldoc = minidom.parseString(response_xml)
         itemlist = xmldoc.getElementsByTagName('jGetList:JItem')
         args=[]
@@ -740,19 +740,25 @@ class JobDetail:
         headers = START_HEADERS
         body = START_BODY
         body = body.replace('JobID', str(self.jid))
-        # #response_xml = Thomson(self.name).get_response(headers, body)
+        # response_xml = Thomson(self.name).get_response(headers, body)
         History().create_log(thomson_name=self.name, user=user, action='start', jid=self.jid, datetime=DateTime().get_now())
-        # return self.parse_status(response_xml)
-        return "OK"
+        time.sleep(0.5)
+        try:
+            node_ID = dbNodeDetail(self.name).get_node_by_job(self.jid)        
+        except Exception as e:
+            node_ID = 0
+        # node_ID = dbNodeDetail(self.name).get_node_by_job(self.jid)        
+        # status = self.parse_status(response_xml)
+        return {'status': 'OK','nid': node_ID}
 
     def restart(self, user):
-        self.abort(user)
-        time.sleep(2)
-        if self.start(user) == 'OK':
-            message = dbNodeDetail(self.name).get_node_by_job(self.jid)
-        else:
-            message = 'can not start job'
-        return message
+        if self.abort(user) == 'OK':
+            time.sleep(1)
+            # print self.start(user)['nid']
+            return self.start(user)
+        else :
+            message = 'can not stop job'
+            return message
         # return "Oke"+self.name
     def abort(self, user):
         from setting.xmlReq.JobDetailReq import ABORT_HEADERS, ABORT_BODY

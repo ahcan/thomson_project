@@ -116,7 +116,8 @@ app.controller('ctrl-thomson-HNI',function($scope, $http, $timeout, $window, $in
             url: '/job/api/' + $scope.host + '/' + job_id + '/restart/',
             }).then(function(response){
                 if (response.status == 202) {
-                    $window.alert('jod is started on node: '+response.data.message);
+                    $window.alert(response.data.message);
+                    console.log(response.data);
                     $scope.show_detail(node_id);
                     $scope.$emit('uloadMain-HNI');
                 }
