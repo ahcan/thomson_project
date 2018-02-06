@@ -1,31 +1,26 @@
 {% extends 'base.html' %}
 {% block content %}
-<script type="text/javascript" src="/static/assets/js/jquery.floatThead.min.js"></script>
-<div ng-app="Job" ng-controller="jobCtrl">
+<div ng-app="Job"  ng-controller="ctrl-main">
     {%include "job/template.html" %}
 </div>
-<script>
-    var app = angular.module('Job',[]);
-    app.controller("jobCtrl", function ($scope,$http,$timeout,$window){
-        $scope.host = 'thomson-lab'
+<script type="text/javascript">
+    var app = angular.module('Job',['ngSanitize']);
+    app.controller("jobCtrl", function ($scope,$http,$timeout,$window, $interval){
+        $scope.host = 'thomson-lab';
+        var tickReload = false;
         $scope.reload = function () {
             $scope.total = 0;
-            $http.get('/job/api/'+$scope.host+'/job/').
+            $http({method: 'GET',
+                url:'/job/api/'+$scope.host+'/job/',
+                timeout:900,}).
             then(function (response) {
-                if(response.status == 302 && response.data.url){
-                    console.log(response.status);
-                    $window.location.href=response.data.url;
-                }
-                else{
+                if(response.status == 200 && response.data.length){
                     $scope.job_list = response.data;
-                    $scope.total = $scope.job_list.length
-                    console.log($scope.job_list);
-                }
-            },function(response){if (response.status == 401) {$window.location.href='/accounts/login/'}});
-            $timeout(function(){
-                $scope.reload();
-            },10000)
+                    tickReload = true;
+                }else{tickReload = true;}
+            }, function(response){if (response.status == 401) {$window.location.href='/accounts/login/'}; tickReload = true;});
         };
+        $interval(function(){if (tickReload) {$scope.reload();}}, 3000);
         // Fiter By State checkbox
         $scope.filters = {};
         //function
@@ -44,23 +39,131 @@
             // console.log(jobID);
             $http.get('/job/api/'+$scope.host+'/job/'+jobID+'/').then(function(response){
                 $scope.workflow = response.data;
-                console.log($scope.workflow);
+                // console.log($scope.workflow);
             });
             $http.get('/log/api/'+$scope.host+'/'+jobID+'/').then(function(response){
                 $scope.lstLogJob = response.data;
-                console.log($scope.lstLogJob);
+                // console.log($scope.lstLogJob);
             });
             $scope.clickrow = true;
             $scope.showpara = true;
-        }
+        };
+        //restart Job
+        $scope.restartJob = function(job_id){
+            if (angular.element(document.getElementById('cpt-value-widgetRestart')).val()===""){
+                alert("Please resolve the captcha and submit!");}
+            else{            
+                $scope.$emit('loadMain-LAB');
+                // console.log("restart");
+                $http({
+                method: 'PUT',
+                url: '/job/api/' + $scope.host + '/' + job_id + '/restart/',
+                }).then(function(response){
+                    if (response.status == 202) {
+                        $window.alert(response.data.message);
+                        $scope.$emit('uloadMain-LAB');
+                    }
+                    else{
+                        $scope.$emit('uloadMain-LAB');}
+            });}
+            $scope.moreinfo(job_id);
+        };
+        // stop job
+        $scope.stopJob = function(job_id){
+            if (angular.element(document.getElementById('cpt-value-widgetStop')).val()===""){ 
+            //get val byid
+                alert("Please resolve the captcha and submit!");
+            }else{
+                $scope.$emit('loadMain-LAB');
+                $http({
+                method: 'PUT',
+                url: '/job/api/'+ $scope.host + '/'+job_id + '/abort/',
+                }).then(function(response){
+                    if (response.status == 202) {
+                    $window.alert(response.data.message);
+                    // $scope.show_detail(node_id);
+                    $scope.$emit('uloadMain-LAB');
+                    }
+                    else{$scope.emit('uloadMain-LAB');}
+                    });
+            }
+            $scope.moreinfo(job_id);
+        };
+        // start Job
+        $scope.startJob = function(job_id){
+            if (angular.element(document.getElementById('cpt-value-widgetStart')).val()===""){ 
+            //get val byid
+                alert("Please resolve the captcha and submit!");
+            }else{
+                $scope.$emit('loadMain-LAB');
+                $http({
+                method: 'PUT',
+                url: '/job/api/'+ $scope.host + '/'+job_id + '/start/',
+                }).then(function(response){
+                    if (response.status == 202) {
+                    $window.alert(response.data.message);
+                    // $scope.show_detail(node_id);
+                    $scope.$emit('uloadMain-LAB');
+                    }
+                    else{$scope.emit('uloadMain-LAB');}
+                    });
+            }
+            $scope.moreinfo(job_id);
+        };
+        $scope.checkBackup = function(job_id, action){
+            $scope.job_id = job_id;
+            // $scope.node_id = node_id;
+            $scope.txtHeader= action+' Job:&nbsp;'+job_id;
+            $http({
+                method: 'GET',
+                url: '/job/api/' + $scope.host + '/' + job_id + '/check-backup/',
+            }).then(function(response){
+                if(response.status == 202){
+                    if(response.data[0]['backup']){
+                        var tmp= "glyphicon glyphicon-ok";
+                    }else{ var tmp = "glyphicon glyphicon-remove";}
+                    var strbackup="<p>Define backup input:&nbsp;<i class=\""+tmp+"\"></i></p></br>";
+                    var strip = "<p>IP address:&nbsp;"+response.data[0]['ip']+"</p>";
+                    $scope.txtBody = strbackup+ strip;
+                }
+                else{
+                    $scope.txtBody = '<p class="alert alert-danger">Not connect server!</p>';
+                }
+            });
+        };
     });
 </script>
+<script type="text/javascript" src="/static/ajax/libs/jsMonitor/ctrl-load.js"></script>
 <script type="text/javascript">
     var $scroll = $('table.scrollTable');
     $scroll.floatThead({
         scrollContainer: function($table){
         return $table.closest('.wrapper');
         }
+    });
+    setTimeout(function() {location.reload();}, 600000);
+    $(document).ready(function(){
+        $('#frm-modal-stop-thomson-lab').submit(function() {
+            if($('#cpt-value-widgetStop').val()===""){
+                $('#modal-stop-thomson-lab').modal('show');
+            }else{
+                $('#modal-stop-thomson-lab').modal('hide');
+            }
+        });
+        $('#frm-modal-restart-thomson-lab').submit(function() {
+            if($('#cpt-value-widgetRestart').val()===""){
+                $('#modal-restart-thomson-lab').modal('show');
+            }else{
+                $('#modal-restart-thomson-lab').modal('hide');
+            }
+        });
+        $('#frm-modal-start-thomson-lab').submit(function() {
+            if($('#cpt-value-widgetStart').val()===""){
+                $('#modal-start-thomson-lab').modal('show');
+            }else{
+                $('#modal-start-thomson-lab').modal('hide');
+            }
+        });
     });
 </script>
 {% endblock %}

@@ -23,11 +23,13 @@ app.controller('ctrload-log', function($scope){
     $scope.$on('uloadLog-HCM', function(){$scope.isLoadLog = false;});
 });
 app.controller('ctrl-main', function($scope){
-    $scope.isload = false;
+    $scope.isLoad = false;
     $scope.$on('loadMain-HNI', function(){$scope.isLoad = true;});
     $scope.$on('uloadMain-HNI', function(){$scope.isLoad = false;});
     $scope.$on('loadMain-HCM', function(){$scope.isLoad = true;});
     $scope.$on('uloadMain-HCM', function(){$scope.isLoad = false;});
+    $scope.$on('loadMain-LAB', function(){$scope.isLoad = true;});
+    $scope.$on('uloadMain-LAB', function(){$scope.isLoad = false;});
 });
 // // window.top;
 // var sitekey = "6Ld8F0AUAAAAAFTqjGB-p1gCOQxCBfoBLWGy3dRT";
