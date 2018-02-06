@@ -11,6 +11,7 @@ from accounts.user_info import *
 from django.contrib.auth.decorators import login_required
 from utils import DatabaseJob as JobDB
 
+
 # Create your views here.
 
 ##############################################################################
@@ -237,12 +238,13 @@ job/api/125/start/
 @csrf_exempt
 @login_required()
 def start_job(request, jid, thomson_name):
-    result = JobDetail(jid, thomson_name).start()
-    arg = {}
-    arg["message"] = result
-    message = json.dumps(arg)
-    print "start"
-    return HttpResponse(message, content_type="application.json",status=202)
+    result = JobDetail(jid, thomson_name).start(request.user.username)
+    if result['status'] == 'OK' and result['nid']:
+        message = 'Jod is started on node: %d'%(result['nid'])
+    else:
+        message = 'Job can not Start!'
+    # print "start"
+    return HttpResponse(json.dumps({'message': message}), content_type="application.json",status=202)
 
 ##############################################################################
 #                                                                            #
@@ -258,11 +260,12 @@ job/api/125/start/
 @login_required()
 def restart_job(request, jid, thomson_name):
     result = JobDetail(jid, thomson_name).restart(request.user.username)
-    arg = {}
-    arg["message"] = result
-    message = json.dumps(arg)
-    print "restart"
-    return HttpResponse(message, content_type="application.json",status=202)
+    if result['status'] == 'OK' and result['nid']:
+        message = 'Jod is started on node: %d'%(result['nid'])
+    else:
+        message = 'Job can not Start!'
+    # json.dumps()
+    return HttpResponse(json.dumps({'message': message}), content_type="application.json",status=202)
 
 ##############################################################################
 #                                                                            #
@@ -280,12 +283,11 @@ def abort_job(request, jid, thomson_name):
     result = JobDetail(jid, thomson_name).abort(request.user.username)
     arg = {}
     if result =='OK':
-        result = "Job"+jid+" on "+thomson_name+" just be stoped"
+        result = "Job "+jid+" on "+thomson_name+" just be stoped"
     elif request =='NotOK':
-        result = "Job"+jid+" on "+thomson_name+" cant not stop"
+        result = "Job "+jid+" on "+thomson_name+" cant not stop"
     arg["message"] = result
     message = json.dumps(arg)
-    print "stop"
     return HttpResponse(message, content_type="application.json", status=202)
 
 # Check backup Job
