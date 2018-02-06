@@ -256,6 +256,11 @@ body {
   background-color: #EBE449;
   color:#333;
 }*/
+.col-edit {
+  text-align: center;
+  color: white;
+
+}
 .glyphicon-ok {
   color: #25C829; }
 

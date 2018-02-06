@@ -1,3 +1,4 @@
+// add <div class="simple-captcha"> to use captcha
 $(document).ready(function(){
         renderLayout($('.simple-captcha'));
         // $('#form-1').submit(function(e){e.preventDefault();});
@@ -70,7 +71,7 @@ function valiCaptcha(ele_id){
                     return true;}
             },
             error: function(response){
-                $("#error"+ele_id).text("Not conntet server!");
+                $("#error"+ele_id).text("Not connect server!");
                 $('#error-captcha-'+ele_id).show();
                 return false;
             },});
