@@ -239,7 +239,7 @@ job/api/125/start/
 @login_required()
 def start_job(request, jid, thomson_name):
     result = JobDetail(jid, thomson_name).start(request.user.username)
-    if result['status'] == 'OK' and result['nid']:
+    if result['status'] == 'OK':
         message = 'Jod is started on node: %d'%(result['nid'])
     else:
         message = 'Job can not Start!'
