@@ -87,7 +87,7 @@ app.controller('ctrl-thomson-HCM',function($scope, $http, $timeout, $window, $in
         $http({
             method:'GET',
             url:'/system/api/'+$scope.host+'/'+node_id+'/',
-            timeout:2000,
+            timeout:10000,
         }).then(function(response){
             if($scope.nodeDetail == node_id && response.status == 200 && response.data.length){
                 $scope.node = response.data[0];
@@ -211,7 +211,7 @@ app.controller('ctrl-thomson-HCM',function($scope, $http, $timeout, $window, $in
             url: '/job/api/' + $scope.host + '/' + job_id + '/check-backup/',
         }).then(function(response){
             if(response.status ==202){
-                if(response.data[0]['backup']){
+                if(response.data[0]['backup'] === 'true'){
                     var tmp= "glyphicon glyphicon-ok";
                 }else{ var tmp = "glyphicon glyphicon-remove";}
                 var strbackup="<p>Define backup input:&nbsp;<i class=\""+tmp+"\"></i></p></br>";
