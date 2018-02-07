@@ -4,6 +4,7 @@ app.controller('ctrl-thomson-HCM',function($scope, $http, $timeout, $window, $in
     $scope.isRealTime = false;
     $scope.isJob = false;
     $scope.node_id = 0;
+    $scope.nodeDetail = 0;
     var tickNode = false;
     var tickAllLog = false;
     var tickCountJob = false;
@@ -86,7 +87,7 @@ app.controller('ctrl-thomson-HCM',function($scope, $http, $timeout, $window, $in
         $http({
             method:'GET',
             url:'/system/api/'+$scope.host+'/'+node_id+'/',
-            timeout:3000,
+            timeout:2000,
         }).then(function(response){
             if($scope.nodeDetail == node_id && response.status == 200 && response.data.length){
                 $scope.node = response.data[0];
@@ -96,12 +97,10 @@ app.controller('ctrl-thomson-HCM',function($scope, $http, $timeout, $window, $in
                 // $scope.job_list = response.data[0].job_list;
             }else{tickDetail = true;}
         }, function(response){tickDetail = true;});
-        if ($scope.isJob && $scope.nodeDetail == node_id){
-            $timeout(function() {
-                if(tickDetail){$scope.reload_detail(node_id);}
-            }, 3000);
-        }
     };
+    // reload detail node
+    $interval(function(){if(tickDetail && $scope.nodeDetail){console.log(tickDetail); $scope.reload_detail($scope.nodeDetail);}}, 3000);
+
     $scope.set_nodedatil = function(node_id){
         $scope.nodeDetail = node_id;
     };
