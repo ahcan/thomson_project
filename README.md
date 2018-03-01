@@ -7,3 +7,4 @@ module request:
 	+pytz
 	+tzlocal
     +django-recaptcha 
+    + otp: django-two-factor-auth

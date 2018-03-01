@@ -13,10 +13,12 @@ from django.shortcuts import render, redirect
 from accounts.models import *
 from setting import settings
 from setting.DateTime import *
+from django_otp.decorators import otp_required #otp
             
 # ------------auth
 @require_http_methods(['GET', 'POST'])
 @csrf_exempt
+# @otp_required
 def log_in(request):
     if request.method=='POST':
         data = json.loads(request.body)

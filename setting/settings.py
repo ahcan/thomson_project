@@ -1,4 +1,5 @@
 import os
+from django.core.urlresolvers import reverse_lazy
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -28,6 +29,10 @@ INSTALLED_APPS = [
     'job',
     'workflow',
     'captcha',
+    'django_otp', #otp django
+    'django_otp.plugins.otp_static',
+    'django_otp.plugins.otp_totp',
+    'two_factor',
 ]
 
 MIDDLEWARE = [
@@ -38,6 +43,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_otp.middleware.OTPMiddleware',
 ]
 
 ROOT_URLCONF = 'setting.urls'
@@ -70,7 +76,8 @@ DATABASES = {
         #'ENGINE': 'django.db.backends.sqlite3',
         #'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'thomson',
+        # 'NAME': 'thomson',
+        'NAME': 'test_otp',
         'USER': 'root',
         'PASSWORD': 'root',
         #'USER': 'thomson',
@@ -152,11 +159,16 @@ THOMSON_HOST={
 }
 
 # login redirect
-LOGIN_URL = '/accounts/login/'
-LOGIN_REDIRECT_URL = '/'
+# LOGIN_URL = '/accounts/login/'
+# LOGIN_REDIRECT_URL = '/'
+LOGIN_URL = 'two_factor:login'
+# this one is optional
+LOGIN_REDIRECT_URL = 'two_factor:profile'
 
 # config captcha
 CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.math_challenge'
 CAPTCHA_TIMEOUT = 2 #minutes
 # CAPTCHA_MATH_CHALLENGE_OPERATOR = ('+',)
 CAPTCHA_NOISE_FUNCTIONS = ('captcha.helpers.noise_null',)
+
+TWO_FACTOR_QR_FACTORY = 'qrcode.image.pil.PilImage'
