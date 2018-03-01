@@ -49,7 +49,7 @@ class Thomson:
         self.name = name
     def get_response(self, headers, body):
         response = requests.post(self.url, data=body, headers=headers, \
-            auth=HTTPDigestAuth(self.user, self.passwd))
+            auth=HTTPDigestAuth(self.user, self.passwd), timeout=5)
         #print response.content
         response_xml = response.content[response.content.find('<soapenv:Envelope') :\
          response.content.find('</soapenv:Envelope>') + len('</soapenv:Envelope>')]
