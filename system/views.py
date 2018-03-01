@@ -94,7 +94,7 @@ def redirect_node(request, node_id):
 @csrf_exempt
 def monitor(request):
     user = user_info(request)
-    return render_to_response('system/monitor.min.html', user)
+    return render_to_response('system/monitor.html', user)
 
 # link test captcha
 @login_required()
