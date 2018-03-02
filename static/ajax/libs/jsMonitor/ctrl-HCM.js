@@ -158,7 +158,7 @@ app.controller('ctrl-thomson-HCM',function($scope, $http, $timeout, $window, $in
                 // console.log(response.data);
                 $scope.$broadcast('uloadLog-HCM');
             }else{
-                console.log("Error");
+                // console.log("Error");
                 $scope.$broadcast('loadLog-HCM');
             }
         });
@@ -188,7 +188,7 @@ app.controller('ctrl-thomson-HCM',function($scope, $http, $timeout, $window, $in
         }, function(response){tickLogJob = true;});
     };
     // reload log Job
-    $interval(function(){if (tickLogJob && $scope.isRealTime) {console.log('reload log job',tickLogJob, $scope.job_id); $scope.reload_log($scope.job_id, $scope.job_name);}}, 10000);
+    $interval(function(){if (tickLogJob && $scope.isRealTime) {$scope.reload_log($scope.job_id, $scope.job_name);}}, 10000);
     $scope.loadAllLog = function(){
         tickAllLog = false;
         $scope.nowDate = +new Date();
