@@ -183,7 +183,7 @@ app.controller('ctrl-thomson-HNI',function($scope, $http, $timeout, $window, $in
             }else{
                 console.log("Error");
                 $scope.$broadcast('loadLog-HCM');
-                tickLogJob = false;
+                tickLogJob = true; 
             } 
         }, function(response){tickLogJob = true;});
     };
