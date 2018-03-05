@@ -551,6 +551,12 @@ table.floatThead-table {
     .wrapper-log-1 {
       height: 515px;
     }
+    .wrapper-log-lab{
+      height: 315px;
+    }
+    .wrapper-log-lab-1{
+      height: 815px;
+    }
   .loader{
     margin-top: 7%;
     position: absolute;

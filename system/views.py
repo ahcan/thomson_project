@@ -95,7 +95,12 @@ def redirect_node(request, node_id):
 def monitor(request):
     user = user_info(request)
     return render_to_response('system/monitor.min.html', user)
-
+# link to page monitor lab
+@login_required()
+@csrf_exempt
+def monitor_lab(request):
+    user = user_info(request)
+    return render_to_response('system/monitor-lab.html', user)
 # link test captcha
 @login_required()
 @csrf_exempt
