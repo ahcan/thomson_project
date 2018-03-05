@@ -9,6 +9,7 @@ app.controller('ctrl-thomson-HNI',function($scope, $http, $timeout, $window, $in
     var tickAllLog = false;
     var tickCountJob = false;
     var tickDetail = false;
+    var tickLogJob = false;
     $scope.reloadNodes = function(){
         tickNode = false;
         $scope.$broadcast('loadNode-HNI');
@@ -99,7 +100,7 @@ app.controller('ctrl-thomson-HNI',function($scope, $http, $timeout, $window, $in
         }, function(response){tickDetail = true;});
     };
     // reload detail node
-    $interval(function(){if(tickDetail && $scope.nodeDetail){console.log(tickDetail); $scope.reload_detail($scope.nodeDetail);}}, 3000);
+    $interval(function(){if(tickDetail && $scope.nodeDetail){$scope.reload_detail($scope.nodeDetail);}}, 3000);
 
     $scope.set_nodedatil = function(node_id){
         $scope.nodeDetail = node_id;
@@ -109,14 +110,14 @@ app.controller('ctrl-thomson-HNI',function($scope, $http, $timeout, $window, $in
             alert("Please resolve the captcha and submit!");}
         else{            
             $scope.$emit('loadMain-HNI');
-            console.log("restart");
+            // console.log("restart");
             $http({
             method: 'PUT',
             url: '/job/api/' + $scope.host + '/' + job_id + '/restart/',
             }).then(function(response){
                 if (response.status == 202) {
                     $window.alert(response.data.message);
-                    console.log(response.data);
+                    // console.log(response.data);
                     $scope.show_detail(node_id);
                     $scope.$emit('uloadMain-HNI');
                 }
@@ -147,7 +148,7 @@ app.controller('ctrl-thomson-HNI',function($scope, $http, $timeout, $window, $in
         $scope.job_name = job_name;
         $scope.isRealTime = true;
         $scope.job_id = job_id;
-        $scope.$broadcast('loadLog-HNI');
+        $scope.$broadcast('loadLog-HCM');
         $http({
             method: 'GET',
             url: '/log/api/'+ $scope.host +'/'+ job_id +'/',
@@ -155,34 +156,39 @@ app.controller('ctrl-thomson-HNI',function($scope, $http, $timeout, $window, $in
             if (response.status == 200 ){
                 $scope.lstLogJob = response.data;
                 // console.log(response.data);
-                $scope.$broadcast('uloadLog-HNI');
+                $scope.$broadcast('uloadLog-HCM');
             }else{
-                console.log("Error");
-                $scope.$broadcast('loadLog-HNI');
+                // console.log("Error");
+                $scope.$broadcast('loadLog-HCM');
             }
         });
-        $timeout(function(){$scope.reload_log(job_id, job_name);}, 10000);
+        if ($scope.isRealTime && $scope.job_id == job_id){
+            $scope.reload_log(job_id, job_name);
+        }
     };
     $scope.reload_log = function(job_id, job_name){
         $scope.job_name = job_name;
-        $timeout(function(){$scope.$broadcast('loadLog-HNI');}, 0);
+        tickLogJob = false;
+        $scope.$broadcast('loadLog-HCM');
         $http({
             method: 'GET',
             url: '/log/api/'+ $scope.host +'/'+ job_id +'/',
+            timeout: 5000,
         }).then(function(response){
            if (response.status == 200 && $scope.job_id == job_id && response.data.length){
                 $scope.lstLogJob = response.data;
                 // console.log(response.data);
-                $scope.$broadcast('uloadLog-HNI');
+                $scope.$broadcast('uloadLog-HCM');
+                tickLogJob = true;
             }else{
-                console.log("Error");
-                $scope.$broadcast('loadLog-HNI');
+                // console.log("Error");
+                $scope.$broadcast('loadLog-HCM');
+                tickLogJob = true; 
             } 
-        });
-        if($scope.isJob && $scope.isRealTime && $scope.job_id == job_id){
-            $timeout(function(){$scope.reload_log(job_id, job_name);}, 10000);
-        }
+        }, function(response){tickLogJob = true;});
     };
+    // reload log Job
+    $interval(function(){if (tickLogJob && $scope.isRealTime) {$scope.reload_log($scope.job_id, $scope.job_name);}}, 10000);
     $scope.loadAllLog = function(){
         tickAllLog = false;
         $scope.nowDate = +new Date();
