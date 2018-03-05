@@ -22,6 +22,7 @@ urlpatterns = [
 
     #Link monitor
     url(r'^monitor/$', views.monitor, name='monitor'),
+    url(r'^monitor_lab/$', views.monitor_lab, name='monitor_lab'),
     #Link get captcha
     url(r'^captcha/$',views.captcha, name='captcha'),
     # url(r'^check_captcha/$', views.check_captcha, name='check_captcha'),
