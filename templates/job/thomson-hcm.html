@@ -12,7 +12,7 @@
         $scope.reload = function () {
             $http({method: 'GET',
                 url:'/job/api/'+$scope.host+'/job/',
-                timeout:900,}).
+                timeout:1000,}).
             then(function (response) {
                 if(response.status == 200 && response.data.length){
                     $scope.job_list = response.data;
