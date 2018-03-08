@@ -6,20 +6,23 @@
 </div>
 <script>
     var app = angular.module('Workflow',[]);
-    app.controller("workflowCtrl", function ($scope,$http,$timeout,$element,$sce){
+    app.controller("workflowCtrl", function ($scope,$http,$timeout,$element,$sce,$interval){
         $scope.host = 'thomson-hni';
+        var tickReload = false;
         $scope.reload = function () {
             $scope.total = 0;
-            $http.get('/workflow/api/'+$scope.host+'/workflow/').
+            $http({method: 'GET',
+                url:'/workflow/api/'+$scope.host+'/workflow/',
+                timeout:1000,}).
             then(function (response) {
-                $scope.workflow_list = response.data;
-                $scope.total = $scope.workflow_list.length;
-                console.log($scope.workflow_list);
-            });
-            $timeout(function(){
-                $scope.reload();
-            },10000)
+                if(response.status == 200 && response.data.length){
+                    $scope.workflow_list = response.data;
+                    $scope.total = response.data.length;
+                    tickReload = true;
+                }else{tickReload = true;}
+            }, function(response){if (response.status == 401) {$window.location.href='/accounts/login/'}; tickReload = true;});
         };
+        $interval(function(){if (tickReload) {$scope.reload()}}, 10000);
         $scope.reload();
         $scope.showinfo = function(id){
             // var tootcontents = '<div>loading....</div>';
