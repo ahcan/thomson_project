@@ -29,6 +29,7 @@ class Database:
             self.close_connect(session)
             return 1
         except Exception as e:
+            self.close_connect(session)
             return 0
 
     '''SELECT'''
@@ -45,4 +46,5 @@ class Database:
             return rows
         except Exception as e:
             print e
+            self.close_connect(session)
             return 0
