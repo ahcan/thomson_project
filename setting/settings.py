@@ -124,7 +124,7 @@ STATICFILES_DIRS = [
 
 # Session timeout (minute)
 # AUTO_LOGOUT_DELAY = 1
-AUTO_LOGOUT_DELAY = 1440
+AUTO_LOGOUT_DELAY = 190
 
 # Thomson config
 THOMSON_HOST={
