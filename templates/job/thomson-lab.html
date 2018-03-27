@@ -50,68 +50,6 @@
             $scope.clickrow = true;
             $scope.showpara = true;
         };
-        //restart Job
-        $scope.restartJob = function(job_id){
-            if (angular.element(document.getElementById('cpt-value-widgetRestart')).val()===""){
-                alert("Please resolve the captcha and submit!");}
-            else{            
-                $scope.$emit('loadMain-LAB');
-                // console.log("restart");
-                $http({
-                method: 'PUT',
-                url: '/job/api/' + $scope.host + '/' + job_id + '/restart/',
-                }).then(function(response){
-                    if (response.status == 202) {
-                        $window.alert(response.data.message);
-                        $scope.$emit('uloadMain-LAB');
-                    }
-                    else{
-                        $scope.$emit('uloadMain-LAB');}
-            });}
-            $scope.moreinfo(job_id);
-        };
-        // stop job
-        $scope.stopJob = function(job_id){
-            if (angular.element(document.getElementById('cpt-value-widgetStop')).val()===""){ 
-            //get val byid
-                alert("Please resolve the captcha and submit!");
-            }else{
-                $scope.$emit('loadMain-LAB');
-                $http({
-                method: 'PUT',
-                url: '/job/api/'+ $scope.host + '/'+job_id + '/abort/',
-                }).then(function(response){
-                    if (response.status == 202) {
-                    $window.alert(response.data.message);
-                    // $scope.show_detail(node_id);
-                    $scope.$emit('uloadMain-LAB');
-                    }
-                    else{$scope.emit('uloadMain-LAB');}
-                    });
-            }
-            $scope.moreinfo(job_id);
-        };
-        // start Job
-        $scope.startJob = function(job_id){
-            if (angular.element(document.getElementById('cpt-value-widgetStart')).val()===""){ 
-            //get val byid
-                alert("Please resolve the captcha and submit!");
-            }else{
-                $scope.$emit('loadMain-LAB');
-                $http({
-                method: 'PUT',
-                url: '/job/api/'+ $scope.host + '/'+job_id + '/start/',
-                }).then(function(response){
-                    if (response.status == 202) {
-                    $window.alert(response.data.message);
-                    // $scope.show_detail(node_id);
-                    $scope.$emit('uloadMain-LAB');
-                    }
-                    else{$scope.emit('uloadMain-LAB');}
-                    });
-            }
-            $scope.moreinfo(job_id);
-        };
         $scope.checkBackup = function(job_id, action){
             $scope.job_id = job_id;
             // $scope.node_id = node_id;
