@@ -132,6 +132,10 @@
                                         <input type="text" class="form-control" ng-model="schedule.date_time" ><span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                                     </div>
                                 </div>
+                                <div class="form-group">
+                                    <label>Action:&nbsp;</label>
+                                    Start <input ng-model="schedule.action" type="radio" name="action" value="start">
+                                    &nbsp; Stop <input ng-model="schedule.action" type="radio" name="action" value="stop"></div>
                             </form>
                         </div>
                         <div class="modal-footer">
@@ -168,7 +172,7 @@
             },10000)
         };
     $scope.isLoaded = false;
-    $scope.schedule={'jobid_list':'', 'date_time':''};
+    $scope.schedule={'jobid_list':'', 'date_time':'','action':'start'};
     $scope.onload();
     $scope.deteleRow = function (field) {
 
@@ -220,26 +224,25 @@
   }
 
   $scope.updateTime  = function(){
-    //getElement via DOM in angular
+    // getElement via DOM in angular
     var da = angular.element( document.getElementById('daypicker').firstElementChild);
      $scope.schedule.date_time = da.val();
   }
 });
 </script>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('#createJob').on('click', function(e){
-                // console.log("$$$$$$$");
-            });
-            var $scroll = $('table.scrollTable');
-            $scroll.floatThead({
-            scrollContainer: function($table){
-            return $table.closest('.wrapper');
-            }
-            });
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#createJob').on('click', function(e){
+            // console.log("$$$$$$$");
         });
-        
-    </script>
+        var $scroll = $('table.scrollTable');
+        $scroll.floatThead({
+        scrollContainer: function($table){
+        return $table.closest('.wrapper');
+        }
+        });
+    });
+</script>
 
 <script type="text/javascript">
     $(document).ready(function () {
@@ -251,12 +254,4 @@
         });
     });
 </script>
-<script type="text/javascript">
-    var $scroll = $('table.scrollTable');
-    $scroll.floatThead({
-        scrollContainer: function($table){
-        return $table.closest('.wrapper');
-        }
-    });
-</script>
-    {% endblock %}
+{% endblock %}

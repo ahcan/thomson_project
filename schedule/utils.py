@@ -12,7 +12,7 @@ class RequestGetParam:
     def __init__(self, Request):
         self.data = json.loads(Request.body)
     def get_action(self):
-        return 'start'
+        return self.data['action']
     def get_job_id(self, thomson_name):
         jobid_list = ''
         error = ''
