@@ -130,7 +130,6 @@
 <script type="text/javascript" src="/static/ajax/libs/jsMonitor/ctrl-HNI.min.js"></script>
 <script type="text/javascript" src="/static/ajax/libs/jsMonitor/ctrl-HCM.js"></script>
 <script type="text/javascript">
-  $(document).ready(function(){
     var $scroll = $('table.scrollTable');
     $scroll.floatThead({
         scrollContainer: function($table){
@@ -138,6 +137,5 @@
         }
     });
     setTimeout(function() {location.reload();}, 600000);
-  });
 </script>
 {% endblock %}
