@@ -11,9 +11,9 @@ urlpatterns = [
     url(r'^api/(?P<wfid>.+)/create/$', views.create_job, name='create_job'),
     url(r'^api/(?P<jid>\d+)/modify/$', views.modify_job, name='modify_job'),
     url(r'^api/(?P<jid>\d+)/delete/$', views.delete_job, name='delete_job'),
-    url(r'^api/(?P<thomson_name>\w+\-+\w+)/(?P<jid>\d+)/start/$', views.start_job, name='start_job'),
-    url(r'^api/(?P<thomson_name>\w+\-+\w+)/(?P<jid>\d+)/abort/$', views.abort_job, name='abort_job'),
-    url(r'^api/(?P<thomson_name>\w+\-+\w+)/(?P<jid>\d+)/restart/$', views.restart_job, name='abort_job'),
+    # url(r'^api/(?P<thomson_name>\w+\-+\w+)/(?P<jid>\d+)/start/$', views.start_job, name='start_job'),
+    # url(r'^api/(?P<thomson_name>\w+\-+\w+)/(?P<jid>\d+)/abort/$', views.abort_job, name='abort_job'),
+    # url(r'^api/(?P<thomson_name>\w+\-+\w+)/(?P<jid>\d+)/restart/$', views.restart_job, name='abort_job'),
 
     #link response template show all job data: /job/
     url(r'^(?P<thomson_name>\w+\-+\w+)/$', views.get_job, name='job'),
