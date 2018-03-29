@@ -6,4 +6,4 @@ module request:
 	+requests
 	+pytz
 	+tzlocal
-    +django-recaptcha 
+    +django-simple-captcha
