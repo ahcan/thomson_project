@@ -804,4 +804,3 @@ class JobDetail:
     #print Workflow().get_workflow()
     #print WorkflowDetail('AACEncoder').get_param()
     #print Job().get_job()
-
