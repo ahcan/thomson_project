@@ -2,9 +2,10 @@ import json
 from xml.dom import minidom
 import requests# $ pip install requests
 from requests.auth import HTTPDigestAuth
-from setting.DateTime import *
+from setting.DateTime import DateTime as ThonsonTime
 from setting import settings
 from job.utils import History
+from elstLogThomson.query import *
 from system.utils import DatabaseNode as dbNodeDetail
 ##############################################################################
 #                                                                            #
@@ -303,6 +304,10 @@ class Log:
         from setting.xmlReq.LogReq import HEADERS
         self.headers = HEADERS
         self.name  = name
+        self.elsatic = Elastic(host='118.69.190.70')
+        """
+        name: ten cum thomson thomson-hni
+        """
 
     def parse_xml(self, xml):
         args = []
@@ -345,9 +350,11 @@ class Log:
         from setting.xmlReq.LogReq import BODY
         body = BODY
         #response_xml = Thomson(self.name).get_response(self.headers, body)
-        response_xml = File().get_response('LogsAllGetRsp.xml')
-        return self.parse_xml(response_xml)
-
+        # response_xml = File().get_response('LogsAllGetRsp.xml')
+        array = self.elsatic.query_by_ident(ident=settings.THOMSON_HOST[self.name]['ident'], ip=settings.THOMSON_HOST[self.name]['host'], size = 1000)
+        # print self.name
+        # return self.parse_xml(response_xml)
+        return self.elsatic.get_json_message(array)
     #Getting Open Logs of All Severities
     def get_open(self):
         from setting.xmlReq.LogReq import OPEN
@@ -361,10 +368,12 @@ class Log:
     def get_by_jobID(self, jobID):
         from setting.xmlReq.LogReq import ID
         body = ID
-        body = body.replace('JobID', str(jobID))
-        response_xml = File().get_response('LogsGetByJobIDRsp.xml')
+        # body = body.replace('JobID', str(jobID))
+        # response_xml = File().get_response('LogsGetByJobIDRsp.xml')
         #response_xml = Thomson(self.name).get_response(self.headers, body)
-        return self.parse_xml(response_xml)
+        arrayJob = self.elsatic.query_job_by_id(ident=settings.THOMSON_HOST[self.name]['ident'], ip=settings.THOMSON_HOST[self.name]['host'], jid=jobID)
+        # return self.parse_xml(response_xml)
+        return self.elsatic.get_json_message(arrayJob)
 
     def get_sys_log(self):
         from setting.xmlReq.LogReq import SYSTEM
@@ -657,10 +666,10 @@ class Job:
                             'status'    : Status,
                             'jid'       : JId,
                             'prog'      : Prog,
-                            'startdate' : DateTime().conver_UTC_2_unix_timestamp(StartDate) \
+                            'startdate' : ThonsonTime().conver_UTC_2_unix_timestamp(StartDate) \
                             if StartDate else '',
                             'ver'       : Ver,
-                            'enddate'   : DateTime().conver_UTC_2_unix_timestamp(EndDate) \
+                            'enddate'   : ThonsonTime().conver_UTC_2_unix_timestamp(EndDate) \
                             if EndDate else ''
                     })
         return args
@@ -742,13 +751,13 @@ class JobDetail:
         body = body.replace('JobID', str(self.jid))
         # response_xml = Thomson(self.name).get_response(headers, body)
         History().create_log(thomson_name=self.name, user=user, action='start', jid=self.jid, datetime=DateTime().get_now())
-        time.sleep(0.5)
+        time.sleep(1)
         try:
             node_ID = dbNodeDetail(self.name).get_node_by_job(self.jid)        
         except Exception as e:
             node_ID = 0
-        # node_ID = dbNodeDetail(self.name).get_node_by_job(self.jid)        
         # status = self.parse_status(response_xml)
+        # return {'status': status,'nid': node_ID}
         return {'status': 'OK','nid': node_ID}
 
     def restart(self, user):
@@ -765,7 +774,7 @@ class JobDetail:
         headers = ABORT_HEADERS
         body = ABORT_BODY
         body = body.replace('JobID', str(self.jid))
-        # #response_xml = Thomson(self.name).get_response(headers, body)
+        # response_xml = Thomson(self.name).get_response(headers, body)
         History().create_log(thomson_name=self.name, user=user, action='abort', jid=self.jid, datetime=DateTime().get_now())
         # return self.parse_status(response_xml)
         return "OK"
