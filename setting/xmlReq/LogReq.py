@@ -29,7 +29,7 @@ ID = """<soapenv:Envelope
         <soapenv:Body>
             <log:LogsGetReq Cmd="Start" OpV="01.00.00" Open="true"
              Close="true" Sys="false" JSelect="Selected jobs"
-             Sev="Info to critical" Nb="50" PastCloseNb="500">
+             Sev="Info to critical" Nb="500" PastCloseNb="500">
                 <job:JId>JobID</job:JId>
             </log:LogsGetReq>
         </soapenv:Body>
