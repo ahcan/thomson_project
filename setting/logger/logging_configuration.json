@@ -1,0 +1,69 @@
+{
+    "version": 1,
+    "disable_existing_loggers": false,
+    "formatters":{ 
+        "thomson-hcm": {
+            "format": "Thomson-HCM: date: %(asctime)s - serverity: %(levelname)s - message: %(message)s"
+        },
+        "thomson-hni":{
+            "format":"Thomson-HNI: date: %(asctime)s - serverity: %(levelname)s - message: %(message)s"
+        },
+        "thomson-lab":{
+            "format":"Thomson-LAB: date: %(asctime)s - serverity: %(levelname)s - message: %(message)s"
+        },
+        "django":{
+            "format":"Thomson-TOOL: date: %(asctime)s - module: %(name)s - serverity: %(levelname)s - message: %(message)s"
+        },
+        "thomson-tool":{
+            "format":"Thomson-TOOL: date: %(asctime)s - serverity: %(levelname)s - message: %(message)s"
+        }
+    },
+    "handlers": {
+        "sys_hcm_handler": {
+            "address": "/dev/log",
+            "class": "logging.handlers.SysLogHandler",
+            "level": "WARNING",
+            "facility": "local6",
+            "formatter": "thomson-hcm"
+        },
+        "sys_hni_handler":{
+            "address": "/dev/log",
+            "class": "logging.handlers.SysLogHandler",
+            "level": "WARNING",
+            "facility": "local6",
+            "formatter": "thomson-hni"
+        },
+        "sys_lab_handler":{
+            "address": "/dev/log",
+            "class": "logging.handlers.SysLogHandler",
+            "level": "WARNING",
+            "facility": "local6",
+            "formatter": "thomson-lab"
+        },
+        "sys_django_handler":{
+            "address": "/dev/log",
+            "class": "logging.handlers.SysLogHandler",
+            "level": "WARNING",
+            "facility": "local6",
+            "formatter": "thomson-tool"
+        }
+    },
+    "root": {
+        "level": "INFO",
+        "handlers": []
+    },
+    "loggers": {
+        "thomson-hcm": {
+            "handlers": ["sys_hcm_handler"]
+        },
+        "thomson-hni": {
+            "handlers": ["sys_hni_handler"]
+        },
+        "thomson-lab": {
+            "handlers": ["sys_lab_handler"]
+        },
+        "thomson-tool": {
+            "handlers": ["sys_django_handler"]
+        }
+    }
+}
