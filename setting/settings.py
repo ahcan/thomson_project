@@ -71,10 +71,10 @@ DATABASES = {
         #'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'thomson',
-        #'USER': 'root',
-        #'PASSWORD': 'root',
-        'USER': 'thomson',
-        'PASSWORD': 'thomson@$@',
+        'USER': 'root',
+        'PASSWORD': 'root',
+        #'USER': 'thomson',
+        #'PASSWORD': 'thomson@$@',
         'HOST': 'localhost',
         'PORT': 3306,
     }
@@ -134,6 +134,7 @@ THOMSON_HOST={
         'passwd' : '123456',
         'host'  :   '172.29.3.189',
         'url' : 'http://%s/services/Maltese' % ('172.29.3.189'),
+        'ident': 'hcm',
     },
     'thomson-hni':
     {
@@ -141,6 +142,7 @@ THOMSON_HOST={
         'passwd' : '123456',
         'host'  :   '172.29.70.189',
         'url' : 'http://%s/services/Maltese' % ('172.29.70.189'),
+        'ident': 'hni',
     },
     'thomson-lab':
     {
@@ -148,6 +150,7 @@ THOMSON_HOST={
         'passwd' : '123456',
         'host'  : '172.17.5.110',
         'url' : 'http://%s/services/Maltese' % ('172.17.5.110'),
+        'ident': 'lab',
     }
 }
 
