@@ -6,6 +6,9 @@ from setting.MySQL_Database import Database
 from setting import DateTime
 import json
 from setting import settings
+from setting import logger
+import logging, logging.config
+
 import time
 
 class DatabaseJob():
@@ -116,7 +119,12 @@ class DatabaseJob():
 class History:
     """docstring for JobHistory"""
     def create_log(self, thomson_name, user, action, jid, datetime):
+        log = logging.getLogger("thomson-tool")
         host = settings.THOMSON_HOST[thomson_name]['host']
+        jname = JobParam.objects.all().filter(host = host, jid = jid)[0].name
+        desc = "Job operation: %s by \"%s\""%(action, user)
+        args = {"sev": "Info", "host": host, "opdate": datetime, "jid": jid, "jname": jname, "desc": desc}
+        log.critical(json.dumps(args))
         history = JobHistory(user=user, host=host, action=action, jid=jid, datetime=datetime)
         history.save()
         print "log start/stop job"
