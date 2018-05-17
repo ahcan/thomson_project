@@ -123,7 +123,7 @@ class History:
         host = settings.THOMSON_HOST[thomson_name]['host']
         jname = JobParam.objects.all().filter(host = host, jid = jid)[0].name
         desc = "Job operation: %s by \"%s\""%(action, user)
-        args = {"sev": "Info", "host": host, "datetime": datetime, "jid": jid, "jname": jname, "desc": desc}
+        args = {"sev": "Info", "host": host, "opdate": datetime, "jid": jid, "jname": jname, "desc": desc}
         log.critical(json.dumps(args))
         history = JobHistory(user=user, host=host, action=action, jid=jid, datetime=datetime)
         history.save()
