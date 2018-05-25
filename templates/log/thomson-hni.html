@@ -2,45 +2,104 @@
 {% block content %}
 <!-- <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ng-app="Log" ng-controller="logCtrl"> -->
 <script type="text/javascript" src="/static/assets/js/jquery.floatThead.min.js"></script>
-<div ng-app="Log" ng-controller="logCtrl">
-   {%include "log/template.html"%}
+<div ng-app="Log">
+    <div ng-class="{'container-loadding':isLoad,'container-loadding-hide':!isLoad}" ng-controller="ctrl-main">
+        <div class="sk-fading-circle" ng-show="isLoad" style="z-index: 1000;">
+            <div class="sk-circle1 sk-circle"></div>
+            <div class="sk-circle2 sk-circle"></div>
+            <div class="sk-circle3 sk-circle"></div>
+            <div class="sk-circle4 sk-circle"></div>
+            <div class="sk-circle5 sk-circle"></div>
+            <div class="sk-circle6 sk-circle"></div>
+            <div class="sk-circle7 sk-circle"></div>
+            <div class="sk-circle8 sk-circle"></div>
+            <div class="sk-circle9 sk-circle"></div>
+            <div class="sk-circle10 sk-circle"></div>
+            <div class="sk-circle11 sk-circle"></div>
+            <div class="sk-circle12 sk-circle"></div>
+        </div> 
+        <div ng-controller="logCtrl">
+        {%include "log/template.html"%}
+        </div>
+    </div>
 </div>
 <script>
     var app = angular.module('Log',[]);
-    app.controller("logCtrl", function ($scope,$http,$timeout){
+    app.controller("logCtrl", function ($scope,$http,$timeout, $interval){
+        $scope.lstSev = ['Minor','Major', 'Critical', 'Info'];
         $scope.reload = function () {
             $scope.host = 'thomson-hni'
             $scope.nowDate = +new Date();
-            $http.get('/log/api/'+$scope.host+'/log/').
-            then(function (response) {
-                $scope.log_list = response.data;
-                $scope.total = $scope.log_list.length;
-                console.log($scope.log_list);
-            });
-            // console.log($scope.nowDate);
-            $timeout(function(){
-                $scope.reload();
-            },10000)
+            $scope.onChangeFilter();
         };
     // Fiter By State checkbox
-        $scope.filters = {};
+        $scope.chckfilters = [];
+        $scope.filters = {'sev':[]};
         //function
-        $scope.filterBySev = function(job){
-            return $scope.filters[job.sev] || noFilter($scope.filters);
+        function filterBySev(){
+            lstfilters = [];
+            if ($scope.chckfilters.Minor){
+                lstfilters.push('Minor');
+            }
+            if ($scope.chckfilters.Major){
+                lstfilters.push('Major');
+            }
+            if ($scope.chckfilters.Critical){
+                lstfilters.push('Critical');
+            }
+            if ($scope.chckfilters.Info){
+                lstfilters.push('Info');
+            }
+            return lstfilters
         };
-        $scope.getSevs = function(){
-            return ($scope.log_list || []).map(function(job){return job.sev;}).filter(function (cat, idx, arr) { return arr.indexOf(cat) === idx;});
-        };
+
         function noFilter(filterObj){
             return Object.keys(filterObj).every(function(key){return !filterObj[key];});
-        }
+        };
+
+        $scope.onChangeFilter = function(){
+            $scope.$emit('loadMain-HCM')
+            $scope.filters.sev = filterBySev();
+            if ($scope.filters.sev.length){
+                $http({
+                    method: 'POST',
+                    timeout: 2000,
+                    url: '/log/api/'+$scope.host+'/filter/',
+                    data: $scope.filters,
+                }).then(function (response) {
+                    if (response.status == 200 && response.data.length){
+                        $scope.log_list = response.data;
+                        $scope.total = $scope.log_list.length;
+                        $scope.$emit('uloadMain-HCM');
+                    }
+                }, function(response){if (response.status == 401){$scope.$emit('uloadMain-HCM'); $window.location.href= '/accounts/login/';}}); 
+            }
+            else{
+                $http({
+                    method: "GET",
+                    timeout: 2000,
+                    url: '/log/api/'+$scope.host+'/log/',
+                    data: $scope.lstfilters,
+                }).then(function (response) {
+                    if (response.status == 200){
+                        $scope.log_list = response.data;
+                        $scope.total = $scope.log_list.length;
+                        $scope.$emit('uloadMain-HCM');
+                    }
+                }, function(response){if (response.status == 401){$scope.$emit('uloadMain-HCM'); $window.location.href='/accounts/login/'}});
+            }
+        };
     //end filter
     // warrning time log
-        
+    	
     // end warrning
         $scope.reload();
+        $timeout(function() {$interval(function() {
+            $scope.reload();
+        }, 2000);}, 1000);
     });
 </script>
+<script type="text/javascript" src="/static/ajax/libs/jsMonitor/ctrl-load.min.js"></script>
 <script type="text/javascript">
     var $scroll = $('table.scrollTable');
     $scroll.floatThead({

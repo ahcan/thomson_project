@@ -16,8 +16,8 @@
     <div class="col-md-12">
         <div style="margin-top:10px; margin-bottom:10px;">
             <div class="input-group">
-                <label class="checkbox-inline" ng-repeat="sev in getSevs()">
-                <input type="checkbox" ng-model="filters[sev]">{{'{{sev}'}}}</input>
+                <label class="checkbox-inline" ng-repeat="sev in lstSev">
+                <input type="checkbox" id="chkbox_{{'{{sev}'}}}" ng-model="chckfilters[sev]" ng-change="onChangeFilter()">{{'{{sev}'}}}</input>
             </label>
             </div>
         </div>             
@@ -39,7 +39,7 @@
                 </tr>
             </thead>
             <tbody class="width-col-default">
-                <tr ng-repeat="log in log_list | filter:search | filter:filterBySev | orderBy: '-opdate'" ng-class="{'warning': nowDate-opdate<=60000}">
+                <tr ng-repeat="log in log_list | filter:search | orderBy: '-opdate'" ng-class="{'warning': nowDate-log.opdate<=60000}">
                     <td style="width: 2%;"><span>{{'{{$index + 1}'}}}</span></td>
                     <td style="width: 2%;"><div class="serverily {{'{{log.sev}'}}}"></div></td>
                     <td style="width: 2%;"><span>{{'{{log.nid}'}}}</span></td>

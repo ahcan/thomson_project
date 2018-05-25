@@ -118,11 +118,11 @@ class DatabaseJob():
         return JobParam.objects.filter(host = host, jid = jid)[0].backup
 class History:
     """docstring for JobHistory"""
-    def create_log(self, thomson_name, user, action, jid, datetime):
+    def create_log(self, thomson_name, user, action, jid, datetime, des=None):
         log = logging.getLogger("thomson-tool")
         host = settings.THOMSON_HOST[thomson_name]['host']
         jname = JobParam.objects.all().filter(host = host, jid = jid)[0].name
-        desc = "Job operation: %s by \"%s\""%(action, user)
+        desc = "Job operation: %s by \"%s\" from Thomson-Tool"%(action, user)
         args = {"sev": "Info", "host": host, "opdate": datetime, "jid": jid, "jname": jname, "desc": desc}
         log.critical(json.dumps(args))
         history = JobHistory(user=user, host=host, action=action, jid=jid, datetime=datetime)
