@@ -108,9 +108,6 @@ def add_schedule(request, thomson_name):
             agrs["detail"] = schedule
             messages = json.dumps(agrs)
             return HttpResponse(messages, content_type='application/json', status=203)
-    else:
-        user = user_info(request)
-        return render_to_response("schedule/addJob.html", user)
 
 ### remove schedule ###
 @require_http_methods(['DELETE'])

@@ -66,7 +66,7 @@ def get_job_status_json(request, thomson_name):
 @require_http_methods(['GET'])
 @csrf_exempt
 # @login_required()
-
+# link get node status /system/api/thomson_name/nstatus
 def get_nodes_status_json(request, thomson_name):
     # nodes_status = Node(thomson_name).get_info()
     if not request.user.is_authenticated():
