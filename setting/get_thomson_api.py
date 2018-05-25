@@ -7,6 +7,7 @@ from setting import settings
 from job.utils import History
 from elstLogThomson.query import *
 from system.utils import DatabaseNode as dbNodeDetail
+import time
 ##############################################################################
 #                                                                            #
 #-------------------------------------FILE-----------------------------------#
@@ -72,7 +73,7 @@ class Thomson:
         "'OlsonTZ'" in str(itemlist[0].attributes.items()) else ""
         #Convert response data to Json
         args = []
-        args.append({'dateAndTime'  : DateTime().conver_UTC_2_unix_timestamp(DateAndTime) \
+        args.append({'dateAndTime'  : ThonsonTime().conver_UTC_2_unix_timestamp(DateAndTime) \
             if DateAndTime else 1,
                     'timeZone'      : OlsonTZ if OlsonTZ else "Asia/Ho_Chi_Minh"
             })
@@ -371,7 +372,7 @@ class Log:
         # body = body.replace('JobID', str(jobID))
         # response_xml = File().get_response('LogsGetByJobIDRsp.xml')
         #response_xml = Thomson(self.name).get_response(self.headers, body)
-        arrayJob = self.elsatic.query_job_by_id(ident=settings.THOMSON_HOST[self.name]['ident'], ip=settings.THOMSON_HOST[self.name]['host'], jid=jobID)
+        arrayJob = self.elsatic.query_job_by_id(ident=settings.THOMSON_HOST[self.name]['ident'], jid=jobID)
         # return self.parse_xml(response_xml)
         return self.elsatic.get_json_message(arrayJob)
 
@@ -381,6 +382,14 @@ class Log:
         response_xml = File().get_response('LogsGetSysRsp.xml')
         #response_xml = Thomson(self.name).get_response(self.headers, body)
         return self.parse_xml(response_xml)
+
+    def get_by_sevJob(self, sevs):
+        """
+        get all by severity
+        sevs: arry of severity
+        """
+        arraySev = self.elsatic.fiter_by_sev(ident=settings.THOMSON_HOST[self.name]['ident'], ip=settings.THOMSON_HOST[self.name]['host'], lstSev=sevs)
+        return self.elsatic.get_json_message(arraySev)
 
 
 ##############################################################################
@@ -750,7 +759,7 @@ class JobDetail:
         body = START_BODY
         body = body.replace('JobID', str(self.jid))
         # response_xml = Thomson(self.name).get_response(headers, body)
-        History().create_log(thomson_name=self.name, user=user, action='start', jid=self.jid, datetime=DateTime().get_now())
+        History().create_log(thomson_name=self.name, user=user, action='start', jid=self.jid, datetime=ThonsonTime().get_now()*1000)
         time.sleep(1)
         try:
             node_ID = dbNodeDetail(self.name).get_node_by_job(self.jid)        
@@ -761,21 +770,25 @@ class JobDetail:
         return {'status': 'OK','nid': node_ID}
 
     def restart(self, user):
-        if self.abort(user) == 'OK':
-            time.sleep(1)
+        try:
+            if self.abort(user) == 'OK':
+                time.sleep(1)
             # print self.start(user)['nid']
-            return self.start(user)
-        else :
-            message = 'can not stop job'
-            return message
+                return self.start(user)
+            else :
+                message = 'can not stop job'
+                return message
         # return "Oke"+self.name
+        except Exception as identifier:
+            return identifier
+
     def abort(self, user):
         from setting.xmlReq.JobDetailReq import ABORT_HEADERS, ABORT_BODY
         headers = ABORT_HEADERS
         body = ABORT_BODY
         body = body.replace('JobID', str(self.jid))
         # response_xml = Thomson(self.name).get_response(headers, body)
-        History().create_log(thomson_name=self.name, user=user, action='abort', jid=self.jid, datetime=DateTime().get_now())
+        History().create_log(thomson_name=self.name, user=user, action='abort', jid=self.jid, datetime=ThonsonTime().get_now())
         # return self.parse_status(response_xml)
         return "OK"
 
