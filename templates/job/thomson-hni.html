@@ -2,24 +2,30 @@
 {% block content %}
 <div ng-app="Job"  ng-controller="ctrl-main">
     {%include "job/template.html" %}
+    {%include "../modal-alert.html"%}
 </div>
 <script type="text/javascript">
     var app = angular.module('Job',['ngSanitize']);
     app.controller("jobCtrl", function ($scope,$http,$timeout,$window, $interval){
         $scope.host = 'thomson-hni';
+        $scope.jobauto = {};
+        $scope.isShow = false;
+        $scope.isAlert = false;
         var tickReload = false;
         $scope.total = 0;
+        $scope.$emit('loadMain-HCM');
         $scope.reload = function () {
             $http({method: 'GET',
                 url:'/job/api/'+$scope.host+'/job/',
-                timeout:1000,}).
+                timeout:3000,}).
             then(function (response) {
                 if(response.status == 200 && response.data.length){
                     $scope.job_list = response.data;
-                    tickReload = true;
                     $scope.total = response.data.length;
+                    tickReload = true;
                 }else{tickReload = true;}
-            }, function(response){if (response.status == 401) {$window.location.href='/accounts/login/'}; tickReload = true;});
+                $scope.$emit('uloadMain-HCM');
+            }, function(response){if (response.status == 401) {$window.location.href='/accounts/login/'}; tickReload = true; $scope.$emit('uloadMain-HCM')});
         };
         $interval(function(){if (tickReload) {$scope.reload();}}, 3000);
         // Fiter By State checkbox
@@ -36,25 +42,34 @@
         }
         //end filter
         $scope.reload();
-        $scope.moreinfo = function(jobID){
+        $scope.moreinfo = function(jobID, ticked){
             // console.log(jobID);
+            //get workflow
             $http.get('/job/api/'+$scope.host+'/job/'+jobID+'/').then(function(response){
                 $scope.workflow = response.data;
                 // console.log($scope.workflow);
             });
+            //get list job
             $http.get('/log/api/'+$scope.host+'/'+jobID+'/').then(function(response){
                 $scope.lstLogJob = response.data;
                 // console.log($scope.lstLogJob);
             });
             $scope.clickrow = true;
             $scope.showpara = true;
+            $scope.jobauto = {'jid':jobID, 'jticked': ticked};
+            $scope.isShow = true;
+            if (ticked){
+                $scope.ischecked = true;
+            }else{
+                $scope.ischecked = false;
+            }
         };
         //restart Job
-        $scope.restartJob = function(job_id){
+        $scope.restartJob = function(job_id, ticked){
             if (angular.element(document.getElementById('cpt-value-widgetRestart')).val()===""){
                 alert("Please resolve the captcha and submit!");}
             else{            
-                $scope.$emit('loadMain-HNI');
+                $scope.$emit('loadMain-HCM');
                 // console.log("restart");
                 $http({
                 method: 'PUT',
@@ -62,54 +77,64 @@
                 }).then(function(response){
                     if (response.status == 202) {
                         $window.alert(response.data.message);
-                        $scope.$emit('uloadMain-HNI');
+                        $scope.$emit('uloadMain-HCM');
                     }
                     else{
-                        $scope.$emit('uloadMain-HNI');}
+                        $scope.$emit('uloadMain-HCM');}
             });}
-            $scope.moreinfo(job_id);
+            $scope.moreinfo(job_id, ticked);
         };
         // stop job
-        $scope.stopJob = function(job_id){
+        $scope.stopJob = function(job_id, ticked){
             if (angular.element(document.getElementById('cpt-value-widgetStop')).val()===""){ 
             //get val byid
                 alert("Please resolve the captcha and submit!");
             }else{
-                $scope.$emit('loadMain-HNI');
+                $scope.$emit('loadMain-HCM');
                 $http({
                 method: 'PUT',
                 url: '/job/api/'+ $scope.host + '/'+job_id + '/abort/',
                 }).then(function(response){
                     if (response.status == 202) {
-                    $window.alert(response.data.message);
+                    setAlert("Success !", response.data.message, "alert-success");
+                    $('#modal-alert').modal('show')
                     // $scope.show_detail(node_id);
-                    $scope.$emit('uloadMain-HNI');
+                    $scope.$emit('uloadMain-HCM');
                     }
-                    else{$scope.emit('uloadMain-HNI');}
+                    else{
+                        setAlert("Error!",'Can not stop job.', "alert-danger");
+                        $('#modal-alert').modal('show');
+                        $scope.emit('uloadMain-HCM');
+                    }
                     });
             }
-            $scope.moreinfo(job_id);
+            $scope.moreinfo(job_id, ticked);
         };
         // start Job
-        $scope.startJob = function(job_id){
+        $scope.startJob = function(job_id, ticked){
             if (angular.element(document.getElementById('cpt-value-widgetStart')).val()===""){ 
             //get val byid
                 alert("Please resolve the captcha and submit!");
             }else{
-                $scope.$emit('loadMain-HNI');
+                $scope.$emit('loadMain-HCM');
                 $http({
                 method: 'PUT',
                 url: '/job/api/'+ $scope.host + '/'+job_id + '/start/',
                 }).then(function(response){
                     if (response.status == 202) {
-                    $window.alert(response.data.message);
+                    setAlert("Success !", response.data.message, "alert-success");
+                    $('#modal-alert').modal('show');
                     // $scope.show_detail(node_id);
-                    $scope.$emit('uloadMain-HNI');
+                    $scope.$emit('uloadMain-HCM');
                     }
-                    else{$scope.emit('uloadMain-HNI');}
+                    else{$scope.$emit('uloadMain-HCM');}
+                    },function(response){
+                        setAlert("Error!",'Can not start job.', "alert-danger");
+                        $('#modal-alert').modal('show');
+                        $scope.$emit('uloadMain-HCM');
                     });
             }
-            $scope.moreinfo(job_id);
+            $scope.moreinfo(job_id, ticked);
         };
         $scope.checkBackup = function(job_id, action){
             $scope.job_id = job_id;
@@ -119,7 +144,7 @@
                 method: 'GET',
                 url: '/job/api/' + $scope.host + '/' + job_id + '/check-backup/',
             }).then(function(response){
-                if(response.status == 202){
+                if(response.status == 200){
                     if(response.data[0]['backup'] === 'true'){
                         var tmp= "glyphicon glyphicon-ok";
                     }else{ var tmp = "glyphicon glyphicon-remove";}
@@ -131,6 +156,40 @@
                     $scope.txtBody = '<p class="alert alert-danger">Not connect server!</p>';
                 }
             });
+        };
+        $scope.isAuto = function(job_id){
+            $scope.jobauto.jticked = $scope.ischecked;
+            $scope.$emit('loadMain-HCM');
+            var msg = "Update for job: "+job_id;
+            $http({
+                method:"POST",
+                url:'/job/api/'+$scope.host+'/job/'+job_id+'/isAuto/',
+                timeout: 2000,
+                data: $scope.jobauto
+            }).then(function(response){
+                if(response.status==200){
+                    setAlert(response.data.detail, msg, "alert-success");
+                    $scope.reload();
+                    $('#modal-alert').modal('show');
+                }else if(response.status == 203){
+                    setAlert(response.data.detail,'',"alert-danger");
+                    $scope.reload();
+                    $('#modal-alert').modal('show');
+                    $scope.$emit('uloadMain-HCM');
+                }
+                $scope.$emit('uloadMain-HCM');
+            }, function(response){
+                setAlert(response.data.detail, '', "alert-danger");
+                $scope.reload();
+                $('#modal-alert').modal('show');
+                $scope.$emit('uloadMain-HCM');
+            });
+        };
+        //set alert
+        function setAlert(message_head, message, clsalert){
+            $('#alert-content').addClass(clsalert);
+            $('#alert-head').text(message_head);
+            $('#alert-message').text(message);
         };
     });
 </script>
@@ -144,25 +203,25 @@
     });
     setTimeout(function() {location.reload();}, 600000);
     $(document).ready(function(){
-        $('#frm-modal-stop-thomson-hni').submit(function() {
+        $('#frm-modal-stop-thomson-hcm').submit(function() {
             if($('#cpt-value-widgetStop').val()===""){
-                $('#modal-stop-thomson-hni').modal('show');
+                $('#modal-stop-thomson-hcm').modal('show');
             }else{
-                $('#modal-stop-thomson-hni').modal('hide');
+                $('#modal-stop-thomson-hcm').modal('hide');
             }
         });
-        $('#frm-modal-restart-thomson-hni').submit(function() {
+        $('#frm-modal-restart-thomson-hcm').submit(function() {
             if($('#cpt-value-widgetRestart').val()===""){
-                $('#modal-restart-thomson-hni').modal('show');
+                $('#modal-restart-thomson-hcm').modal('show');
             }else{
-                $('#modal-restart-thomson-hni').modal('hide');
+                $('#modal-restart-thomson-hcm').modal('hide');
             }
         });
-        $('#frm-modal-start-thomson-hni').submit(function() {
+        $('#frm-modal-start-thomson-hcm').submit(function() {
             if($('#cpt-value-widgetStart').val()===""){
-                $('#modal-start-thomson-hni').modal('show');
+                $('#modal-start-thomson-hcm').modal('show');
             }else{
-                $('#modal-start-thomson-hni').modal('hide');
+                $('#modal-start-thomson-hcm').modal('hide');
             }
         });
     });

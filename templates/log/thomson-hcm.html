@@ -4,20 +4,7 @@
 <script type="text/javascript" src="/static/assets/js/jquery.floatThead.min.js"></script>
 <div ng-app="Log">
     <div ng-class="{'container-loadding':isLoad,'container-loadding-hide':!isLoad}" ng-controller="ctrl-main">
-        <div class="sk-fading-circle" ng-show="isLoad" style="z-index: 1000;">
-            <div class="sk-circle1 sk-circle"></div>
-            <div class="sk-circle2 sk-circle"></div>
-            <div class="sk-circle3 sk-circle"></div>
-            <div class="sk-circle4 sk-circle"></div>
-            <div class="sk-circle5 sk-circle"></div>
-            <div class="sk-circle6 sk-circle"></div>
-            <div class="sk-circle7 sk-circle"></div>
-            <div class="sk-circle8 sk-circle"></div>
-            <div class="sk-circle9 sk-circle"></div>
-            <div class="sk-circle10 sk-circle"></div>
-            <div class="sk-circle11 sk-circle"></div>
-            <div class="sk-circle12 sk-circle"></div>
-        </div> 
+        {%include "../loading.html"%}
         <div ng-controller="logCtrl">
         {%include "log/template.html"%}
         </div>

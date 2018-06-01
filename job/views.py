@@ -301,11 +301,38 @@ def check_bckJob(request, jid, thomson_name):
     backup = 'false'
     ip = 0
     for param in lstparam:
-        print param
+        # print param
         if param['name'] == 'Define backup input':
             backup = param['value']
         if param['name'] == 'Backup input IP address':
             ip = param['value']
     result = json.dumps([{'backup': backup, 'ip': ip}])
-    return HttpResponse(result, content_type="application.json", status=202)
-    
+    return HttpResponse(result, content_type="application.json", status=200)
+
+##############################################################################
+#                                                                            #
+#-----------------------------AUTO BACKUP JOB--------------------------------#
+#                                                                            #
+##############################################################################
+@require_http_methods(['POST'])
+@csrf_exempt
+def return_main_job(requests, thomson_name, jid):
+    if not requests.user.is_authenticated():
+        return HttpResponse(status=401)
+    user = user_info(requests)
+    data = ''
+    args = {}
+    print requests.body
+    try:
+        data = json.loads(requests.body)
+    except Exception as e:
+        print e
+        return HttpResponse(e, content_type='application/json', status = 203)
+    if JobDB().update_job_auto(thomson_name, data):
+        args['detail'] = "Update successful!"
+        message = json.dumps(args)
+        return HttpResponse(message, content_type = 'application/json', status =200)
+    else:
+        args['detail'] = "Update Error!"
+        message = json.dumps(args)
+        return HttpResponse(message, content_type = 'applicatiob/json', status=203)

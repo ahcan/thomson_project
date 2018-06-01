@@ -1,23 +1,11 @@
 <script type="text/javascript" src="/static/assets/js/jquery.floatThead.min.js"></script>
+<link href="/static/assets/css/checkbox.css" rel="stylesheet"></link>
 <div class="col-md-11" ng-class="{'container-loadding':isLoad,'container-loadding-hide':!isLoad}">
-    <div class="sk-fading-circle" ng-show="isLoad">
-      <div class="sk-circle1 sk-circle"></div>
-      <div class="sk-circle2 sk-circle"></div>
-      <div class="sk-circle3 sk-circle"></div>
-      <div class="sk-circle4 sk-circle"></div>
-      <div class="sk-circle5 sk-circle"></div>
-      <div class="sk-circle6 sk-circle"></div>
-      <div class="sk-circle7 sk-circle"></div>
-      <div class="sk-circle8 sk-circle"></div>
-      <div class="sk-circle9 sk-circle"></div>
-      <div class="sk-circle10 sk-circle"></div>
-      <div class="sk-circle11 sk-circle"></div>
-      <div class="sk-circle12 sk-circle"></div>
-    </div>
+        {%include "../loading.html"%}
 </div>
 <div class="content colpadding" ng-class="{'main-loader':isLoad, 'colpadding':!isLoad}" ng-controller="jobCtrl">
     <!-- job manager -->
-    <div class="table-responsive colpadding col-md-4">
+    <div class="table-responsive colpadding col-md-5">
         <h2 class="sub-header">Jobs &nbsp;&nbsp; {{'{{host}'}}} <span style="font-size: 20px;">Total jobs: {{'{{total}'}}}</span></h2>
         <div class="panel-body">
             <div class="col-md-8">
@@ -42,6 +30,7 @@
                         <th class="col-md-1">State</th>
                         <th class="col-md-3">Workflow</th>
                         <th class="col-md-1">Edit</th>
+                        <th class="col-md-1">is_Auto</th>
                     </tr>
                 </thead>
                 <tfoot>
@@ -50,7 +39,7 @@
                     </tr>
                 </tfoot>
                 <tbody class="rowlink">
-                    <tr ng-repeat="job in (job_list | filter:filterByState | filter:search | orderBy: jid) as filterState" ng-click="moreinfo(job.jid)">
+                    <tr ng-repeat="job in (job_list | filter:filterByState | filter:search | orderBy: jid) as filterState" ng-click="moreinfo(job.jid, job.iauto)">
                         <td class="col-md-1"><span>{{'{{job.jid}'}}}</span></td>
                         <td class="col-md-4"><sapn>{{'{{job.jname}'}}}</sapn></td>
                         <td class="col-md-1"><span>{{'{{job.status}'}}}</span></td>
@@ -64,13 +53,18 @@
                                 <a role="button" class="btn btn-danger btn-xs" href="#modal-start-{{'{{host}'}}}" data-toggle='modal' title="Start Job" name="tbnStart{{'{{host}'}}}{{'{{job.jid}'}}}" ng-click="checkBackup(job.jid, 'Start');" ng-show="job.state=='Aborted' || job.state=='Completed'"><span class="glyphicon glyphicon-play"></span></a>
                             </div>
                         </td>
+                        <td class="col-md-1">
+                                <label class="container-checkbox" title="Auto Return Main">
+                                <input type="checkbox" ng-checked="job.iauto" ng-disabled="true">
+                                <span class="checkmark" ng-disabled="true"></span>
+                          </label></td>
                     </tr>
                 </tbody>
             </table>
         </div>
     </div>
     <!-- log and param -->
-    <div class=" table-responsive colpadding col-md-8 body-right">
+    <div class=" table-responsive colpadding col-md-7 body-right">
         <!-- tab content -->
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -80,6 +74,7 @@
                     <ul class="nav nav-tabs">
                         <li class="active"><a href="#tab_log" data-toggle="tab">Logs</a></li>
                         <li><a href="#tab_param" data-toggle="tab">Params</a></li>
+                        <li><a href="#tab_auto" data-toggle="tab">Is Auto</a></li>
                         <!-- <li><a href="#tab_addJob" data-toggle="tab">Add Job</a></li> -->
                     </ul>
                     <div class="tab-content">
@@ -123,6 +118,16 @@
                                         </tr>
                                     </tbody>
                                 </table>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="tab_auto">
+                            <div class="wrapper wrapper-panel">
+                                <p style="margin-top: 20px; padding-left: 20px;" ng-show="isShow">
+                                    <label class="container-checkbox" title="Auto Return Main">Auto return main for job {{'{{jobauto.jid}'}}}
+                                        <input id="chkauto-{{'{{jobauto.jid}'}}}" ng-model="ischecked" type="checkbox" ng-change="isAuto(jobauto.jid)">
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </p>
                             </div>
                         </div>
                     </div>

@@ -37,3 +37,11 @@ class JobHistory(models.Model):
     class Meta:
         managed = True
         db_table = 'job_history'
+
+class JobAuto(models.Model):
+    jid = models.IntegerField(blank=True, null=False)
+    host = models.CharField(max_length=20, blank=True, null=False)
+    auto = models.BooleanField(default=False)
+    class Meta:
+        managed = True
+        db_table = 'job_auto'
