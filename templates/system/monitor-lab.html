@@ -3,20 +3,7 @@
 <script type="text/javascript" src="/static/assets/js/jquery.floatThead.min.js"></script>
 <div ng-app="System">
     <div ng-class="{'container-loadding':isLoad,'container-loadding-hide':!isLoad}" ng-controller="ctrl-main">
-        <div class="sk-fading-circle" ng-show="isLoad">
-          <div class="sk-circle1 sk-circle"></div>
-          <div class="sk-circle2 sk-circle"></div>
-          <div class="sk-circle3 sk-circle"></div>
-          <div class="sk-circle4 sk-circle"></div>
-          <div class="sk-circle5 sk-circle"></div>
-          <div class="sk-circle6 sk-circle"></div>
-          <div class="sk-circle7 sk-circle"></div>
-          <div class="sk-circle8 sk-circle"></div>
-          <div class="sk-circle9 sk-circle"></div>
-          <div class="sk-circle10 sk-circle"></div>
-          <div class="sk-circle11 sk-circle"></div>
-          <div class="sk-circle12 sk-circle"></div>
-        </div> 
+        {% include "../loading.html" %}
     </div>
     <div ng-controller="ctrl-thomson-LAB" ng-class="{'main-loader':isLoad, 'colpadding':!isLoad}">
         <div class="colpadding col-md-5">
@@ -329,6 +316,9 @@
           </div>
           <!-- End Modal -->
     </div>
+    <!-- alert -->
+    {% include "../modal-alert.html"%}
+    <!-- End alert -->
 </div>
 <script type="text/javascript">
     var app =angular.module('System',['ngSanitize']);
