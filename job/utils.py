@@ -51,9 +51,24 @@ class DatabaseJob():
         data: json {'jticket':,'jid':}
         """
         host = settings.THOMSON_HOST[thomson_name]['host']
-        sql = "update job_auto set auto = %s where jid = %d and host = '%s';"%(data['jticked'], data['jid'], host)
-        print sql
+        sql_update = "update job_auto set auto = %s where jid = %d and host = '%s';"%(data['jticked'], data['jid'], host)
+        sql_insert = "insert into job_auto (jid, host, auto) values(%d, %s,%s);"%(data['jid'], host, data['jticked'])
+        if self.check_job_auto(host, data['jid']):
+            sql = sql_update
+        else:
+            sql = sql_insert
+        # print sql
         return self.db.execute_non_query(sql)
+    
+    def check_job_auto(self, host, jid):
+        """
+        kiem tra jid da co ton tai trong database
+        return true/false
+        """
+        sql = "select jid from job_auto where jid= %d and host = '%s';"%(jid, host)
+        if len(self.db.execute_query(sql)):
+            return 1
+        else: return 0
 
     # Return Json Job
     def json_job_host(self, thomson_name):
@@ -128,6 +143,7 @@ class DatabaseJob():
     def check_backup_job(self, thomson_name, jid):
         host = settings.THOMSON_HOST[thomson_name]['host']
         return JobParam.objects.filter(host = host, jid = jid)[0].backup
+
 class History:
     """docstring for JobHistory"""
     def create_log(self, thomson_name, user, action, jid, datetime, des=None):

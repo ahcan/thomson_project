@@ -160,7 +160,7 @@
         $scope.isAuto = function(job_id){
             $scope.jobauto.jticked = $scope.ischecked;
             $scope.$emit('loadMain-HCM');
-            var msg = "Update for job: "+job_id;
+            var msg;
             $http({
                 method:"POST",
                 url:'/job/api/'+$scope.host+'/job/'+job_id+'/isAuto/',
@@ -168,6 +168,7 @@
                 data: $scope.jobauto
             }).then(function(response){
                 if(response.status==200){
+                    msg =  "Update for job: "+job_id;
                     setAlert(response.data.detail, msg, "alert-success");
                     $scope.reload();
                     $('#modal-alert').modal('show');
@@ -179,7 +180,8 @@
                 }
                 $scope.$emit('uloadMain-HCM');
             }, function(response){
-                setAlert(response.data.detail, '', "alert-danger");
+                msg = "No connect to server."
+                setAlert('Error!', msg, "alert-danger");
                 $scope.reload();
                 $('#modal-alert').modal('show');
                 $scope.$emit('uloadMain-HCM');
