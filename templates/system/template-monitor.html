@@ -197,10 +197,12 @@
                         <span>{{'{{log.desc}'}}}</span>
                     </td>
                     <td style="width: 10%;">
-                        <span>{{'{{log.opdate | date:"dd-MM-yyyy HH:mm:ss"}'}}}</span>
+                        <span ng-if="log.opdate">{{'{{log.opdate*1000 | date:"dd-MM-yyyy HH:mm:ss"}'}}}</span>
+                        <span ng-if="!log.opdate"></span>
                     </td>
                     <td style="width: 10%;">
-                        <span>{{'{{log.cldate | date:"dd-MM-yyyy HH:mm:ss"}'}}}</span>
+                        <span ng-if="log.cldate">{{'{{log.cldate*1000 | date:"dd-MM-yyyy HH:mm:ss"}'}}}</span>
+                        <span ng-if="!log.cldate"></span>
                     </td>
                     <td style="width: 4%;">
                         <span>{{'{{log.jid}'}}}</span>
