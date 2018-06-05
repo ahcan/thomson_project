@@ -52,12 +52,11 @@ class DatabaseJob():
         """
         host = settings.THOMSON_HOST[thomson_name]['host']
         sql_update = "update job_auto set auto = %s where jid = %d and host = '%s';"%(data['jticked'], data['jid'], host)
-        sql_insert = "insert into job_auto (jid, host, auto) values(%d, %s,%s);"%(data['jid'], host, data['jticked'])
+        sql_insert = "insert into job_auto (jid, host, auto) values(%d, '%s',%s);"%(data['jid'], host, data['jticked'])
         if self.check_job_auto(host, data['jid']):
             sql = sql_update
         else:
             sql = sql_insert
-        # print sql
         return self.db.execute_non_query(sql)
     
     def check_job_auto(self, host, jid):
