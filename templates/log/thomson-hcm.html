@@ -17,6 +17,8 @@
         $scope.reload = function () {
             $scope.host = 'thomson-hcm'
             $scope.nowDate = +new Date();
+            $scope.nowDate = ($scope.nowDate - $scope.nowDate%1000)/1000;
+            console.log($scope.nowDate);
             $scope.onChangeFilter();
         };
     // Fiter By State checkbox

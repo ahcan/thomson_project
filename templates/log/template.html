@@ -39,7 +39,7 @@
                 </tr>
             </thead>
             <tbody class="width-col-default">
-                <tr ng-repeat="log in log_list | filter:search | orderBy: '-opdate'" ng-class="{'warning': nowDate-log.opdate<=60000}">
+                <tr ng-repeat="log in log_list | filter:search | orderBy: '-opdate'" ng-class="{'warning': nowDate-log.opdate<=60}">
                     <td style="width: 2%;"><span>{{'{{$index + 1}'}}}</span></td>
                     <td style="width: 2%;"><div class="serverily {{'{{log.sev}'}}}"></div></td>
                     <td style="width: 2%;"><span>{{'{{log.nid}'}}}</span></td>
