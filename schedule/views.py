@@ -61,7 +61,7 @@ def add_schedule(request, thomson_name):
         if error:
             agrs["detail"] = error
             messages = json.dumps(agrs)
-            return HttpResponse(messages, content_type='application/json', status=203)     	
+            return HttpResponse(messages, content_type='application/json', status=203)
         '''End alidate date time'''
         '''validate jobid input'''
         jobid_list, error = RequestGetParam(request).get_job_id(thomson_name)

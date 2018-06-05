@@ -97,8 +97,8 @@
                                             <td><span>{{'{{log.nid}'}}}</span></td>
                                             <td><span>{{'{{log.res}'}}}</span></td>
                                             <td><span>{{'{{log.desc}'}}}</span></td>
-                                            <td><span>{{'{{log.opdate | date:"dd-M-yyyy H:mm:ss" }'}}}</span></td>
-                                            <td><span>{{'{{log.cldate | date:"dd-M-yyyy H:mm:ss" }'}}}</span></td>
+                                            <td><span ng-if="log.opdate">{{'{{log.opdate*1000 | date:"dd-M-yyyy H:mm:ss" }'}}}</span></td>
+                                            <td><span ng-if="log.cldate">{{'{{log.cldate*1000 | date:"dd-M-yyyy H:mm:ss" }'}}}</span></td>
                                         </tr>
                                     </tbody>
                                 </table>
