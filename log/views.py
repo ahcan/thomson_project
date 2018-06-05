@@ -20,11 +20,13 @@ from django.contrib.auth.decorators import login_required
 @require_http_methods(['GET'])
 @csrf_exempt
 @login_required()
-def get_log_list_json(request, thomson_name):
+def get_logs(request, thomson_name):
     """
     List all Logs.
     /log/api/log
     """
+    if not request.user.is_authenticated():
+        return HttpResponse(status = 401)
     log_list = Log(thomson_name).get_log()
     return HttpResponse(log_list, content_type='application/json', status=200)
 
@@ -37,6 +39,27 @@ def get_log(request, thomson_name):
     /log/
     """
     return render_to_response('log/'+thomson_name+'.html',user)
+
+##############################################################################
+#                                                                            #
+#----------------------------GET ALL LOG BY SEVERITY-------------------------#
+#                                                                            #
+##############################################################################
+@require_http_methods(['POST'])
+@csrf_exempt
+def filter_log(requests, thomson_name):
+    if not requests.user.is_authenticated():
+        return HttpResponse(status = 401)
+    args = {}
+    data =''
+    try:
+        data = json.loads(requests.body)
+    except Exception as e:
+        args['detail'] = "No data input found!"
+        message = json.dumps(args)
+        return HttpResponse(message, content_type='application/json', status=203)
+    log_list = Log(thomson_name).get_by_sevJob(data['sev'])
+    return HttpResponse(log_list, content_type='application/json', status = 200)
 
 ##############################################################################
 #                                                                            #
@@ -74,13 +97,18 @@ def get_open_log(request):
 @csrf_exempt
 @login_required()
 
-def get_log_by_jobID_list_json(request, job_id, thomson_name):
+def get_log_by_jobID_list_json(requests, job_id, thomson_name):
     """
     List all Logs by Job_ID.
-    /log/api/<Job_ID>/
+    /log/api/thomosn_name/<Job_ID>/
     """
-    log_list = Log(thomson_name).get_by_jobID(int(job_id))
-    return HttpResponse(log_list, content_type='application/json', status=200)
+    if not requests.user.is_authenticated():
+        return HttpResponse(status = 401)
+    try:
+        log_list = Log(thomson_name).get_by_jobID(int(job_id))
+        return HttpResponse(log_list, content_type='application/json', status=200)
+    except Exception as e:
+        return HttpResponse(status = 501)
 
 ##############################################################################
 #                                                                            #
