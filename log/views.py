@@ -100,12 +100,15 @@ def get_open_log(request):
 def get_log_by_jobID_list_json(requests, job_id, thomson_name):
     """
     List all Logs by Job_ID.
-    /log/api/<Job_ID>/
+    /log/api/thomosn_name/<Job_ID>/
     """
     if not requests.user.is_authenticated():
         return HttpResponse(status = 401)
-    log_list = Log(thomson_name).get_by_jobID(int(job_id))
-    return HttpResponse(log_list, content_type='application/json', status=200)
+    try:
+        log_list = Log(thomson_name).get_by_jobID(int(job_id))
+        return HttpResponse(log_list, content_type='application/json', status=200)
+    except Exception as e:
+        return HttpResponse(status = 501)
 
 ##############################################################################
 #                                                                            #
