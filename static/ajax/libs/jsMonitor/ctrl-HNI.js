@@ -10,12 +10,6 @@ app.controller('ctrl-thomson-HNI',function($scope, $http, $timeout, $window, $in
     var tickCountJob = false;
     var tickDetail = false;
     var tickLogJob = false;
-    //set alert
-    function setAlert(message_head, message, clsalert){
-        $('#alert-content').addClass(clsalert);
-        $('#alert-head').text(message_head);
-        $('#alert-message').text(message);
-    };
     $scope.reloadNodes = function(){
         tickNode = false;
         $scope.$broadcast('loadNode-HNI');
