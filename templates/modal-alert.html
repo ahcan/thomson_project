@@ -12,3 +12,10 @@
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    function setAlert(message_head, message, clsalert){
+        $('#alert-content').removeClass('alert-success alert-danger').addClass(clsalert);
+        $('#alert-head').text(message_head);
+        $('#alert-message').text(message);
+    }
+</script>
