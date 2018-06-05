@@ -116,13 +116,19 @@ app.controller('ctrl-thomson-HCM',function($scope, $http, $timeout, $window, $in
             url: '/job/api/' + $scope.host + '/' + job_id + '/restart/',
             }).then(function(response){
                 if (response.status == 202) {
-                    $window.alert(response.data.message);
+                    setAlert("Success !", response.data.message, "alert-success");
+                    $('#modal-alert').modal('show');
+                    // $window.alert(response.data.message);
                     // console.log(response.data);
                     $scope.show_detail(node_id);
                     $scope.$emit('uloadMain-HCM');
                 }
                 else{
                     $scope.$emit('uloadMain-HCM');}
+        }, function(response){
+            setAlert("Error!",'Can not start job.', "alert-danger");
+            $('#modal-alert').modal('show');
+            $scope.$emit('uloadMain-HCM');
         });}
     };
     $scope.stopJob = function(job_id, node_id){
@@ -136,11 +142,17 @@ app.controller('ctrl-thomson-HCM',function($scope, $http, $timeout, $window, $in
             url: '/job/api/'+ $scope.host + '/'+job_id + '/abort/',
             }).then(function(response){
                 if (response.status == 202) {
-                $window.alert(response.data.message);
+                    setAlert("Success !", response.data.message, "alert-success");
+                    $('#modal-alert').modal('show');
+                // $window.alert(response.data.message);
                 $scope.show_detail(node_id);
                 $scope.$emit('uloadMain-HCM');
                 }
                 else{$scope.emit('uloadMain-HCM');}
+                }, function(response){
+                    setAlert("Error!",'Can not start job.', "alert-danger");
+                    $('#modal-alert').modal('show');
+                    $scope.$emit('uloadMain-HCM');
                 });
         }
     };

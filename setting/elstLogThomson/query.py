@@ -5,7 +5,7 @@ from setting import DateTime
 
 class Elastic:
 
-    def __init__(self, host=None, port = 9200, size = 1000, index='_all', *agrs, **kwargs):
+    def __init__(self, host=None, port = 9200, size = 1000, index='_all', *args, **kwargs):
         """
         :host: ip elasticsearch
         :port: port of elasticsearch server (default 9200)
@@ -26,6 +26,7 @@ class Elastic:
     def query_by_ident(self, ident=None, time = "66m", size = 0, ip = 0):
         """
         time: thoi gian loc log tu hien tai minute(m),hour(h), day(d)...
+        ip: ip address for match
         Return array full log by ident
         """
         self.size = size if size else self.size
@@ -150,10 +151,10 @@ class Elastic:
         }
         index = "logstash-%s"%(timesindex.replace('-','.'))
         elast = Elasticsearch([{'host':self.host, 'port': self.port}]).search(index= index,body = query,)
-        print query
+        # print query
         return elast['hits']['hits']
 
-    def query_job_by_id(self, ident=None, time = "1y", size = 0, ip = 0, jid = None):
+    def query_job_by_id(self, ident=None, time = "1y", size = 0, jid = None):
         """
         time: thoi gian loc log tu hien tai minute(m),hour(h), day(d)...
         Return array full log by ident
@@ -195,7 +196,130 @@ class Elastic:
             }
         }
         elast = Elasticsearch([{'host':self.host, 'port': self.port}]).search(index= self.index, body = query,)
-        print query
+        # print query
+        return elast['hits']['hits']
+
+    def fiter_by_sev(self, ident=None, ip =0, lstSev=[], size = 0):
+        """
+        ip: ip addrss match
+        lstSev: array severity
+        """
+        array = []
+        for item in lstSev:
+            array.append(item.lower())
+        self.ip = ip if ip else self.ip
+        query = {
+            "sort": [{"@timestamp": "desc"}],
+            "from": 0,
+            "size": size if size else self.size,
+            "_source": ["message"],
+            "query": {
+                "bool": {
+                "must": [
+                    {
+                    "bool": {
+                        "should": [
+                        {
+                            "bool": {
+                            "should": [
+                                {
+                                "bool": {
+                                    "must": [
+                                    {
+                                        "match": {
+                                        "ident.keyword": "Monitor"
+                                        }
+                                    },
+                                    {
+                                        "match": {
+                                        "message": "origin"
+                                        }
+                                    },
+                                    {
+                                        "match": {
+                                        "message": "%s"%(ident)
+                                        }
+                                    }
+                                    ]
+                                }
+                                },
+                                {
+                                "bool": {
+                                    "must": [
+                                    {
+                                        "match": {
+                                        "ident.keyword": "Monitor"
+                                        }
+                                    },
+                                    {
+                                        "match": {
+                                        "message": "4500"
+                                        }
+                                    }
+                                    ]
+                                }
+                                }
+                            ]
+                            }
+                        },
+                        {
+                            "bool": {
+                            "should": [
+                                {
+                                "bool": {
+                                    "must": [
+                                    {
+                                        "match": {
+                                        "host.keyword": "thomson"
+                                        }
+                                    },
+                                    {
+                                        "match": {
+                                        "ident": "%s"%(ident)
+                                        }
+                                    }
+                                    ]
+                                }
+                                },
+                                {
+                                "bool": {
+                                    "must": [
+                                    {
+                                        "match": {
+                                        "ident.keyword": "Thomson-TOOL"
+                                        }
+                                    },
+                                    {
+                                        "match": {
+                                        "message": "%s"%(self.ip)
+                                        }
+                                    }
+                                    ]
+                                }
+                                },
+                                {
+                                "terms": {
+                                    "ident.keyword": [
+                                    "LiveStream"
+                                    ]
+                                }
+                                }
+                            ]
+                            }
+                        }
+                        ]
+                    }
+                    }
+                ],
+                "filter": {
+                    "terms": {
+                        "message": array
+                    }
+                }
+                }
+            }
+        }
+        elast = Elasticsearch([{'host':self.host, 'port': self.port}]).search(index= self.index, body = query,)
         return elast['hits']['hits']
 
     def check_ip(self,strIP):
@@ -208,7 +332,7 @@ class Elastic:
             return True
         else:
             return False
-            
+
     def get_json_message(self,array):
         """"
         Return json from list message

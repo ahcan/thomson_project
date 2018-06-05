@@ -7,12 +7,15 @@ from setting.get_thomson_api import *
 from setting.DateTime import *
 from schedule.models import *
 from django.contrib.auth.models import User
+from setting import logger
+import logging, logging.config
+from collections import OrderedDict
 
 class RequestGetParam:
     def __init__(self, Request):
         self.data = json.loads(Request.body)
     def get_action(self):
-        return 'start'
+        return self.data['action']
     def get_job_id(self, thomson_name):
         jobid_list = ''
         error = ''
@@ -312,7 +315,22 @@ class ScheduleHistory:
         now = DateTime().get_now()
         new_history = History(schedule=schedule_obj, date_time=now, host=settings.THOMSON_HOST['thomson-hcm']['host'], messages=msg)
         new_history.save()
+        self.write_rsyslog(user_name, action, schedule_id)
         return 1
+
+    def write_rsyslog(self, user_name, action, schedule_id):
+        log = logging.getLogger("thomson-tool")
+        schedule = Crontab().get_cron_by_id(schedule_id)
+        msg = self.create_message(user_name, action, schedule)
+        now = DateTime().get_now()
+        args = OrderedDict([("sev", "Info"),
+                            ("host", settings.THOMSON_HOST['thomson-hcm']['host']),
+                            ("datetime", now),
+                            ("action", action),
+                            ("desc", msg)])
+        log.warning(json.dumps(args, sort_keys=False))
+        return 1
+
 
     def get_new_id(self, request):
         host = settings.THOMSON_HOST['thomson-hcm']['host']

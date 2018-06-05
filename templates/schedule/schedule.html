@@ -1,15 +1,18 @@
 {% extends 'base.html' %}
 {% block content %}
-    <script src="/static/ajax/libs/jquery/jquery-3.2.1.min.js"></script>
+    <!-- <script src="/static/ajax/libs/jquery/jquery-3.2.1.min.js"></script> -->
     <!-- <script type="text/javascript" src="https://code.jquery.com/ui/1.11.3/jquery-ui.min.js" ></script> -->
-    <script src="/static/assets/js/multiple-select.js"></script>
-    <link href="/static/assets/css/multiple-select.min.css" rel="stylesheet">
+
+    <!-- <script src="/static/assets/js/multiple-select.js"></script> -->
+    <!-- <link href="/static/assets/css/multiple-select.min.css" rel="stylesheet"> -->
+    <script type="text/javascript" src="/static/assets/js/angular/select.js"></script>
+    <link href="/static/assets/css/select.css" rel="stylesheet">
     <script type="text/javascript" src="/static/assets/js/moment.min.js"></script>
     <script type="text/javascript" src="/static/assets/js/bootstrap-datetimepicker.min.js"></script>
     <link rel="stylesheet" type="text/css" href="/static/assets/css/bootstrap-datetimepicker.min.css">
     <!-- Sroll table -->
     <script type="text/javascript" src="/static/assets/js/jquery.floatThead.min.js"></script>
-    <div ng-app="schedule" ng-controller="scheCtrl">
+    <div ng-app="app_schedule" ng-controller="scheCtrl">
         <div class="content">
             <div class="table-responsive col-md-12">
                 <div class="col-md-8"><!-- Main schedule table -->
@@ -88,8 +91,6 @@
                             </tbody>
                         </table>
                     </div>
-                <div><!-- History -->
-                    
                 </div><!-- End History -->
             </div>
             <!-- Modal -->
@@ -103,14 +104,25 @@
                         </div>
                         <div class="modal-body">
                             <form id="formAddJob" name="formAddJob" action="/schedule/add/" method="POST" onsubmit="return SubmitCheckTextField()">
-                                <p style="color:red; font-size: 18px;">Chý ý! Đối với kịch tương tác nên định giờ trước lúc out luồng 13s.</p>
+                                <p style="colo:red; font-size: 18px;">Chý ý! Đối với kịch tương tác nên định giờ trước lúc out luồng 13s.</p>
                                 <div class="form-group">
                                     <label>Job ID:</label>
-                                    <multiple-autocomplete ng-model="schedule.jobid_list"
+                                   <!--  <multiple-autocomplete ng-model="schedule.jobid_list"
                                     object-property="jid"
                                     api-url="/job/api/thomson-hcm/job-name/"
                                     suggestions-arr="optionsList">
-                                    </multiple-autocomplete>
+                                    </multiple-autocomplete> -->
+                                    <!-- <ui-select multiple ng-model="schedule.jobid_list">
+                                        <ui-select-match placeholder="Select or Search..."></ui-select-match>
+                                        <ui-select-choices></ui-select-choices>
+                                    </ui-select> -->
+                                    <ui-select multiple ng-model="schedule.jobid_list" name="name" >
+                                      <ui-select-match placeholder="Select or Search...">{{'{{$item.jid}'}}}</ui-select-match>
+                                      <ui-select-choices repeat="val in job_list | filter: $select.search">
+                                       <div ng-bind-html="val.jid | highlight: $select.search"></div>
+                                       <div ng-bind-html="val.jname | highlight: $select.search"></div>
+                                      </ui-select-choices>
+                                    </ui-select>
                                 </div>
                                 <div class="form-group">
                                     <label>Date:</label>
@@ -118,6 +130,10 @@
                                         <input type="text" class="form-control" ng-model="schedule.date_time" ><span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                                     </div>
                                 </div>
+                                <div class="form-group">
+                                    <label>Action:&nbsp;</label>
+                                    Start <input ng-model="schedule.action" type="radio" name="action" value="start">
+                                    &nbsp; Stop <input ng-model="schedule.action" type="radio" name="action" value="stop"></div>
                             </form>
                         </div>
                         <div class="modal-footer">
@@ -129,12 +145,15 @@
             </div>
             <!-- End Modal -->
         </div>
-
+        {%include "../modal-alert.html"%}
+    </div>
 
 <script>
-var app = angular.module('schedule',['multipleSelect']);
-    app.controller("scheCtrl", function ($scope,$http,$timeout,$window){
+    // var app = angular.module('app_schedule',['multipleSelect']);
+    var app = angular.module('app_schedule',['ui.select','ngSanitize']);
+    app.controller("scheCtrl", function ($scope,$http,$timeout,$window, $interval){
         $scope.host = 'thomson-hcm';
+        $scope.selected;
         $scope.onload = function () {
             $scope.total = 0;
             $http.get('/schedule/api/'+$scope.host+'/schedule/').then(function (response) {
@@ -144,14 +163,29 @@ var app = angular.module('schedule',['multipleSelect']);
             $http.get('/schedule/api/history/').then(function (response) {
                 $scope.history_list = response.data.history;
             });
-        $timeout(function(){
-            // $scope.reload();
-            },10000)
+            $http({method: 'GET', url:'/job/api/thomson-hcm/job-name/', timeout: 20000,}).then(function(response){
+                $scope.job_list = response.data;
+            });
         };
-    $scope.schedule={'jobid_list':'', 'date_time':''};
+        $scope.reload = function () {
+            $scope.total = 0;
+            $scope.schedule={'jobid_list':'', 'date_time':'','action':'start'};
+            $http.get('/schedule/api/'+$scope.host+'/schedule/').then(function (response) {
+                $scope.scrontab_list = response.data;
+                $scope.total = $scope.scrontab_list.length
+            });
+            $http.get('/schedule/api/history/').then(function (response) {
+                $scope.history_list = response.data.history;
+            });
+            $http({method: 'GET', url:'/job/api/thomson-hcm/job-name/', timeout: 20000,}).then(function(response){
+                $scope.job_list = response.data;
+            });
+        };
+        $interval(function(){$scope.onload();},10000);
+    $scope.isLoaded = false;
+    $scope.schedule={'jobid_list':'', 'date_time':'','action':'start'};
     $scope.onload();
     $scope.deteleRow = function (field) {
-
     if ($window.confirm("Please confirm?")) {
             // body...
             var id = field.id;
@@ -160,12 +194,14 @@ var app = angular.module('schedule',['multipleSelect']);
                     url : '/schedule/delete/'+id+'/',
             }).then(function(response){
                 if(response.status == 203){
-                $window.alert(response.data.detail);
+                    setAlert("Error", response.data.detail, "alert-danger");
+                    $('#modal-alert').modal('show');
             }
             else
                 if (response.status == 202){
-                    $window.alert(response.data.detail);
-                    $scope.onload();
+                    setAlert("Success", response.data.detail, "alert-success");
+                    $('#modal-alert').modal('show');
+                    $scope.reload();
                 }
             });
     } else {
@@ -185,41 +221,44 @@ var app = angular.module('schedule',['multipleSelect']);
       data : $scope.schedule
     }).then(function(response){
       if(response.status == 203){
-        $window.alert(response.data.detail);
+          $('#myModal').modal('hide');
+          setAlert("Error", response.data.detail, "alert-danger");
+          $('#modal-alert').modal('show');
       }
       else
         if (response.status == 202){
-            $window.alert(response.data.detail);
-          $window.location.href='/schedule/';
+            $('#myModal').modal('hide');
+            setAlert("Success", response.data.detail, "alert-success");
+            $('#modal-alert').modal('show');
+            $scope.onload();
         }
     });
   }
 
   $scope.cancel_schedule = function(){
-    console.log($scope.modelArr)
+        $scope.reload();
   }
 
   $scope.updateTime  = function(){
-    //getElement via DOM in angular
+    // getElement via DOM in angular
     var da = angular.element( document.getElementById('daypicker').firstElementChild);
      $scope.schedule.date_time = da.val();
   }
 });
 </script>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('#createJob').on('click', function(e){
-                // console.log("$$$$$$$");
-            });
-            var $scroll = $('table.scrollTable');
-            $scroll.floatThead({
-            scrollContainer: function($table){
-            return $table.closest('.wrapper');
-            }
-            });
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#createJob').on('click', function(e){
+            // console.log("$$$$$$$");
         });
-        
-    </script>
+        var $scroll = $('table.scrollTable');
+        $scroll.floatThead({
+        scrollContainer: function($table){
+        return $table.closest('.wrapper');
+        }
+        });
+    });
+</script>
 
 <script type="text/javascript">
     $(document).ready(function () {
@@ -231,12 +270,4 @@ var app = angular.module('schedule',['multipleSelect']);
         });
     });
 </script>
-<script type="text/javascript">
-    var $scroll = $('table.scrollTable');
-    $scroll.floatThead({
-        scrollContainer: function($table){
-        return $table.closest('.wrapper');
-        }
-    });
-</script>
-    {% endblock %}
+{% endblock %}

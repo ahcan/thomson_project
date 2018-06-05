@@ -61,7 +61,7 @@ def add_schedule(request, thomson_name):
         if error:
             agrs["detail"] = error
             messages = json.dumps(agrs)
-            return HttpResponse(messages, content_type='application/json', status=203)     	
+            return HttpResponse(messages, content_type='application/json', status=203)
         '''End alidate date time'''
         '''validate jobid input'''
         jobid_list, error = RequestGetParam(request).get_job_id(thomson_name)
@@ -108,9 +108,6 @@ def add_schedule(request, thomson_name):
             agrs["detail"] = schedule
             messages = json.dumps(agrs)
             return HttpResponse(messages, content_type='application/json', status=203)
-    else:
-        user = user_info(request)
-        return render_to_response("schedule/addJob.html", user)
 
 ### remove schedule ###
 @require_http_methods(['DELETE'])

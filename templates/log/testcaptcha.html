@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% csrf_token %}
+    {{ form.as_p }}
+<div ng-app='myapp' ng-controller='myctrl'>
+  <form method="post" ng-submit="mysubmit()">
+    <!-- <script src='https://www.google.com/recaptcha/api.js'></script> -->
+    <div class="g-recaptcha" data-sitekey="6Ld8F0AUAAAAAFTqjGB-p1gCOQxCBfoBLWGy3dRT"></div>
+    <button type="submit" class="btn btn-primary">Post</button>
+  </form>
+</div>
+<script type="text/javascript">
+    var app = angular.module('myapp',[]);
+    app.controller('myctrl', function($scope, $http){
+        $scope.mysubmit = function(){
+            var captcha = window.grecaptcha.getResponse();
+            console.log(captcha);
+            if (captcha ===""){
+                alert("Please resolve the captcha and submit!");
+            }else{
+                $http({
+                    method:"POST",
+                    url:'/log/api/captcha/',
+                    data:{'value1':'data1','captcha':captcha},
+                    headers: {'Content-Type': 'application/json; charset=utf-8'},
+                }).then(function(response){
+                    console.log(response.data);
+                });
+            }
+        };
+    });
+</script>
+{% endblock %}

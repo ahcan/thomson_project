@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block content %}
+<script type="text/javascript" src="/static/assets/js/jquery.floatThead.min.js"></script>
+<div ng-app="Job" ng-controller="jobCtrl">
+    {%include "job/template.html" %}
+</div>
+<script>
+    var app = angular.module('Job',[]);
+    app.controller("jobCtrl", function ($scope,$http,$timeout,$window){
+        $scope.host = 'thomson-hcm'
+        $scope.reload = function () {
+            $scope.total = 0;
+            $http.get('/job/api/'+$scope.host+'/job/').
+            then(function (response) {
+                if(response.status == 302 && response.data.url){
+                    console.log(response.status);
+                    $window.location.href=response.data.url;
+                }
+                else{
+                    $scope.job_list = response.data;
+                    $scope.total = $scope.job_list.length
+                    console.log($scope.job_list);
+                }
+            });
+            $timeout(function(){
+                $scope.reload();
+            },10000)
+        };
+        // Fiter By State checkbox
+        $scope.filters = {};
+        //function
+        $scope.filterByState = function(job){
+            return $scope.filters[job.state] || noFilter($scope.filters);
+        };
+        $scope.getStates = function(){
+            return ($scope.job_list || []).map(function(job){return job.state;}).filter(function (cat, idx, arr) { return arr.indexOf(cat) === idx;});
+        };
+        function noFilter(filterObj){
+            return Object.keys(filterObj).every(function(key){return !filterObj[key];});
+        }
+        //end filter
+        $scope.reload();
+        $scope.moreinfo = function(jobID){
+            // console.log(jobID);
+            $http.get('/job/api/'+$scope.host+'/job/'+jobID+'/').then(function(response){
+                $scope.workflow = response.data;
+                console.log($scope.workflow);
+            });
+            $http.get('/log/api/'+$scope.host+'/'+jobID+'/').then(function(response){
+                $scope.lstLogJob = response.data;
+                console.log($scope.lstLogJob);
+            });
+            $scope.clickrow = true;
+            $scope.showpara = true;
+        }
+    });
+</script>
+<script type="text/javascript">
+    var $scroll = $('table.scrollTable');
+    $scroll.floatThead({
+        scrollContainer: function($table){
+        return $table.closest('.wrapper');
+        }
+    });
+</script>
+{% endblock %}

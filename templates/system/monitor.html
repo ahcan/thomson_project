@@ -3,21 +3,8 @@
 <script type="text/javascript" src="/static/assets/js/jquery.floatThead.min.js"></script>
 <div class="col-md-12" ng-app="System">
     <div ng-class="{'container-loadding':isLoad,'container-loadding-hide':!isLoad}" ng-controller="ctrl-main">
-        <div class="sk-fading-circle" ng-show="isLoad">
-          <div class="sk-circle1 sk-circle"></div>
-          <div class="sk-circle2 sk-circle"></div>
-          <div class="sk-circle3 sk-circle"></div>
-          <div class="sk-circle4 sk-circle"></div>
-          <div class="sk-circle5 sk-circle"></div>
-          <div class="sk-circle6 sk-circle"></div>
-          <div class="sk-circle7 sk-circle"></div>
-          <div class="sk-circle8 sk-circle"></div>
-          <div class="sk-circle9 sk-circle"></div>
-          <div class="sk-circle10 sk-circle"></div>
-          <div class="sk-circle11 sk-circle"></div>
-          <div class="sk-circle12 sk-circle"></div>
-        </div> 
-      <div class="colpadding col-md-6" ng-class="{'main-loader':isLoad, 'colpadding':!isLoad}" ng-controller="ctrl-thomson-HNI">
+        {% include "../loading.html" %}
+        <div class="colpadding col-md-6" ng-class="{'main-loader':isLoad, 'colpadding':!isLoad}" ng-controller="ctrl-thomson-HNI">
           {% include "system/template-monitor.html" %}
           <!-- Modal Stop-->
           <div class="modal fade" id="modal-stop-thomson-hni" role="dialog">
@@ -68,7 +55,7 @@
               </div>
           </div>
           <!-- End Modal -->
-      </div>
+        </div>
       <div class="colpadding col-md-6" ng-class="{'main-loader':isLoad, 'colpadding':!isLoad}" ng-controller="ctrl-thomson-HCM">
           {% include "system/template-monitor.html" %}
           <!-- Modal Stop-->
@@ -119,7 +106,11 @@
                   </div>
               </div>
           </div>
+          <!-- End Modal -->
       </div>
+    <!-- alert -->
+    {% include "../modal-alert.html"%}
+    <!-- End alert -->
     </div>
 </div>
 <script type="text/javascript">
@@ -127,8 +118,8 @@
 </script>
 <script type="text/javascript" src="/static/assets/js/captcha/simple-captcha.min.js"></script>
 <script type="text/javascript" src="/static/ajax/libs/jsMonitor/ctrl-load.min.js"></script>
-<script type="text/javascript" src="/static/ajax/libs/jsMonitor/ctrl-HNI.min.js"></script>
-<script type="text/javascript" src="/static/ajax/libs/jsMonitor/ctrl-HCM.min.js"></script>
+<script type="text/javascript" src="/static/ajax/libs/jsMonitor/ctrl-HNI.js"></script>
+<script type="text/javascript" src="/static/ajax/libs/jsMonitor/ctrl-HCM.js"></script>
 <script type="text/javascript">
     var $scroll = $('table.scrollTable');
     $scroll.floatThead({

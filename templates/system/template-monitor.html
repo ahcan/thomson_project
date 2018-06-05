@@ -142,9 +142,7 @@
                     </td>
                     <td style="width: 4%;">
                         <div style="display: inline-flex;">
-                           <!--  <a  role="button" name="tbnStart{{'{{job.jid}'}}}" class="btn btn-success btn-xs" title="Restart"
-                                ng-click="checkBackup(job.jid, node.nid);" href="#modal-restart-{{'{{host}'}}}" data-toggle='modal'><span class="glyphicon glyphicon-refresh"></span></a>&nbsp;
-                            <a  role="button" class="btn btn-danger btn-xs" href="#modal-stop-{{'{{host}'}}}" data-toggle='modal' title="Stop Job" name="tbnStop{{'{{host}'}}}{{'{{job.jid}'}}}" ng-click="dataModal(job.jid, node.nid);"><span class="glyphicon glyphicon-stop"></span></a> -->
+                          
                             <!-- <button type="button" name="tbnStop{{'{{job.jid}'}}}" class="btn btn-danger btn-xs glyphicon glyphicon-stop" title="Stop" ng-show="job.state == 'Running'" ng-click="stopJob(job.jid, node.nid);"></button> -->
                         </div>
                     </td>
@@ -197,10 +195,12 @@
                         <span>{{'{{log.desc}'}}}</span>
                     </td>
                     <td style="width: 10%;">
-                        <span>{{'{{log.opdate | date:"dd-MM-yyyy HH:mm:ss"}'}}}</span>
+                        <span ng-if="log.opdate">{{'{{log.opdate*1000 | date:"dd-MM-yyyy HH:mm:ss"}'}}}</span>
+                        <span ng-if="!log.opdate"></span>
                     </td>
                     <td style="width: 10%;">
-                        <span>{{'{{log.cldate | date:"dd-MM-yyyy HH:mm:ss"}'}}}</span>
+                        <span ng-if="log.cldate">{{'{{log.cldate*1000 | date:"dd-MM-yyyy HH:mm:ss"}'}}}</span>
+                        <span ng-if="!log.cldate"></span>
                     </td>
                     <td style="width: 4%;">
                         <span>{{'{{log.jid}'}}}</span>
@@ -225,7 +225,7 @@
     <div ng-controller="ctrload-log" class="loader panel-body"><div class="content" ng-show="isLoadLog"></div></div>
     <div class="wrapper wrapper-log" style="overflow-y: scroll;">
         <table class="table table-bordered table-panel table-hover table-striped scrollTable">
-            <thead class="width-col-default">
+            <thead>
                 <th style="width: 5%;">
                     <label>
                         <span>Severity</span>
