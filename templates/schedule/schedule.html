@@ -91,8 +91,6 @@
                             </tbody>
                         </table>
                     </div>
-                <div><!-- History -->
-                    
                 </div><!-- End History -->
             </div>
             <!-- Modal -->
@@ -106,7 +104,7 @@
                         </div>
                         <div class="modal-body">
                             <form id="formAddJob" name="formAddJob" action="/schedule/add/" method="POST" onsubmit="return SubmitCheckTextField()">
-                                <p style="color:red; font-size: 18px;">Chý ý! Đối với kịch tương tác nên định giờ trước lúc out luồng 13s.</p>
+                                <p style="colo:red; font-size: 18px;">Chý ý! Đối với kịch tương tác nên định giờ trước lúc out luồng 13s.</p>
                                 <div class="form-group">
                                     <label>Job ID:</label>
                                    <!--  <multiple-autocomplete ng-model="schedule.jobid_list"
@@ -147,12 +145,13 @@
             </div>
             <!-- End Modal -->
         </div>
-
+        {%include "../modal-alert.html"%}
+    </div>
 
 <script>
     // var app = angular.module('app_schedule',['multipleSelect']);
     var app = angular.module('app_schedule',['ui.select','ngSanitize']);
-    app.controller("scheCtrl", function ($scope,$http,$timeout,$window){
+    app.controller("scheCtrl", function ($scope,$http,$timeout,$window, $interval){
         $scope.host = 'thomson-hcm';
         $scope.selected;
         $scope.onload = function () {
@@ -167,15 +166,26 @@
             $http({method: 'GET', url:'/job/api/thomson-hcm/job-name/', timeout: 20000,}).then(function(response){
                 $scope.job_list = response.data;
             });
-        $timeout(function(){
-            // $scope.reload();
-            },10000)
         };
+        $scope.reload = function () {
+            $scope.total = 0;
+            $scope.schedule={'jobid_list':'', 'date_time':'','action':'start'};
+            $http.get('/schedule/api/'+$scope.host+'/schedule/').then(function (response) {
+                $scope.scrontab_list = response.data;
+                $scope.total = $scope.scrontab_list.length
+            });
+            $http.get('/schedule/api/history/').then(function (response) {
+                $scope.history_list = response.data.history;
+            });
+            $http({method: 'GET', url:'/job/api/thomson-hcm/job-name/', timeout: 20000,}).then(function(response){
+                $scope.job_list = response.data;
+            });
+        };
+        $interval(function(){$scope.onload();},10000);
     $scope.isLoaded = false;
     $scope.schedule={'jobid_list':'', 'date_time':'','action':'start'};
     $scope.onload();
     $scope.deteleRow = function (field) {
-
     if ($window.confirm("Please confirm?")) {
             // body...
             var id = field.id;
@@ -184,12 +194,14 @@
                     url : '/schedule/delete/'+id+'/',
             }).then(function(response){
                 if(response.status == 203){
-                $window.alert(response.data.detail);
+                    setAlert("Error", response.data.detail, "alert-danger");
+                    $('#modal-alert').modal('show');
             }
             else
                 if (response.status == 202){
-                    $window.alert(response.data.detail);
-                    $scope.onload();
+                    setAlert("Success", response.data.detail, "alert-success");
+                    $('#modal-alert').modal('show');
+                    $scope.reload();
                 }
             });
     } else {
@@ -209,18 +221,22 @@
       data : $scope.schedule
     }).then(function(response){
       if(response.status == 203){
-        $window.alert(response.data.detail);
+          $('#myModal').modal('hide');
+          setAlert("Error", response.data.detail, "alert-danger");
+          $('#modal-alert').modal('show');
       }
       else
         if (response.status == 202){
-            $window.alert(response.data.detail);
-          $window.location.href='/schedule/';
+            $('#myModal').modal('hide');
+            setAlert("Success", response.data.detail, "alert-success");
+            $('#modal-alert').modal('show');
+            $scope.onload();
         }
     });
   }
 
   $scope.cancel_schedule = function(){
-    console.log($scope.modelArr)
+        $scope.reload();
   }
 
   $scope.updateTime  = function(){

@@ -76,10 +76,13 @@
                 url: '/job/api/' + $scope.host + '/' + job_id + '/restart/',
                 }).then(function(response){
                     if (response.status == 202) {
-                        $window.alert(response.data.message);
+                        setAlert("Success!", response.data.message, "alert-success");
+                        $('#modal-alert').modal('show');
                         $scope.$emit('uloadMain-HCM');
                     }
                     else{
+                        setAlert("Error!", response.data.message, "alert-danger");
+                        $('#modal-alert').modal('show');
                         $scope.$emit('uloadMain-HCM');}
             });}
             $scope.moreinfo(job_id, ticked);
@@ -186,12 +189,6 @@
                 $('#modal-alert').modal('show');
                 $scope.$emit('uloadMain-HCM');
             });
-        };
-        //set alert
-        function setAlert(message_head, message, clsalert){
-            $('#alert-content').addClass(clsalert);
-            $('#alert-head').text(message_head);
-            $('#alert-message').text(message);
         };
     });
 </script>
