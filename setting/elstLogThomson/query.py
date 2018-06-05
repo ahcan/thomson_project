@@ -23,7 +23,7 @@ class Elastic:
         self.index = index
         return
 
-    def query_by_ident(self, ident=None, time = "66m", size = 0, ip = 0):
+    def query_by_ident(self, ident=None, time = "24h", size = 0, ip = 0):
         """
         time: thoi gian loc log tu hien tai minute(m),hour(h), day(d)...
         ip: ip address for match
