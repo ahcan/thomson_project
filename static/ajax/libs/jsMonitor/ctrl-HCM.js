@@ -204,6 +204,7 @@ app.controller('ctrl-thomson-HCM',function($scope, $http, $timeout, $window, $in
     $scope.loadAllLog = function(){
         tickAllLog = false;
         $scope.nowDate = +new Date();
+        $scope.nowDate = ($scope.nowDate - $scope.nowDate%1000)/1000;
         $scope.$broadcast('loadRealtime-HCM');
         $http({
             method: 'GET',

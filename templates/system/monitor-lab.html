@@ -190,10 +190,10 @@
                                             <span>{{'{{log.desc}'}}}</span>
                                         </td>
                                         <td style="width: 10%;">
-                                            <span>{{'{{log.opdate | date:"dd-MM-yyyy HH:mm:ss" }'}}}</span>
+                                            <span ng-if="log.opdate">{{'{{log.opdate*1000 | date:"dd-MM-yyyy HH:mm:ss" }'}}}</span>
                                         </td>
                                         <td style="width: 10%;">
-                                            <span>{{'{{log.cldate | date:"dd-MM-yyyy HH:mm:ss" }'}}}</span>
+                                            <span ng-if="log.cldate">{{'{{log.cldate*1000 | date:"dd-MM-yyyy HH:mm:ss" }'}}}</span>
                                         </td>
                                     </tr>
                                 </tbod>
@@ -223,7 +223,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr ng-repeat="log in log_list | filter:search | filter:filterBySev | orderBy: '-opdate'" ng-class="{'warning': nowDate-log.opdate<=60000}">
+                                    <tr ng-repeat="log in log_list | filter:search | filter:filterBySev | orderBy: '-opdate'" ng-class="{'warning': nowDate-log.opdate<=60}">
                                         <td style="width: 4%;">
                                             <span>{{'{{$index + 1}'}}}</span>
                                         </td>

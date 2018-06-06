@@ -142,8 +142,7 @@
                     </td>
                     <td style="width: 4%;">
                         <div style="display: inline-flex;">
-                          
-                            <!-- <button type="button" name="tbnStop{{'{{job.jid}'}}}" class="btn btn-danger btn-xs glyphicon glyphicon-stop" title="Stop" ng-show="job.state == 'Running'" ng-click="stopJob(job.jid, node.nid);"></button> -->
+                            
                         </div>
                     </td>
                 </tr>
@@ -178,7 +177,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="log in log_list | filter:search | filter:filterBySev | orderBy: '-opdate'" ng-class="{'warning': nowDate-log.opdate<=60000}">
+                <tr ng-repeat="log in log_list | filter:search | filter:filterBySev | orderBy: '-opdate'" ng-class="{'warning': nowDate-log.opdate<=60}">
                     <td style="width: 4%;">
                         <span>{{'{{$index + 1}'}}}</span>
                     </td>
