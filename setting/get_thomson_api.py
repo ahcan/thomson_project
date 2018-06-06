@@ -349,7 +349,7 @@ class Log:
     def get_log(self):
         from setting.xmlReq.LogReq import BODY
         body = BODY
-        response_xml = Thomson(self.name).get_response(self.headers, body)
+        #response_xml = Thomson(self.name).get_response(self.headers, body)
         #response_xml = File().get_response('LogsAllGetRsp.xml')
         array = self.elsatic.query_by_ident(ident=settings.THOMSON_HOST[self.name]['ident'], ip=settings.THOMSON_HOST[self.name]['host'], size = 1000)
         # print self.name
@@ -370,8 +370,8 @@ class Log:
         body = ID
         # body = body.replace('JobID', str(jobID))
         #response_xml = File().get_response('LogsGetByJobIDRsp.xml')
-        response_xml = Thomson(self.name).get_response(self.headers, body)
-        arrayJob = self.elsatic.query_job_by_id(ident=settings.THOMSON_HOST[self.name]['ident'], ip=settings.THOMSON_HOST[self.name]['host'], jid=jobID)
+        #response_xml = Thomson(self.name).get_response(self.headers, body)
+        arrayJob = self.elsatic.query_job_by_id(ident=settings.THOMSON_HOST[self.name]['ident'], jid=jobID)
         # return self.parse_xml(response_xml)
         return self.elsatic.get_json_message(arrayJob)
 
@@ -382,6 +382,13 @@ class Log:
         response_xml = Thomson(self.name).get_response(self.headers, body)
         return self.parse_xml(response_xml)
 
+    def get_by_sevJob(self, sevs):
+        """
+        get all by severity
+        sevs: arry of severity
+        """
+        arraySev = self.elsatic.fiter_by_sev(ident=settings.THOMSON_HOST[self.name]['ident'], ip=settings.THOMSON_HOST[self.name]['host'], lstSev=sevs)
+        return self.elsatic.get_json_message(arraySev)
 
 ##############################################################################
 #                                                                            #
