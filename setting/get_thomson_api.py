@@ -759,7 +759,7 @@ class JobDetail:
         body = START_BODY
         body = body.replace('JobID', str(self.jid))
         # response_xml = Thomson(self.name).get_response(headers, body)
-        History().create_log(thomson_name=self.name, user=user, action='start', jid=self.jid, datetime=ThonsonTime().get_now()*1000)
+        History().create_log(thomson_name=self.name, user=user, action='start', jid=self.jid, datetime=ThonsonTime().get_now())
         time.sleep(1)
         try:
             node_ID = dbNodeDetail(self.name).get_node_by_job(self.jid)        
