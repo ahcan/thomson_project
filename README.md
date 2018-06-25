@@ -7,4 +7,5 @@ module request:
 	+pytz
 	+tzlocal
     +django-simple-captcha
-	+MySQL-python 
+    +MySQL-python 
+    +elasticsearch
