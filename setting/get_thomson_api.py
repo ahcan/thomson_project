@@ -62,8 +62,8 @@ class Thomson:
         headers = DateAndTimeReq.HEADERS
         body = DateAndTimeReq.BODY
         print body
-        #response_xml = self.get_response(headers, body)
-        response_xml = File().get_response('GetDateAndTimeRsp.xml')
+        response_xml = self.get_response(headers, body)
+        #response_xml = File().get_response('GetDateAndTimeRsp.xml')
         print response_xml
         xmldoc = minidom.parseString(response_xml)
         itemlist = xmldoc.getElementsByTagName('GetDateAndTime:RspOkGetDate')
@@ -83,8 +83,8 @@ class Thomson:
         from setting.xmlReq import MountPointReq
         headers = MountPointReq.HEADERS
         body = MountPointReq.BODY
-        #response_xml = self.get_response(headers, body)
-        response_xml = File().get_response('GetMountPointsRsp.xml')
+        response_xml = self.get_response(headers, body)
+        #response_xml = File().get_response('GetMountPointsRsp.xml')
         xmldoc = minidom.parseString(response_xml)
         itemlist = xmldoc.getElementsByTagName('GetMountPoints:MountPoint')
         args = []
@@ -99,8 +99,8 @@ class Thomson:
         from setting.xmlReq import SystemReq
         headers = SystemReq.HEADERS
         body = SystemReq.BODY
-        ##response_xml = self.get_response(headers, body)
-        response_xml = File().get_response('SystemGetStatusRsp.xml')
+        response_xml = self.get_response(headers, body)
+        #response_xml = File().get_response('SystemGetStatusRsp.xml')
         xmldoc = minidom.parseString(response_xml)
         itemlist = xmldoc.getElementsByTagName('sGetStatus:RspOkSGS')
         Status = itemlist[0].attributes['Status'].value if 'Status' in\
@@ -140,8 +140,8 @@ class Thomson:
         from setting.xmlReq.SystemReq import LICENSE_HEADERS, LICENSE_BODY
         headers = LICENSE_HEADERS
         body = LICENSE_BODY
-        #response_xml = self.get_response(headers, body)
-        response_xml = File().get_response('SystemGetVersionsRsp.xml')
+        response_xml = self.get_response(headers, body)
+        #response_xml = File().get_response('SystemGetVersionsRsp.xml')
         return response_xml
 
     def parse_license_xml_object(self, license_obj):
@@ -196,8 +196,8 @@ class Node:
         self.name = name
 
     def get_nodes_xml(self):
-        #response_xml = Thomson(self.name).get_response(self.headers, self.body)
-        response_xml = File().get_response('SystemGetNodesStatsRsp.xml')
+        response_xml = Thomson(self.name).get_response(self.headers, self.body)
+        #response_xml = File().get_response('SystemGetNodesStatsRsp.xml')
         return response_xml
 
     def parse_dom_object(self, dom_object):
@@ -351,7 +351,7 @@ class Log:
         from setting.xmlReq.LogReq import BODY
         body = BODY
         #response_xml = Thomson(self.name).get_response(self.headers, body)
-        # response_xml = File().get_response('LogsAllGetRsp.xml')
+        #response_xml = File().get_response('LogsAllGetRsp.xml')
         array = self.elsatic.query_by_ident(ident=settings.THOMSON_HOST[self.name]['ident'], ip=settings.THOMSON_HOST[self.name]['host'], size = 1000)
         # print self.name
         # return self.parse_xml(response_xml)
@@ -360,8 +360,8 @@ class Log:
     def get_open(self):
         from setting.xmlReq.LogReq import OPEN
         body = OPEN
-        #response_xml = Thomson(self.name).get_response(self.headers, body)
-        response_xml = File().get_response('LogsOpenGetRsp.xml')
+        response_xml = Thomson(self.name).get_response(self.headers, body)
+        #response_xml = File().get_response('LogsOpenGetRsp.xml')
         #print response_xml
         return self.parse_xml(response_xml)
 
@@ -369,8 +369,8 @@ class Log:
     def get_by_jobID(self, jobID):
         from setting.xmlReq.LogReq import ID
         body = ID
-        # body = body.replace('JobID', str(jobID))
-        # response_xml = File().get_response('LogsGetByJobIDRsp.xml')
+        #body = body.replace('JobID', str(jobID))
+        #response_xml = File().get_response('LogsGetByJobIDRsp.xml')
         #response_xml = Thomson(self.name).get_response(self.headers, body)
         arrayJob = self.elsatic.query_job_by_id(ident=settings.THOMSON_HOST[self.name]['ident'], jid=jobID)
         # return self.parse_xml(response_xml)
@@ -379,7 +379,7 @@ class Log:
     def get_sys_log(self):
         from setting.xmlReq.LogReq import SYSTEM
         body = SYSTEM
-        response_xml = File().get_response('LogsGetSysRsp.xml')
+        #response_xml = File().get_response('LogsGetSysRsp.xml')
         #response_xml = Thomson(self.name).get_response(self.headers, body)
         return self.parse_xml(response_xml)
 
@@ -425,8 +425,8 @@ class Workflow:
     def get_workflow(self):
         from setting.xmlReq.WorkflowReq import BODY
         body = BODY
-        #response_xml = Thomson(self.name).get_response(self.headers, body)
-        response_xml = File().get_response('WorklowGetListRsp.xml')
+        response_xml = Thomson(self.name).get_response(self.headers, body)
+        #response_xml = File().get_response('WorklowGetListRsp.xml')
         return self.parse_xml(response_xml)
 
 class WorkflowDetail:
@@ -473,8 +473,8 @@ class WorkflowDetail:
         return json.dumps(args)
 
     def get_param(self):
-        #response_xml = Thomson(self.name).get_response(self.headers, self.body)
-        response_xml = File().get_response('WorkflowGetParamsRsp.xml')
+        response_xml = Thomson(self.name).get_response(self.headers, self.body)
+        #response_xml = File().get_response('WorkflowGetParamsRsp.xml')
         #print response_xml
         return self.parse_xml(response_xml)
 
@@ -554,8 +554,8 @@ class Job:
     def get_job_xml(self):
         from setting.xmlReq.JobReq import BODY
         body = BODY
-        #response_xml = Thomson(self.name).get_response(self.headers, body)
-        response_xml = File().get_response('JobGetListRsp.xml')
+        response_xml = Thomson(self.name).get_response(self.headers, body)
+        #response_xml = File().get_response('JobGetListRsp.xml')
         return response_xml
 
     def get_jobid_list(self):
@@ -570,37 +570,37 @@ class Job:
         return args
 
     def get_job(self):
-        #response_xml = self.get_job_xml()
+        response_xml = self.get_job_xml()
         return self.parse_xml(response_xml)
 
     def get_job_name(self): # get name id job
-        #response_xml = self.get_job_xml()
+        response_xml = self.get_job_xml()
         return self.parse_xml_name(response_xml)
 
     def count_job(self):
-        #response_xml = self.get_job_xml()
+        response_xml = self.get_job_xml()
         return self.count_object(response_xml)
 
     def get_Waiting_xml(self):
         from setting.xmlReq.JobReq import WAITTING
         body = WAITTING
-        #response_xml = Thomson(self.name).get_response(self.headers, body)
-        response_xml = File().get_response('JobGetListRsp.xml')
+        response_xml = Thomson(self.name).get_response(self.headers, body)
+        #response_xml = File().get_response('JobGetListRsp.xml')
         return response_xml
 
     def get_Waiting(self):
-        #response_xml = self.get_Waiting_xml()
+        response_xml = self.get_Waiting_xml()
         return self.parse_xml(response_xml)
 
     def count_Waiting(self):
-        #response_xml = self.get_Waiting_xml()
+        response_xml = self.get_Waiting_xml()
         return self.count_object(response_xml)
 
     def get_Running_xml(self):
         from setting.xmlReq.JobReq import RUNNING
         body = RUNNING
-        #response_xml = Thomson(self.name).get_response(self.headers, body)
-        response_xml = File().get_response('JobGetListRsp.xml')
+        response_xml = Thomson(self.name).get_response(self.headers, body)
+        #response_xml = File().get_response('JobGetListRsp.xml')
         return response_xml
 
     def get_Running(self):
@@ -608,52 +608,52 @@ class Job:
         return self.parse_xml(xml)
 
     def count_Running(self):
-        #response_xml = self.get_Running_xml()
+        response_xml = self.get_Running_xml()
         return self.count_object(response_xml)
 
     def get_Paused_xml(self):
         from setting.xmlReq.JobReq import PAUSED
         body = PAUSED
-        #response_xml = Thomson(self.name).get_response(self.headers, body)
-        response_xml = File().get_response('JobGetListRsp.xml')
+        response_xml = Thomson(self.name).get_response(self.headers, body)
+        #response_xml = File().get_response('JobGetListRsp.xml')
         return response_xml
 
     def get_Paused(self):
-        #response_xml = self.get_Paused_xml()
+        response_xml = self.get_Paused_xml()
         return self.parse_xml(response_xml)
 
     def count_Paused(self):
-        #response_xml = self.get_Paused_xml()
+        response_xml = self.get_Paused_xml()
         return self.count_object(response_xml)
 
     def get_Completed_xml(self):
         from setting.xmlReq.JobReq import COMPLETED
         body = COMPLETED
-        #response_xml = Thomson(self.name).get_response(self.headers, body)
-        response_xml = File().get_response('JobGetListRsp.xml')
+        response_xml = Thomson(self.name).get_response(self.headers, body)
+        #response_xml = File().get_response('JobGetListRsp.xml')
         return response_xml
 
     def get_Completed(self):
-        #response_xml = self.get_Completed_xml()
+        response_xml = self.get_Completed_xml()
         return self.parse_xml(response_xml)
 
     def count_Completed(self):
-        #response_xml = self.get_Completed_xml()
+        response_xml = self.get_Completed_xml()
         return self.count_object(response_xml)
 
     def get_Aborted_xml(self):
         from setting.xmlReq.JobReq import ABORTED
         body = ABORTED
-        #response_xml = Thomson(self.name).get_response(self.headers, body)
-        response_xml = File().get_response('JobGetListRsp.xml')
+        response_xml = Thomson(self.name).get_response(self.headers, body)
+        #response_xml = File().get_response('JobGetListRsp.xml')
         return response_xml
 
     def get_Aborted(self):
-        #response_xml = self.get_Aborted_xml()
+        response_xml = self.get_Aborted_xml()
         return self.parse_xml(response_xml)
 
     def count_Aborted(self):
-        #response_xml = self.get_Aborted_xml()
+        response_xml = self.get_Aborted_xml()
         return self.count_object(response_xml)
 
     def get_job_detail_by_job_id(self, arr_job_id):
@@ -717,8 +717,8 @@ class JobDetail:
         headers = HEADERS
         body = BODY
         body = body.replace('JobID', str(self.jid))
-        #response_xml = Thomson(self.name).get_response(headers, body)
-        response_xml = File().get_response('JobGetParamsRsp.xml')
+        response_xml = Thomson(self.name).get_response(headers, body)
+        #response_xml = File().get_response('JobGetParamsRsp.xml')
         return response_xml
 
     def get_param(self):
@@ -727,8 +727,8 @@ class JobDetail:
 
 
     def get_job_name(self):
-        #response_xml = self.get_param_xml()
-        response_xml = File().get_response('JobGetParamsRsp.xml')
+        response_xml = self.get_param_xml()
+        #response_xml = File().get_response('JobGetParamsRsp.xml')
         xmldoc = minidom.parseString(response_xml)
         joblist = xmldoc.getElementsByTagName('wd:Job')
         job = joblist[0]
@@ -758,16 +758,16 @@ class JobDetail:
         headers = START_HEADERS
         body = START_BODY
         body = body.replace('JobID', str(self.jid))
-        # response_xml = Thomson(self.name).get_response(headers, body)
-        History().create_log(thomson_name=self.name, user=user, action='start', jid=self.jid, datetime=ThonsonTime().get_now()*1000)
+        response_xml = Thomson(self.name).get_response(headers, body)
+        History().create_log(thomson_name=self.name, user=user, action='start', jid=self.jid, datetime=ThonsonTime().get_now())
         time.sleep(1)
         try:
             node_ID = dbNodeDetail(self.name).get_node_by_job(self.jid)        
         except Exception as e:
             node_ID = 0
-        # status = self.parse_status(response_xml)
-        # return {'status': status,'nid': node_ID}
-        return {'status': 'OK','nid': node_ID}
+        status = self.parse_status(response_xml)
+        return {'status': status,'nid': node_ID}
+        #return {'status': 'OK','nid': node_ID}
 
     def restart(self, user):
         try:
@@ -787,17 +787,17 @@ class JobDetail:
         headers = ABORT_HEADERS
         body = ABORT_BODY
         body = body.replace('JobID', str(self.jid))
-        # response_xml = Thomson(self.name).get_response(headers, body)
+        response_xml = Thomson(self.name).get_response(headers, body)
         History().create_log(thomson_name=self.name, user=user, action='abort', jid=self.jid, datetime=ThonsonTime().get_now())
-        # return self.parse_status(response_xml)
-        return "OK"
+        return self.parse_status(response_xml)
+        #return "OK"
 
     def delete(self):
         from setting.xmlReq.JobDetailReq import DELETE_HEADERS, DELETE_BODY
         headers = DELETE_HEADERS
         body = DELETE_BODY
         body = body.replace('JobID', str(self.jid))
-        #response_xml = Thomson(self.name).get_response(headers, body)
+        response_xml = Thomson(self.name).get_response(headers, body)
         return self.parse_status(response_xml)
 
 ##############################################################################
