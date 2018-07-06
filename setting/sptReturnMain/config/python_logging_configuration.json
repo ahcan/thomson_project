@@ -1,0 +1,152 @@
+{
+    "version": 1,
+    "disable_existing_loggers": true,
+    "formatters":{ 
+        "dal": {
+            "format":"AutoThomson: date: %(asctime)s - %(name)s - p%(process)s {%(pathname)s:%(lineno)d} - serverity: %(levelname)s - message: %(message)s"
+        },
+        "rabbit":{
+            "format":"AutoThomson: date: %(asctime)s - %(name)s - p%(process)s {%(pathname)s:%(lineno)d} - serverity: %(levelname)s - message: %(message)s"
+        },
+        "elasticsearch":{
+            "format":"AutoThomson: date: %(asctime)s - %(name)s - p%(process)s {%(pathname)s:%(lineno)d} - serverity: %(levelname)s - message: %(message)s"
+        },
+        "auto_thomson":{
+            "format":"AutoThomson: date: %(asctime)s - %(name)s - p%(process)s {%(pathname)s:%(lineno)d} - serverity: %(levelname)s - message: %(message)s"
+        },
+        "auto":{
+            "format":"AutoThomson: date: %(asctime)s - %(name)s - serverity: %(levelname)s - message: %(message)s"
+        },
+        "return_main":{
+            "format":"AutoThomson: date: %(asctime)s - %(name)s - p%(process)s {%(pathname)s:%(lineno)d} - serverity: %(levelname)s - message: %(message)s"
+        },
+        "supervisord":{
+            "format":"AutoThomson: date: %(asctime)s - %(name)s - p%(process)s {%(pathname)s:%(lineno)d} - serverity: %(levelname)s - message: %(message)s"
+        },
+        "utils":{
+            "format":"AutoThomson: date: %(asctime)s - %(name)s - p%(process)s {%(pathname)s:%(lineno)d} - serverity: %(levelname)s - message: %(message)s"
+        },
+        "thomson":{
+            "format":"AutoThomson: date: %(asctime)s - %(name)s - p%(process)s {%(pathname)s:%(lineno)d} - serverity: %(levelname)s - message: %(message)s"
+        },
+        "unknow_log":{
+            "format":"AutoThomson: date: %(asctime)s - %(name)s - serverity: %(levelname)s - message: %(message)s"
+        }
+    },
+    "handlers": {
+        "dal_handler": {
+            "filename": "/var/log/auto_thomson/DAL.log",
+            "encoding": "utf8",
+            "class": "logging.FileHandler",
+            "level": "DEBUG",
+            "formatter": "dal"
+        },
+        "rabbit_handler":{
+            "filename": "/var/log/auto_thomson/rabbit.log",
+            "class": "logging.FileHandler",
+            "level": "DEBUG",
+            "formatter": "rabbit"
+        },
+        "elasticsearch_handler":{
+            "filename": "/var/log/auto_thomson/elasticsearch.log",
+            "class": "logging.FileHandler",
+            "level": "DEBUG",
+            "formatter": "elasticsearch"
+        },
+        "auto_thomson_handler":{
+            "filename": "/var/log/auto_thomson/auto_thomson.log",
+            "class": "logging.FileHandler",
+            "level": "DEBUG",
+            "formatter": "auto_thomson"
+        },
+        "auto_handler":{
+            "address": "/dev/log",
+            "class": "logging.handlers.SysLogHandler",
+            "level": "WARNING",
+            "facility": "local6",
+            "formatter": "auto"
+        },
+        "return_main_handler":{
+            "filename": "/var/log/auto_thomson/return_main.log",
+            "class": "logging.FileHandler",
+            "level": "DEBUG",
+            "formatter": "auto_thomson"
+        },
+        "double_node_handler":{
+            "filename": "/var/log/auto_thomson/double_node.log",
+            "class": "logging.FileHandler",
+            "level": "DEBUG",
+            "formatter": "auto_thomson"
+        },
+        "supervisord_handler":{
+            "filename": "/var/log/auto_thomson/supervisord.log",
+            "class": "logging.FileHandler",
+            "level": "DEBUG",
+            "formatter": "supervisord"
+        },
+        "utils_handler":{
+            "filename": "/var/log/auto_thomson/utils.log",
+            "class": "logging.FileHandler",
+            "level": "DEBUG",
+            "formatter": "utils"
+        },
+        "thomson_handler":{
+            "filename": "/var/log/auto_thomson/thomson.log",
+            "class": "logging.FileHandler",
+            "level": "DEBUG",
+            "formatter": "thomson"
+        },
+        "unknow_log_handler":{
+            "filename": "/var/log/auto_thomson/unknow_log.log",
+            "class": "logging.FileHandler",
+            "level": "DEBUG",
+            "formatter": "unknow_log"
+        }
+    },
+    "root": {
+        "level": "WARNING",
+        "handlers": ["auto_handler"]
+    },
+    "loggers": {
+        "dal": {
+            "handlers": ["dal_handler"],
+            "level": "DEBUG"
+        },
+        "rabbit": {
+            "handlers": ["rabbit_handler"],
+            "level": "DEBUG"
+        },
+        "elasticsearch": {
+            "handlers": ["elasticsearch_handler"],
+            "level": "DEBUG"
+        },
+        "auto_thomson": {
+            "handlers": ["auto_thomson_handler"],
+            "level": "DEBUG"
+        },
+        "return_main": {
+            "handlers": ["return_main_handler"],
+            "level": "DEBUG"
+        },
+        "double_node": {
+            "handlers": ["double_node_handler"],
+            "level": "DEBUG"
+        },
+        "supervisord": {
+            "handlers": ["supervisord_handler"],
+            "level": "DEBUG"
+        },
+        "utils": {
+            "handlers": ["utils_handler"],
+            "level": "DEBUG"
+        },
+        "thomson": {
+            "handlers": ["thomson_handler"],
+            "level": "INFO"
+        },
+        "unknow_log": {
+            "handlers": ["unknow_log_handler"],
+            "level": "DEBUG"
+        }
+    }
+}
