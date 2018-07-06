@@ -70,6 +70,7 @@
                 alert("Please resolve the captcha and submit!");}
             else{            
                 $scope.$emit('loadMain-HCM');
+                $("#modal-restart-thomson-lab").modal("hide");
                 // console.log("restart");
                 $http({
                 method: 'PUT',
@@ -94,6 +95,7 @@
                 alert("Please resolve the captcha and submit!");
             }else{
                 $scope.$emit('loadMain-HCM');
+                $("#modal-stop-thomson-lab").modal("hide");
                 $http({
                 method: 'PUT',
                 url: '/job/api/'+ $scope.host + '/'+job_id + '/abort/',
@@ -120,6 +122,7 @@
                 alert("Please resolve the captcha and submit!");
             }else{
                 $scope.$emit('loadMain-HCM');
+                $("#modal-start-thomson-lab").modal("hide");
                 $http({
                 method: 'PUT',
                 url: '/job/api/'+ $scope.host + '/'+job_id + '/start/',
@@ -190,6 +193,39 @@
                 $scope.$emit('uloadMain-HCM');
             });
         };
+        $scope.returnJob = function(job_id){
+            if($("#cpt-value-widgetReturn").val() === ""){
+                //get val byid
+                alert("Please resolve the captcha and submit!");
+            }else{
+                $scope.$emit('loadMain-HCM');
+                var msg;
+                $("#modal-remain-thomson-lab").modal("hide");
+                $http({
+                    method:"POST",
+                    url:'/job/api/'+$scope.host+'/job/'+job_id+'/reMain/',
+                    timeout: 10000,
+                }).then(function(response){
+                    if(response.status == 200){
+                        msg = "Return main for job: "+job_id;
+                        setAlert(response.data.detail, msg, "alert-success");
+                        $scope.reload();
+                        $('#modal-alert').modal('show');
+                    }else if(response.status == 203){
+                        setAlert(response.data.detail,'',"alert-danger");
+                        $scope.reload();
+                        $('#modal-alert').modal('show');
+                        $scope.$emit('uloadMain-HCM');
+                    }
+                }, function(response){
+                    msg = "No connect to server."
+                    setAlert('Error!', msg, "alert-danger");
+                    $scope.reload();
+                    $('#modal-alert').modal('show');
+                    $scope.$emit('uloadMain-HCM');
+                });
+            }
+        };
     });
 </script>
 <script type="text/javascript" src="/static/ajax/libs/jsMonitor/ctrl-load.js"></script>
@@ -202,25 +238,25 @@
     });
     setTimeout(function() {location.reload();}, 600000);
     $(document).ready(function(){
-        $('#frm-modal-stop-thomson-hcm').submit(function() {
+        $('#frm-modal-stop-thomson-lab').submit(function() {
             if($('#cpt-value-widgetStop').val()===""){
-                $('#modal-stop-thomson-hcm').modal('show');
+                $('#modal-stop-thomson-lab').modal('show');
             }else{
-                $('#modal-stop-thomson-hcm').modal('hide');
+                $('#modal-stop-thomson-lab').modal('hide');
             }
         });
-        $('#frm-modal-restart-thomson-hcm').submit(function() {
+        $('#frm-modal-restart-thomson-lab').submit(function() {
             if($('#cpt-value-widgetRestart').val()===""){
-                $('#modal-restart-thomson-hcm').modal('show');
+                $('#modal-restart-thomson-lab').modal('show');
             }else{
-                $('#modal-restart-thomson-hcm').modal('hide');
+                $('#modal-restart-thomson-lab').modal('hide');
             }
         });
-        $('#frm-modal-start-thomson-hcm').submit(function() {
+        $('#frm-modal-start-thomson-lab').submit(function() {
             if($('#cpt-value-widgetStart').val()===""){
-                $('#modal-start-thomson-hcm').modal('show');
+                $('#modal-start-thomson-lab').modal('show');
             }else{
-                $('#modal-start-thomson-hcm').modal('hide');
+                $('#modal-start-thomson-lab').modal('hide');
             }
         });
     });

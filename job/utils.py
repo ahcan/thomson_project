@@ -8,6 +8,8 @@ import json
 from setting import settings
 from setting import logger
 import logging, logging.config
+from setting.sptReturnMain import return_main
+# from setting import sptReturnMain
 
 import time
 
@@ -26,7 +28,7 @@ class DatabaseJob():
 
     def get_job_host(self, thomson_name):
         host = settings.THOMSON_HOST[thomson_name]['host']
-        sql = "select j.jid, p.name, w.name, j.state, j.status, j.startdate, j.enddate, w.wid, j_a.auto from job j \
+        sql = "select j.jid, p.name, w.name, j.state, j.status, j.startdate, j.enddate, w.wid, j_a.auto, p.backup from job j \
                 INNER JOIN job_param p ON j.jid = p.jid and p.host = j.host and p.host = '%s'\
                 INNER JOIN workflow w ON w.wid = p.wid and w.host = p.host \
                 LEFT JOIN job_auto j_a ON j.jid = j_a.jid and j.host = j_a.host;"%(host)
@@ -79,7 +81,7 @@ class DatabaseJob():
             lstjob = self.get_job_host(thomson_name)
             print "no data list job by host"
         for item in lstjob:
-            JId,jobname,workflow_name,State,Status,StartDate,EndDate,workflowIdRef,backMain = item[0], item[1], item[2], item[3], item[4], item[5], item[6], item[7], item[8]
+            JId,jobname,workflow_name,State,Status,StartDate,EndDate,workflowIdRef,backMain,isBackup = item[0], item[1], item[2], item[3], item[4], item[5], item[6], item[7], item[8], item[9]
             args.append({'jname'    : jobname,
                         'wid'       : workflowIdRef,
                         'wname'     : workflow_name,
@@ -92,7 +94,8 @@ class DatabaseJob():
                         # 'ver'       : int(Ver),
                         'enddate'   : EndDate \
                         if EndDate else None,
-                        'iauto'     : backMain
+                        'iauto'     : backMain,
+                        'iBackup'  : isBackup
                 })
         return json.dumps(args)
 
@@ -146,12 +149,30 @@ class DatabaseJob():
 class History:
     """docstring for JobHistory"""
     def create_log(self, thomson_name, user, action, jid, datetime, des=None):
-        log = logging.getLogger("thomson-tool")
+        log = logger.getLogger("thomson-tool")
         host = settings.THOMSON_HOST[thomson_name]['host']
         jname = JobParam.objects.all().filter(host = host, jid = jid)[0].name
-        desc = "Job operation: %s by \"%s\" from Thomson-Tool"%(action, user)
+        desc = "Job operation: %s by '%s' from Thomson-Tool"%(action, user)
         args = {"sev": "Info", "host": host, "opdate": datetime, "jid": jid, "jname": jname, "desc": desc}
         log.critical(json.dumps(args))
         history = JobHistory(user=user, host=host, action=action, jid=jid, datetime=datetime)
         history.save()
-        print "log start/stop job"
+        print "log start/stop job {0}".format(jid)
+
+class acThomson:
+    def __init__(self, thomson_name):
+        """
+        thomson_name : name of thomson in setting file
+        """
+        self.thomson_name = thomson_name
+    def returnMainJob(self, jid):
+        data = {"jid": jid, "host": settings.THOMSON_HOST[self.thomson_name]}
+        try:
+            result, msg = return_main.return_main(data)
+            if result:
+                return "OK"
+            else:
+                return msg
+        except Exception as e:
+            print e
+            return "NotOK"

@@ -49,3 +49,9 @@ class DateTime:
         format_iso_now = (now- timedelta(hours = 1)).isoformat()
         tz = time.timezone/-(60*60)
         return "%s+0%s:00"%(format_iso_now,tz)
+
+    def get_now_as_logtash_fortmat(self):
+        return datetime.strftime(datetime.now(), '%Y.%m.%d')
+
+    def get_yesterday_as_logtash_fortmat(self):
+        return datetime.strftime(datetime.now() - timedelta(1), '%Y.%m.%d')

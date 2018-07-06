@@ -5,7 +5,7 @@
 </div>
 <div class="content colpadding" ng-class="{'main-loader':isLoad, 'colpadding':!isLoad}" ng-controller="jobCtrl">
     <!-- job manager -->
-    <div class="table-responsive colpadding col-md-5">
+    <div class="table-responsive colpadding col-md-6">
         <h2 class="sub-header">Jobs &nbsp;&nbsp; {{'{{host}'}}} <span style="font-size: 20px;">Total jobs: {{'{{total}'}}}</span></h2>
         <div class="panel-body">
             <div class="col-md-8">
@@ -25,11 +25,12 @@
                 <thead>
                     <tr>
                         <th class="col-md-1">ID</th>
-                        <th class="col-md-4">Name</th>
+                        <th class="col-md-3">Name</th>
                         <th class="col-md-1">Status</th>
                         <th class="col-md-1">State</th>
                         <th class="col-md-3">Workflow</th>
                         <th class="col-md-1">Edit</th>
+                        <th class="col-md-1">Re_main</th>
                         <th class="col-md-1">is_Auto</th>
                     </tr>
                 </thead>
@@ -53,18 +54,21 @@
                                 <a role="button" class="btn btn-danger btn-xs" href="#modal-start-{{'{{host}'}}}" data-toggle='modal' title="Start Job" name="tbnStart{{'{{host}'}}}{{'{{job.jid}'}}}" ng-click="checkBackup(job.jid, 'Start');" ng-show="job.state=='Aborted' || job.state=='Completed'"><span class="glyphicon glyphicon-play"></span></a>
                             </div>
                         </td>
+                        <td class="col-md-1 col-edit">
+                            <a role="button" class="btn btn-primary btn-xs" href="#modal-remain-{{'{{host}'}}}" data-toggle='modal' ng-show="job.iBackup == 'true'" title="Return Main" name="tbnReturn{{'{{host}'}}}{{'{{job.jid}'}}}" ng-click="checkBackup(job.jid, 'Return main');"><span class="glyphicon glyphicon-repeat" ></span></a>
+                        </td>
                         <td class="col-md-1">
-                                <label class="container-checkbox" title="Auto Return Main">
-                                <input type="checkbox" ng-checked="job.iauto" ng-disabled="true">
-                                <span class="checkmark" ng-disabled="true"></span>
-                          </label></td>
+                            <label class="container-checkbox" title="Auto Return Main">
+                            <input type="checkbox" ng-checked="job.iauto" ng-disabled="true">
+                            <span class="checkmark" ng-disabled="true"></span>
+                            </label></td>
                     </tr>
                 </tbody>
             </table>
         </div>
     </div>
     <!-- log and param -->
-    <div class=" table-responsive colpadding col-md-7 body-right">
+    <div class=" table-responsive colpadding col-md-6 body-right">
         <!-- tab content -->
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -209,5 +213,30 @@
             </div>
         </div>
     <!-- End Modal -->
+    <!-- Modal Return Main-->
+    <div class="modal fade" id="modal-remain-{{'{{host}'}}}" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title" style="color:red;" ng-bind-html="txtHeader"></h4>
+                </div>
+                <form method="post" id="frm-modal-return-main-{{'{{host}'}}}" onsubmit="return valiCaptcha('widgetReturn')" ng-submit="returnJob(job_id)">
+                <div class="modal-body">
+                    <div class="form-group" style="text-align: center; font-size: 15px;" ng-bind-html='txtBody'>
+                    </div>
+                    <div class="simple-captcha" id="widgetReturn">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" type="submit" name="resetart" value="Continue">Continue </button>
+                    <input class="btn btn-primary" type="button" data-dismiss="modal" value="Cancel">
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+<!-- End Modal -->
 </div>
 <script type="text/javascript" src="/static/assets/js/captcha/simple-captcha.min.js"></script>

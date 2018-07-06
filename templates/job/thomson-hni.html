@@ -13,7 +13,7 @@
         $scope.isAlert = false;
         var tickReload = false;
         $scope.total = 0;
-        $scope.$emit('loadMain-HCM');
+        $scope.$emit('loadMain-HNI');
         $scope.reload = function () {
             $http({method: 'GET',
                 url:'/job/api/'+$scope.host+'/job/',
@@ -24,8 +24,8 @@
                     $scope.total = response.data.length;
                     tickReload = true;
                 }else{tickReload = true;}
-                $scope.$emit('uloadMain-HCM');
-            }, function(response){if (response.status == 401) {$window.location.href='/accounts/login/'}; tickReload = true; $scope.$emit('uloadMain-HCM')});
+                $scope.$emit('uloadMain-HNI');
+            }, function(response){if (response.status == 401) {$window.location.href='/accounts/login/'}; tickReload = true; $scope.$emit('uloadMain-HNI')});
         };
         $interval(function(){if (tickReload) {$scope.reload();}}, 3000);
         // Fiter By State checkbox
@@ -69,7 +69,8 @@
             if (angular.element(document.getElementById('cpt-value-widgetRestart')).val()===""){
                 alert("Please resolve the captcha and submit!");}
             else{            
-                $scope.$emit('loadMain-HCM');
+                $scope.$emit('loadMain-HNI');
+                $("#modal-restart-thomson-hni").modal("hide");
                 // console.log("restart");
                 $http({
                 method: 'PUT',
@@ -78,12 +79,12 @@
                     if (response.status == 202) {
                         setAlert("Success!", response.data.message, "alert-success");
                         $('#modal-alert').modal('show');
-                        $scope.$emit('uloadMain-HCM');
+                        $scope.$emit('uloadMain-HNI');
                     }
                     else{
                         setAlert("Error!", response.data.message, "alert-danger");
                         $('#modal-alert').modal('show');
-                        $scope.$emit('uloadMain-HCM');}
+                        $scope.$emit('uloadMain-HNI');}
             });}
             $scope.moreinfo(job_id, ticked);
         };
@@ -93,7 +94,8 @@
             //get val byid
                 alert("Please resolve the captcha and submit!");
             }else{
-                $scope.$emit('loadMain-HCM');
+                $scope.$emit('loadMain-HNI');
+                $("#modal-stop-thomson-hni").modal("hide");
                 $http({
                 method: 'PUT',
                 url: '/job/api/'+ $scope.host + '/'+job_id + '/abort/',
@@ -102,12 +104,12 @@
                     setAlert("Success !", response.data.message, "alert-success");
                     $('#modal-alert').modal('show')
                     // $scope.show_detail(node_id);
-                    $scope.$emit('uloadMain-HCM');
+                    $scope.$emit('uloadMain-HNI');
                     }
                     else{
                         setAlert("Error!",'Can not stop job.', "alert-danger");
                         $('#modal-alert').modal('show');
-                        $scope.emit('uloadMain-HCM');
+                        $scope.emit('uloadMain-HNI');
                     }
                     });
             }
@@ -119,7 +121,8 @@
             //get val byid
                 alert("Please resolve the captcha and submit!");
             }else{
-                $scope.$emit('loadMain-HCM');
+                $scope.$emit('loadMain-HNI');
+                $("#modal-start-thomson-hni").modal("hide");
                 $http({
                 method: 'PUT',
                 url: '/job/api/'+ $scope.host + '/'+job_id + '/start/',
@@ -128,13 +131,13 @@
                     setAlert("Success !", response.data.message, "alert-success");
                     $('#modal-alert').modal('show');
                     // $scope.show_detail(node_id);
-                    $scope.$emit('uloadMain-HCM');
+                    $scope.$emit('uloadMain-HNI');
                     }
-                    else{$scope.$emit('uloadMain-HCM');}
+                    else{$scope.$emit('uloadMain-HNI');}
                     },function(response){
                         setAlert("Error!",'Can not start job.', "alert-danger");
                         $('#modal-alert').modal('show');
-                        $scope.$emit('uloadMain-HCM');
+                        $scope.$emit('uloadMain-HNI');
                     });
             }
             $scope.moreinfo(job_id, ticked);
@@ -162,7 +165,7 @@
         };
         $scope.isAuto = function(job_id){
             $scope.jobauto.jticked = $scope.ischecked;
-            $scope.$emit('loadMain-HCM');
+            $scope.$emit('loadMain-HNI');
             var msg;
             $http({
                 method:"POST",
@@ -171,7 +174,7 @@
                 data: $scope.jobauto
             }).then(function(response){
                 if(response.status==200){
-                    msg =  "Update for job: "+job_id;
+                    msg = "Update for job: "+job_id;
                     setAlert(response.data.detail, msg, "alert-success");
                     $scope.reload();
                     $('#modal-alert').modal('show');
@@ -179,16 +182,49 @@
                     setAlert(response.data.detail,'',"alert-danger");
                     $scope.reload();
                     $('#modal-alert').modal('show');
-                    $scope.$emit('uloadMain-HCM');
+                    $scope.$emit('uloadMain-HNI');
                 }
-                $scope.$emit('uloadMain-HCM');
+                $scope.$emit('uloadMain-HNI');
             }, function(response){
                 msg = "No connect to server."
-                setAlert('Error!', msg, "alert-danger");
+                setAlert('Error!', ms, "alert-danger");
                 $scope.reload();
                 $('#modal-alert').modal('show');
-                $scope.$emit('uloadMain-HCM');
+                $scope.$emit('uloadMain-HNI');
             });
+        };
+        $scope.returnJob = function(job_id){
+            if($("#cpt-value-widgetReturn").val() === ""){
+                //get val byid
+                alert("Please resolve the captcha and submit!");
+            }else{
+                $scope.$emit('loadMain-HNI');
+                var msg;
+                $("#modal-remain-thomson-hni").modal("hide");
+                $http({
+                    method:"POST",
+                    url:'/job/api/'+$scope.host+'/job/'+job_id+'/reMain/',
+                    timeout: 10000,
+                }).then(function(response){
+                    if(response.status == 200){
+                        msg = "Return main for job: "+job_id;
+                        setAlert(response.data.detail, msg, "alert-success");
+                        $scope.reload();
+                        $('#modal-alert').modal('show');
+                    }else if(response.status == 203){
+                        setAlert(response.data.detail,'',"alert-danger");
+                        $scope.reload();
+                        $('#modal-alert').modal('show');
+                        $scope.$emit('uloadMain-HNI');
+                    }
+                }, function(response){
+                    msg = "No connect to server."
+                    setAlert('Error!', msg, "alert-danger");
+                    $scope.reload();
+                    $('#modal-alert').modal('show');
+                    $scope.$emit('uloadMain-HNI');
+                });
+            }
         };
     });
 </script>
@@ -202,25 +238,25 @@
     });
     setTimeout(function() {location.reload();}, 600000);
     $(document).ready(function(){
-        $('#frm-modal-stop-thomson-hcm').submit(function() {
+        $('#frm-modal-stop-thomson-hni').submit(function() {
             if($('#cpt-value-widgetStop').val()===""){
-                $('#modal-stop-thomson-hcm').modal('show');
+                $('#modal-stop-thomson-hni').modal('show');
             }else{
-                $('#modal-stop-thomson-hcm').modal('hide');
+                $('#modal-stop-thomson-hni').modal('hide');
             }
         });
-        $('#frm-modal-restart-thomson-hcm').submit(function() {
+        $('#frm-modal-restart-thomson-hni').submit(function() {
             if($('#cpt-value-widgetRestart').val()===""){
-                $('#modal-restart-thomson-hcm').modal('show');
+                $('#modal-restart-thomson-hni').modal('show');
             }else{
-                $('#modal-restart-thomson-hcm').modal('hide');
+                $('#modal-restart-thomson-hni').modal('hide');
             }
         });
-        $('#frm-modal-start-thomson-hcm').submit(function() {
+        $('#frm-modal-start-thomson-hni').submit(function() {
             if($('#cpt-value-widgetStart').val()===""){
-                $('#modal-start-thomson-hcm').modal('show');
+                $('#modal-start-thomson-hni').modal('show');
             }else{
-                $('#modal-start-thomson-hcm').modal('hide');
+                $('#modal-start-thomson-hni').modal('hide');
             }
         });
     });

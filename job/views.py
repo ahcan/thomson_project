@@ -10,7 +10,7 @@ from setting.get_thomson_api import *
 from accounts.user_info import *
 from django.contrib.auth.decorators import login_required
 from utils import DatabaseJob as JobDB
-
+from utils import acThomson
 
 # Create your views here.
 
@@ -27,7 +27,7 @@ def get_job_json(request, thomson_name):
     if not request.user.is_authenticated():
         return HttpResponse(status=401)
     job_list = JobDB().json_job_host(thomson_name)
-    # job_list = Job().get_job()
+    # job_list = Job(thomson_name).get_job()
     return HttpResponse(job_list, content_type='application/json', status=200)
 
 #link get all job name and id /job/api/job-name
@@ -316,17 +316,15 @@ def check_bckJob(request, jid, thomson_name):
 ##############################################################################
 @require_http_methods(['POST'])
 @csrf_exempt
-def return_main_job(requests, thomson_name, jid):
+def set_auto_return_backup(requests, thomson_name, jid):
     if not requests.user.is_authenticated():
         return HttpResponse(status=401)
     user = user_info(requests)
     data = ''
     args = {}
-    print requests.body
     try:
         data = json.loads(requests.body)
     except Exception as e:
-        print e
         return HttpResponse(e, content_type='application/json', status = 203)
     if JobDB().update_job_auto(thomson_name, data):
         args['detail'] = "Update successful!"
@@ -334,5 +332,29 @@ def return_main_job(requests, thomson_name, jid):
         return HttpResponse(message, content_type = 'application/json', status =200)
     else:
         args['detail'] = "Update Error!"
+        message = json.dumps(args)
+        return HttpResponse(message, content_type = 'applicatiob/json', status=203)
+
+# Return backup Job
+
+@require_http_methods(['POST'])
+@csrf_exempt
+def return_main_job(requests, thomson_name, jid):
+    if not requests.user.is_authenticated():
+        return HttpResponse(status=401)
+    user = user_info(requests)
+    args = {}
+    result = acThomson(thomson_name).returnMainJob(jid)
+    # print result
+    if result.upper() == "OK":
+        args['detail'] = "Return successful!"
+        message = json.dumps(args)
+        return HttpResponse(message, content_type = 'application/json', status =200)
+    elif result.upper() == "NOTOK":
+        args['detail'] = "Return Error!"
+        message = json.dumps(args)
+        return HttpResponse(message, content_type = 'applicatiob/json', status=203)
+    else:
+        args['detail'] = "Error!"+result
         message = json.dumps(args)
         return HttpResponse(message, content_type = 'applicatiob/json', status=203)

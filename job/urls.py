@@ -8,7 +8,8 @@ urlpatterns = [
     url(r'^api/(?P<thomson_name>\w+\-+\w+)/job/(?P<jid>\d+)/$', views.get_job_params, name='jparams'),
     # url(r'^api/(?P<thomson_name>\w+\-+\w+)/(?P<jid>\d+)/$', views.get_job_by_id_json, name='job_id'),
     url(r'^api/(?P<thomson_name>\w+\-+\w+)/count-job/$', views.count_job_by_host, name='count_job'),
-    url(r'^api/(?P<thomson_name>\w+\-+\w+)/job/(?P<jid>\d+)/isAuto/$', views.return_main_job, name='job_auto'),
+    url(r'^api/(?P<thomson_name>\w+\-+\w+)/job/(?P<jid>\d+)/isAuto/$', views.set_auto_return_backup, name='job_auto'),
+    url(r'^api/(?P<thomson_name>\w+\-+\w+)/job/(?P<jid>\d+)/reMain/$', views.return_main_job, name='return_main_job'),
 
     url(r'^api/(?P<wfid>.+)/create/$', views.create_job, name='create_job'),
     url(r'^api/(?P<jid>\d+)/modify/$', views.modify_job, name='modify_job'),
