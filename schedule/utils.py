@@ -319,7 +319,7 @@ class ScheduleHistory:
         return 1
 
     def write_rsyslog(self, user_name, action, schedule_id):
-        log = logging.getLogger("thomson-tool")
+        log = logger.getLogger("thomson-tool")
         schedule = Crontab().get_cron_by_id(schedule_id)
         msg = self.create_message(user_name, action, schedule)
         now = DateTime().get_now()
@@ -329,6 +329,7 @@ class ScheduleHistory:
                             ("action", action),
                             ("desc", msg)])
         log.warning(json.dumps(args, sort_keys=False))
+        print "write log schedule!"
         return 1
 
 
