@@ -40,6 +40,11 @@ class Database:
         try:
             session = self.connect()
             cur=session.cursor()
+            cur.execute("SELECT ID FROM INFORMATION_SCHEMA.PROCESSLIST WHERE STATE = 'Sending data';")
+            tmp = cur.fetchall()
+            if len(tmp) > 0:
+                for item in tmp:
+                    cur.execute("kill {0}".format(item[0]))
             cur.execute(query)
             rows = cur.fetchall()
             self.close_connect(session)
