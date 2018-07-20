@@ -194,7 +194,7 @@ def return_main(data):
     target_host = data["host"]
     account = None
     for i in THOMSON_HOST:
-        if THOMSON_HOST[i]["host"] == target_host:
+        if THOMSON_HOST[i]["host"] == target_host['host']:
             account = THOMSON_HOST[i]
             break
     if not account:
@@ -231,4 +231,4 @@ def return_main(data):
         time.sleep(2)
         start = start_job(jd)
         logger.critical("Tool just returned the main source by stop and start job: Job(%s)"%(str(data)))
-    return 1
+    return 1, "Ok"
